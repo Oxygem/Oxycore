@@ -1,0 +1,1 @@
+<pre><?=luawa.utils.tableString( self:get() ) ?></pre>

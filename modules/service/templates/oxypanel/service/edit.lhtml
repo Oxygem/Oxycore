@@ -1,0 +1,8 @@
+<form action="/profile" method="post" class="wide">
+    <label for="name">Name:</label>
+    <input type="text" name="name" id="name" value="<?=self:get( 'service' ).name ?>" />
+
+    <input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+    <button type="submit" class="submit" name="update" value="profile">Update Service &#187;</button>&nbsp;&nbsp;
+    <a href="/service/<?=self:get( 'service' ).id ?>">back to service</a>
+</form>

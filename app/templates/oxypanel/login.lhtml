@@ -1,0 +1,58 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<!--meta-->
+	<title>Login / Oxypanel</title>
+	<meta charset="UTF-8" />
+
+	<!--style-->
+	<link rel="stylesheet" href="/inc/font/ptsans/font.css" media="all" />
+	<link rel="stylesheet" href="/inc/css/style.css" media="all" />
+
+	<!--scripts-->
+</head>
+<body>
+
+	<div id="wrap">
+
+		<div id="header">
+			<ul id="nav">
+				<!--logo-->
+				<li id="logo"><a href="./"><img src="/inc/img/brand/logo.png" alt="Afterburst" /></a></li>
+
+
+				<li class="profile active right"><a href="#">Login</a></li>
+			</ul>
+
+			</ul>
+		</div><!--end header-->
+
+
+
+		<div id="login">
+			<div id="main">
+				<h2>Login to BrandName</h2>
+
+				<? if self:get( 'error' ) then ?><div class="message error">
+					<?=self:get( 'error' ) ?>
+				</div><? end ?>
+
+				<form class="wide" action="/login" method="post">
+					<div><label for="email">Email:</label>
+					<input type="text" name="email" id="email" /></div>
+
+					<div><label for="password">Password:</label>
+					<input type="password" name="password" id="password" /></div>
+
+					<div>
+						<button type="submit" class="submit">Login &#187;</button>
+						or <a href="#">reset your password</a>
+					</div>
+					<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+				</form>
+			</div><!--end main-->
+		</div><!--end login-->
+
+</body>
+</html>

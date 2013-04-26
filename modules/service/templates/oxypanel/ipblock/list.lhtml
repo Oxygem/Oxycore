@@ -1,0 +1,61 @@
+<?
+	local request, user = luawa.request, luawa.user
+?>
+<? if self:get( 'ipblocks' ) then ?>
+
+<form action="" method="get" class="inline">
+	<select name="type">
+		<option value="">Filter by type</option>
+		<option value="ipv4"<? if request.get.type == 'ipv4' then ?> selected<? end ?>>IPv4</option>
+		<option value="ipv6"<? if request.get.type == 'ipv6' then ?> selected<? end ?>>IPv6</option>
+		<option value="">All</option>
+	</select>
+
+	<input type="submit" class="submit" value="Update &#187;" />
+
+	<span class="right admin">
+		<? if user:cookiePermission( 'ViewAnyIpblock' ) then ?>
+			<? if request.get.action ~= 'all' then ?>
+				<a href="/service/ipblocks/all" class="button admin">All IP Blocks</a>
+			<? else ?>
+				<a href="/service/ipblocks" class="button">My IP Blocks</a>
+			<? end ?>
+		<? end ?>
+		<? if user:cookiePermission( 'AddIpblock' ) then ?><a href="/service/ipblocks/add" class="button admin">Add IP Block</a><? end ?>
+	</span>
+</form>
+
+<table cellspacing="0" cellpadding="0">
+	<thead><tr>
+		<th>ID</th>
+		<th>Owners</th>
+		<th>Name</th>
+		<th>Type</th>
+		<th width="180px">Linked</th>
+		<th width="180px">Actions</th>
+	</tr></thead>
+
+	<tbody>
+	<? for k, ipblock in pairs( self:get( 'ipblocks' ) ) do ?>
+	<tr>
+		<td><?=ipblock.id ?></td>
+		<td>
+			<? if ipblock.user_id > 0 then ?><a class="button" href="/user/<?=ipblock.user_id ?>">User</a><? end ?> 
+			<? if ipblock.group_id > 0 then ?><a class="button" href="/group/<?=ipblock.group_id ?>">Group</a><? end ?>
+		</td>
+		<td><?=ipblock.name ?></td>
+		<td><?=ipblock.type ?></td>
+		<td>
+			<? if ipblock.service_id > 0 then ?><a href="/service/<?=ipblock.service_id ?>" class="button blue">Service</a><? end ?>
+			<? if ipblock.service_group_id > 0 then ?><a href="/group/<?=ipblock.service_group_id ?>" class="button blue">Group</a><? end ?>
+		</td>
+		<td>
+			<a href="/ipblock/<?=ipblock.id ?>" class="button green">View</a>
+			<? if ipblock.permissions.edit then ?><a href="/ipblock/<?=ipblock.id ?>/edit" class="button black">Edit</a><? end ?>
+			<? if ipblock.permissions.delete then ?><button class="admin red">Delete</button><? end ?>
+		</td>
+	</tr>
+	<? end ?>
+	</tbody>
+</table>
+<? end ?>

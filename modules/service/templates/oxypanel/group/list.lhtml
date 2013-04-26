@@ -1,0 +1,28 @@
+<? if self:get( 'groups' ) then ?>
+<table cellspacing="0" cellpadding="0">
+	<thead><tr>
+		<th>ID</th>
+		<th>Owners</th>
+		<th>Name</th>
+		<th width="180px">Actions</th>
+	</tr></thead>
+
+	<tbody>
+	<? for k, group in pairs( self:get( 'groups' ) ) do ?>
+	<tr>
+		<td><?=group.id ?></td>
+		<td>
+			<? if group.user_id > 0 then ?><a class="button" href="/user/<?=group.user_id ?>">User</a><? end ?> 
+			<? if group.group_id > 0 then ?><a class="button" href="/group/<?=group.group_id ?>">Group</a><? end ?>
+		</td>
+		<td><?=group.name ?></td>
+		<td>
+			<a href="/group/<?=group.id ?>" class="button green">View</a>
+			<? if group.permissions.edit then ?><a href="/group/<?=group.id ?>/edit" class="button black">Edit</a><? end ?>
+			<? if group.permissions.delete then ?><button class="admin red">Delete</button><? end ?>
+		</td>
+	</tr>
+	<? end ?>
+	</tbody>
+</table>
+<? end ?>

@@ -1,0 +1,2 @@
+local user = {}
+return user

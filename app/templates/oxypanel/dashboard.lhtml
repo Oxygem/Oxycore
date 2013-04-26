@@ -1,0 +1,6 @@
+<h1>main dashboard</h1>
+
+<? for module, data in pairs( self:get( 'dashboard' ) ) do ?>
+    <h3>Module: <a href="/<?=module ?>"><?=module ?></a></h3>
+    <?=luawa.utils.tableString( data ) ?>
+<? end ?>

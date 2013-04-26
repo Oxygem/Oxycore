@@ -1,0 +1,7 @@
+<? if self:get( 'error' ) then ?>
+	<div class="message error"><?=self:get( 'error' ) ?></div>
+<? else local user = self:get( 'user' ) ?>
+	<h3><?=user.name ?></h3>
+
+	<pre><?=luawa.utils:tableString( self:get() ) ?></pre>
+<? end ?>

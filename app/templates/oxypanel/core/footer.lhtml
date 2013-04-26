@@ -1,0 +1,22 @@
+		</div><!--end main-->
+
+		<div id="footer">
+			<span class="left">
+				&copy; <a href="#">BrandName</a> 2013
+			</span>
+			<span class="right">
+				Powered by <a href="#">Oxypanel</a>
+			</span>
+		</div><!--end footer-->
+	</div><!--end wrap-->
+
+	<script type="text/javascript" src="/inc/js/oxypanel.js"></script>
+	<script type="text/javascript" src="/inc/js/jquery.min.js"></script>
+	<? if self:get( 'module_js' ) then
+		for k, file in pairs( self:get( 'module_js' ) ) do ?>
+<script type="text/javascript" src="/inc/js/<?=file ?>"></script>
+	<? end
+	end ?>
+
+</body>
+</html>

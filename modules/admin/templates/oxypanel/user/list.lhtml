@@ -1,0 +1,24 @@
+<? if self:get( 'users' ) then
+	if #self:get( 'users' ) > 0 then ?>
+	<table cellspacing="0" cellpadding="0">
+		<thead><tr>
+		<? for header, v in pairs( self:get( 'users' )[1] ) do ?>
+			<th><?=header ?></th>
+		<? end ?>
+			<th></th>
+		</tr></thead>
+
+		<tbody>
+		<? for k, service in pairs( self:get( 'users' ) ) do ?>
+		<tr>
+			<? for c, value in pairs( service ) do ?>
+			<td><?=value ?></td>
+			<? end ?>
+			<td><a href="/service/<?=service.id ?>">View &rarr;</a></td>
+		</tr>
+		<? end ?>
+	</table>
+<? else ?>
+	<div class="message error"><strong>Error:</strong> No users found</div>
+<? end
+end ?>

@@ -1,0 +1,51 @@
+<div class="half left">
+	<form action="/profile" method="post" class="wide">
+		<label for="name">Display Name:</label>
+		<input type="text" name="name" id="name" value="<?=self:get( 'user' ).name ?>" />
+
+		<label for="email">Email:</label>
+		<input type="text" name="email" id="email" value="<?=self:get( 'user' ).email ?>" />
+
+		<label for="password">New Password (optional):</label>
+		<input type="password" name="password" id="password" />
+
+		<label for="phone">Phone Number:</label>
+		<input type="text" name="phone" id="phone" value="<?=self:get( 'user' ).phone ?>" />
+
+		<label for="twofactor">Enable Two-Factor Auth (requires phone number)</label>
+		<input type="checkbox" class="checkbox" name="twofactor" id="twofactor" /><div></div>
+
+		<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+		<button type="submit" class="submit" name="update" value="profile">Update Profile &#187;</button>
+	</form>
+</div><!--end left-->
+
+<div class="half right">
+	<form action="/profile" method="post" class="wide">
+		<label for="real_name">Company or Individual Name:</label>
+		<input type="text" name="real_name" id="real_name" value="<?=self:get( 'user' ).real_name ?>" />
+
+		<label for="address1">Address Line 1:</label>
+		<input type="text" name="address1" id="address1" value="<?=self:get( 'user' ).address1 ?>" />
+
+		<label for="address2">Address Line 2:</label>
+		<input type="text" name="address2" id="address2" value="<?=self:get( 'user' ).address2 ?>" />
+
+		<label for="postcode">Postcode:</label>
+		<input type="text" name="postcode" id="postcode" value="<?=self:get( 'user' ).postcode ?>" />
+
+		<label for="city">City:</label>
+		<input type="text" name="city" id="city" value="<?=self:get( 'user' ).city ?>" />
+
+		<label for="country">Country:</label>
+		<select name="country" id="country">
+			<option value="">Select Country</option>
+			<? for k, country in pairs( self:get( 'countries' ) ) do ?>
+				<option value="<?=country.iso ?>"<? if country.iso == self:get( 'user' ).country then ?> selected<? end ?>><?=country.name ?></option>
+			<? end ?>
+		</select>
+
+		<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+		<button type="submit" class="submit" name="update" value="address">Update Address &#187;</button>
+	</form>
+</div><!--end right-->

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<? local request, oxy, user = luawa.request, oxy, luawa.user ?>
+	<!--title-->
+	<? if self:get( 'page_title' ) then ?>
+	    <title><?=self:get( 'page_title' ) ?> - BrandName</title>
+	<? else ?>
+		<title>BrandName</title>
+	<? end ?>
+
+	<!--meta-->
+	<meta charset="UTF-8" />
+
+	<!--style-->
+	<link rel="stylesheet" href="/inc/font/ptsans/font.css" media="all" />
+	<link rel="stylesheet" href="/inc/css/style.css" media="all" />
+</head>
+<body id="in_module">
+
+	<div id="wrap">
+
+		<div id="header">
+			<ul id="nav">
+				<!--logo-->
+				<li id="logo"><a href="/"><img src="/inc/img/brand/logo.png" alt="Afterburst" /></a></li>
+
+				<? if user:cookieLogin() then ?>
+					<? if request.get.request == 'dashboard' then ?>
+						<li class="dashboard active"><a href="/">Dashboard</a></li>
+					<? else ?>
+						<li class="dashboard"><a href="/">Dashboard</a></li>
+					<? end ?>
+
+					<? for k, module in pairs( oxy.config.modules ) do
+						if user:cookiePermission( 'Module' .. module ) then ?>
+					    <? if request.get.module == module then ?>
+					        <li class="<?=module ?> active"><a href="/<?=module ?>"><?=oxy.config[module].name ?></a></li>
+					    <? else ?>
+					        <li class="<?=module ?>"><a href="/<?=module ?>"><?=oxy.config[module].name ?></a></li>
+					    <? end ?>
+					<? 	end
+					end ?>
+
+					<li class="right noimg"><a href="/logout">Logout</a></li>
+					<? if request.get.request == 'profile' then ?>
+						<li class="profile right active"><a href="/profile"><?=user:cookieName() ?></a></li>
+					<? else ?>
+						<li class="profile right"><a href="/profile"><?=user:cookieName() ?></a></li>
+					<? end ?>
+				<? else ?>
+					<? if request.get.request == 'login' then ?>
+						<li class="profile right active"><a href="/login">Login</a></li>
+					<? else ?>
+						<li class="profile right"><a href="/login">Login</a></li>
+					<? end ?>
+				<? end ?>
+			</ul>
+
+			<ul id="subnav">
+				<li class="search">
+					<form action="" method="get" class="search">
+						<input type="text" name="q" value="type to search..." onfocus="if( this.value == 'type to search...' ) { this.value = ''; }" onblur="if( this.value == '' ) { this.value = 'type to search...'; }" />
+						<button type="submit">&rarr;</button>
+					</form>
+				</li>
+
+				<!--<li<? if not request.get.mreq then ?> class="active"<? end ?>><a href="/<?=request.get.module ?>">Home</a></li>-->
+
+				<? if request.get.module and oxy[request.get.module].subnav then
+					for k, link in pairs( oxy[request.get.module]:subnav() ) do
+						local isadmin = false
+						local mreqlink = link.link:sub( 2 )
+						local mreq = request.get.mreq or '' ?>
+					<li<? if mreqlink == mreq then ?> class="active"<? end ?>>
+						<? if link.submenus then ?>
+							<ul class="dropdown">
+							<? for title, submenu in pairs( link.submenus ) do ?>
+								<li><ul>
+									<li<? if title == 'Admin' then isadmin = true ?> class="red"<? end ?>><?=title ?></li>
+									<? for c, sublink in pairs( submenu ) do ?>
+										<li><a href="/<?=request.get.module ?><?=sublink.link ?>"><?=sublink.title ?></a></li>
+									<? end ?>
+								</ul></li>
+							<? end ?>
+							</ul>
+						<? end ?>
+
+						<a <? if link.admin then ?>class="red" <? end ?>href="/<?=request.get.module ?><?=link.link ?>"><?=link.title ?><? if link.submenus then if isadmin then ?> <span class="red">&darr;</span> <? else ?> &darr;<? end end ?></a>
+					</li>
+				<? 	end
+				end ?>
+
+				<li class="right"><a href="#">Help</a></li>
+			</ul>
+		</div><!--end header-->
+
+
+
+		<div id="main">
+			<h2>
+				<?=self:get( 'page_title' ) ?> <span class="meta"><?=self:get( 'page_title_meta' ) ?></span>
+				<span class="right"><? if self:get( 'page_title_buttons' ) then
+					for k, button in pairs( self:get( 'page_title_buttons' ) ) do ?>
+					<a href="<?=button.link ?>" class="button <?=button.class ?>"><?=button.text ?></a>
+				<?	end
+				end ?></span>
+			</h2>
+
+			<? if self:get( 'error' ) then ?>
+				<div class="message error"><strong>Error:</strong> <?=self:get( 'error' ) ?></div>
+			<? end ?>
+			<? if self:get( 'success' ) then ?>
+				<div class="message success"><strong>Success:</strong> <?=self:get( 'success' ) ?></div>
+			<? end ?>

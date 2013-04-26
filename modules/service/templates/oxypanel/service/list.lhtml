@@ -1,0 +1,106 @@
+<?
+	local request, user, oxyservice = luawa.request, luawa.user, oxy.service
+?>
+<? if self:get( 'services' ) then ?>
+
+<form action="" method="get" class="inline search">
+	<input type="text" name="q" value="type to search..." onfocus="if( this.value == 'type to search...' ) { this.value = ''; }" onblur="if( this.value == '' ) { this.value = 'type to search...'; }" />
+	<button type="submit">&#187;</button>
+</form>
+
+<form action="" method="get" class="inline">
+	<select name="type">
+		<option value="">Filter by type</option>
+		<? for k, v in pairs( oxyservice.config.services ) do
+			if not v.hidden then
+				local name = v.names or v.name ?>
+				<option value="<?=k ?>"<? if request.get.type == k then ?> selected<? end ?>><?=name ?></option>
+		<?	end
+		end ?>
+		<option value="">All</option>
+	</select>
+
+	<select name="status">
+		<option value="">Filter by status</option>
+		<option value="active"<? if request.get.status == 'active' then ?> selected<? end ?>>Active</option>
+		<option value="suspended"<? if request.get.status == 'suspended' then ?> selected<? end ?>>Suspended</option>
+		<option value="cancelled"<? if request.get.status == 'cancelled' then ?> selected<? end ?>>Cancelled</option>
+		<option value="">All</option>
+	</select>
+
+	<input type="submit" class="submit" value="Update &#187;" />
+
+	<span class="right admin">
+
+			<? if request.get.action ~= 'all' then ?>
+				<a href="/service/services/all" class="button admin">All Services</a>
+			<? else ?>
+				<a href="/service/services" class="button">My Services</a>
+			<? end ?>
+
+		<? if user:cookiePermission( 'AddService' ) then ?><a href="/service/services/add" class="button admin">Add Service</a><? end ?>
+	</span>
+</form>
+
+<table cellspacing="0" cellpadding="0">
+	<thead><tr>
+		<th>ID</th>
+		<? if request.get.action == 'all' then ?><th>Owners</th><? end ?>
+		<th>Name</th>
+		<th>Type</th>
+		<th>Status</th>
+		<? if request.get.action == 'all' then ?><th width="180px">Linked</th><? end ?>
+		<th width="180px">Actions</th>
+	</tr></thead>
+
+	<tbody>
+	<? for k, service in pairs( self:get( 'services' ) ) do
+		local name = oxyservice.config.services[service.type].names or oxyservice.config.services[service.type].name ?>
+	<tr>
+		<td><?=service.id ?></td>
+
+		<? if request.get.action == 'all' then ?><td>
+			<? if service.user_id > 0 then ?>
+				<div class="pop_info">
+					<div class="pop">
+						<strong><a href="#">Fizzadar</a></strong>
+						<a class="button blue">View</a>
+						<span></span>
+					</div>
+					<a class="button admin" href="/user/<?=service.user_id ?>">User</a>
+				</div>
+			<? end ?>
+			<? if service.group_id > 0 then ?><a class="button admin" href="/admin/users?group=<?=service.group_id ?>">Group</a><? end ?>
+		</td><? end ?>
+
+		<td><?=service.name ?></td>
+		<td><?=name ?></td>
+		<td><?=service.status ?></td>
+
+		<? if request.get.action == 'all' then ?><td>
+			<? if service.service_group_id > 0 then ?>
+				<div class="pop_info">
+					<div class="pop">
+						<strong><a href="#">Afterburst US</a></strong>
+						<a class="button blue">View</a>
+						<span></span>
+					</div>
+					<a href="/group/<?=service.service_group_id ?>" class="button admin">Group</a>
+				</div>
+			<? end ?>
+		</td><? end ?>
+
+		<td>
+			<a href="/service/<?=service.id ?>" class="button green">View</a>
+			<? if service.permissions.edit then ?><a href="/service/<?=service.id ?>/edit" class="button black">Edit</a><? end ?>
+			<? if service.permissions.delete then ?><form class="inline"><button type="submit" class="admin red">Delete</button></form><? end ?>
+		</td>
+	</tr>
+	<? end if #self:get( 'services' ) == 0 then ?>
+		<tr>
+			<td colspan="6">No services found</td>
+		</tr>
+	<? end ?>
+	</tbody>
+</table>
+<? end ?>
