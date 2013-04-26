@@ -145,7 +145,7 @@ var service = {
 
         //add commnad to data
         data.command = command;
-        data.token = luawa_token;
+        data.token = oxypanel.luawa_token;
         //make our request
         $.ajax( window.location.origin + window.location.pathname + '/command?_api', {
             type: 'POST',
@@ -154,10 +154,10 @@ var service = {
                 service.showError( status + ': ' + error );
             },
             success: function( data, status ) {
-                luawa_token = data.token;
-
                 if( !data.request_key )
                     return service.showError( data.error );
+
+                oxypanel.luawa_token = data.token;
 
                 //disable service
                 service.disable();
@@ -194,7 +194,7 @@ var service = {
         //add details to data
         data.key = $( 'input[name=key]', form ).val();
         data.value = $( 'input[name=value]', form ).val();
-        data.token = luawa_token;
+        data.token = oxypanel.luawa_token;
         //make our request
         $.ajax( window.location.origin + window.location.pathname + '/setdata?_api', {
             type: 'POST',
@@ -203,7 +203,7 @@ var service = {
                 service.showError( status + ': ' + error );
             },
             success: function( data, status ) {
-                luawa_token = data.token;
+                oxypanel.luawa_token = data.token;
                 service.completeCommand( 'success', 'Complete' );
             }
         });

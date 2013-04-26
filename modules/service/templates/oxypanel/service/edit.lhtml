@@ -1,4 +1,4 @@
-<form action="/profile" method="post" class="wide">
+<form action="/service/<?=self:get( 'service' ).id ?>/edit" method="post" class="wide">
     <label for="name">Name:</label>
     <input type="text" name="name" id="name" value="<?=self:get( 'service' ).name ?>" />
 

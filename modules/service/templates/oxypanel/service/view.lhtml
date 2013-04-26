@@ -50,7 +50,6 @@
     <ul class="stats">
         <li><strong>Status:</strong> <?=self:get( 'service' ).status ?></li>
         <li><strong>Type:</strong> <?=oxy.service.config.services[self:get( 'service' ).type].name ?></li>
-        <li><strong>OS:</strong> <?=oxy.service.config.oses[self:get( 'service' ).data.os_type].name ?> <?=self:get( 'service' ).os_version ?> <small><?=self:get( 'service' ).data.os_arch ?>bit</small></li>
         <? for k, v in pairs( self:get( 'service' ).ips ) do ?>
             <li><strong>IP:</strong> <?=v.address ?></li>
         <? end ?>
@@ -71,12 +70,13 @@
 
 
 <script type="text/javascript">
-    //tell ssh.js our port#
-    var node_port = <?=oxy.config.oxynode.client_port ?>;
+    //token
+    oxypanel.luawa_token = '<?=self:get( 'token' ) ?>';
     //tell ssh.service.js our status key
-    var status_request_key = '<?=self:get( 'service' ).status_request_key ?>',
-        status_request_error = '<?=self:get( 'service' ).status_request_error ?>',
-        luawa_token = '<?=self:get( 'token' ) ?>',
-        service_os_type = '<?=self:get( 'service' ).os_type ?>',
-        service_os_version = '<?=self:get( 'service' ).os_version ?>';
+    oxypanel.service = {
+        status_request_key: '<?=self:get( 'service' ).status_request_key ?>',
+        status_request_error: '<?=self:get( 'service' ).status_request_error ?>',
+        service_os_type: '<?=self:get( 'service' ).os_type ?>',
+        service_os_version: '<?=self:get( 'service' ).os_version ?>'
+    };
 </script>

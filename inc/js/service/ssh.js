@@ -37,9 +37,9 @@ var ssh = {
 //connect to node & build ssh socket
 $( document ).ready( function() {
     //node port defined (should be when included)
-    if( node_port ) {
+    if( oxypanel.node_port ) {
         //connect
-        ssh.socket = io.connect( 'http://' + window.location.hostname + ':' + node_port );
+        ssh.socket = io.connect( 'http://' + window.location.hostname + ':' + oxypanel.node_port );
         ssh.socket.on( 'connect', function() {
             console.log( 'Connected to Node' );
 

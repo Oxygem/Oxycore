@@ -6,20 +6,20 @@
 local oxy, luawa, header, request, user, template = oxy, luawa, luawa.header, luawa.request, luawa.user, oxy.template
 
 --id not set?
-if not request.get.id or not request.get.type then return header:redirect( '/' ) end
+if not request.get.id or not request.get.type then return template:error( 'Invalid ID or type' ) end
 
 --find our object type
 local type = oxy.config.objects[request.get.type]
-if not type or type.hidden then return header:redirect( '/' ) end
+if not type or type.hidden then return template:error( 'Invalid object type' ) end
 
 --not logged in and not public type?
-if not user:checkLogin() and not type.public then return header:redirect( '/login' ) end
+if not user:checkLogin() and not type.public then return template:error( 'You need to be logged in to do that' ) end
 
 --try to load the module in question
 local module = oxy:loadModule( type.module )
 --fail? cya!
 if not module then
-    return header:redirect( '/' )
+    return template:error( 'Could not find module' )
 end
 
 --set our request module to the module (for header)
@@ -36,12 +36,7 @@ end
 --get our object
 local object, err = module[request.get.type]:get( request.get.id, action )
 if not object then
-	template:set( 'error', err )
-	--page title
-	template:set( 'page_title', 'Error' )
-	template:set( 'page_title_meta', '' )
-	template:load( 'core/header' )
-	return template:load( 'core/footer' )
+	return template:error( err )
 else
 	--run get on object if we're not editing
 	if action == 'view' and object.get then object:get() end

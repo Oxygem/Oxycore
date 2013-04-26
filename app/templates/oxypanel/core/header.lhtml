@@ -15,6 +15,9 @@
 	<!--style-->
 	<link rel="stylesheet" href="/inc/font/ptsans/font.css" media="all" />
 	<link rel="stylesheet" href="/inc/css/style.css" media="all" />
+
+	<!--oxypanel js, reset @ footer-->
+	<script type="text/javascript" src="/inc/js/oxypanel.js"></script>
 </head>
 <body id="in_module">
 

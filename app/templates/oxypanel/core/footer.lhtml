@@ -10,7 +10,6 @@
 		</div><!--end footer-->
 	</div><!--end wrap-->
 
-	<script type="text/javascript" src="/inc/js/oxypanel.js"></script>
 	<script type="text/javascript" src="/inc/js/jquery.min.js"></script>
 	<? if self:get( 'module_js' ) then
 		for k, file in pairs( self:get( 'module_js' ) ) do ?>

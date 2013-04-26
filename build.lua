@@ -107,7 +107,8 @@ end
 --do clientside javascript
 local client_js = function() return [[
 var oxypanel = {
-    user_strength: ]] .. luawaconf.user.strength .. [[
+    user_strength: ]] .. luawaconf.user.strength .. [[,
+    node_port: ]] .. luawaconf.oxynode.client_port .. [[
 
 };]] end
 

@@ -4,7 +4,7 @@
 ]]
 
 --get oxy & co
-local oxy, database, user = oxy, luawa.database, luawa.user
+local oxy, user = oxy, luawa.user
 
 --define the service module
 local service = {
@@ -79,6 +79,9 @@ function service:subnav()
     end
     if isadmin then groups.submenus = {} groups.submenus['Admin'] = admin end
     table.insert( nav, groups )
+
+    --automation
+    table.insert( nav, { title = 'Automation', link = '/automation' } )
 
     return nav
 end

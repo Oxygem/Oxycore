@@ -23,4 +23,11 @@ function template:loadModule( module, template )
     return luawa.template:load( dir )
 end
 
+--error only w/ api
+function template:error( message )
+    self:set( 'error', message, true )
+    self:load( 'core/header' )
+    self:load( 'core/footer' )
+end
+
 return template

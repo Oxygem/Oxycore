@@ -168,7 +168,10 @@ end
 
 --POST to edit (just name!)
 function service:edit()
-    return header:redirect( '/service/' .. self.id )
+    template:set( 'success', 'Service updated' )
+
+    --just load this will load GET page
+    luawa:processFile( 'app/get/object' )
 end
 
 

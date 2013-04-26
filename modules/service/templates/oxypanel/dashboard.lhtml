@@ -1,5 +1,5 @@
 <?
-	local user = luawa.user
+	local user, oxyservice = luawa.user, oxy.service
 ?>
 
 <div id="dashboard">
@@ -9,13 +9,15 @@
 				<th width="25px">ID</th>
 				<th>Name</th>
 				<th>Type</th>
+				<th>Status</th>
 				<th width="30px"></th>
 			</tr>
 			<? if self:get( 'services' ) and #self:get( 'services' ) > 0 then for k, service in pairs( self:get( 'services' ) ) do ?>
 			<tr>
 				<td><?=service.id ?></td>
 				<td><?=service.name ?></td>
-				<td><?=service.type ?></td>
+				<td><?=oxyservice.config.services[service.type].name ?></td>
+				<td><?=service.status ?></td>
 				<td><a class="button" href="/service/<?=service.id ?>">View</a></td>
 			</tr>
 			<? end else ?>

@@ -37,13 +37,19 @@ else
 		end
 	end
 
+	--pagination
+	local page = 1
+	if request.get.page and type( tonumber( request.get.page ) ) == 'number' then
+		page = request.get.page
+	end
+
 	--get services
 	local objects, err
 	if request.get.action == 'all' then
-		objects, err = module[object_type]:getAll( wheres )
+		objects, err = module[object_type]:getAll( wheres, 'id DESC', 30, ( page - 1 ) * 30 )
 		template:set( 'page_title_meta', 'owned by anyone' )
 	else
-		objects, err = module[object_type]:getOwned( wheres )
+		objects, err = module[object_type]:getOwned( wheres, 'id DESC', 30, ( page - 1 ) * 30 )
 		template:set( 'page_title_meta', 'owned by you' )
 	end
 	--error (permissions error normally/hopefully)

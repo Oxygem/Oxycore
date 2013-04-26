@@ -3,9 +3,9 @@ var linux = {};
 //service start
 linux.start = function() {
 	//capture status request
-	if( status_request_key ) {
+	if( oxypanel.service.status_request_key ) {
         service.disable();
-		this.status( status_request_key );
+		this.status( oxypanel.service.status_request_key );
 	} else {
         service.showError( status_request_error );
     }
