@@ -42,18 +42,22 @@ else
 	if action == 'view' and object.get then object:get() end
 	--add to template
 	template:set( request.get.type, object, true )
+
 	--set page title
 	template:set( 'page_title', object.name )
 	if oxy.config.objects[request.get.type].title_meta then
 		template:set( 'page_title_meta', object[oxy.config.objects[request.get.type].title_meta] )
-		--view/edit buttons
-		if action == 'view' and module[request.get.type]:permission( object.id, 'edit' ) then
-			template:add( 'page_title_buttons', { { text = 'Edit', link = './' .. object.id .. '/edit' } } )
-		elseif action == 'edit' then
-			template:add( 'page_title_buttons', { { text = 'View', link = '../' .. object.id } } )
-		end
-	else
-		template:set( 'page_title_meta', '' )
+	end
+
+	--view/edit buttons
+	if action == 'view' and module[request.get.type]:permission( object.id, 'edit' ) then
+		template:add( 'page_title_buttons', { { text = 'Edit', link = './' .. object.id .. '/edit' } } )
+	elseif action == 'edit' then
+		template:add( 'page_title_buttons', { { text = 'View', link = '../' .. object.id } } )
+	end
+	--change owner?
+	if module[request.get.type]:permission( object.id, 'owner' ) then
+		template:add( 'page_title_buttons', { { text = 'Change Owner', link = '', class = 'admin' } } )
 	end
 end
 

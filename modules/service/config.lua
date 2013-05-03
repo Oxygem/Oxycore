@@ -13,7 +13,6 @@ local config = {
             title_meta = 'status',
             filters = { 'type', 'status', 'service_group_id' },
             search_fields = { 'name', 'type' },
-            links = { group = 'service_group_id' },
             permissions = { 'data', 'suspend' } --for non view/edit/delete permissions (ie edit does most, but not suspend / data commands (for admins/certain groups/etc))
         },
         group = {
@@ -25,8 +24,7 @@ local config = {
             name = 'IP Block',
             names = 'IP Blocks',
             filters = { 'type', 'service_id', 'service_group_id' },
-            search_fields = { 'name' },
-            links = { service = 'service_id', group = 'service_group_id' }
+            search_fields = { 'name' }
         }
     },
     --requests to capture
@@ -45,14 +43,22 @@ local config = {
             local services = {}
             for k, service in pairs( ls( 'modules/service/services' ) ) do
                 --config
-                local config = require( 'modules/service/services/' .. service .. '/config' )
-                --software
-                local software = ls( 'modules/service/services/' .. service .. '/software' )
-                for c, d in pairs( software ) do software[c] = d:sub( 0, -5 ) end
+                service = service:sub( 0, -5 )
+                local config = require( 'modules/service/services/' .. service )
                 --add to list
                 services[service] = { software = software, name = config.name, names = config.names, parent = config.parent, hidden = config.hidden }
             end
             return services
+        end,
+        --list software
+        software = function()
+            local software = {}
+            for k, os in pairs( ls( 'modules/service/software' ) ) do
+                os = os:sub( 0, -5 )
+                local conf = require( 'modules/service/software/' .. os )
+                software[os] = conf
+            end
+            return software
         end,
         --list os's
         oses = function()

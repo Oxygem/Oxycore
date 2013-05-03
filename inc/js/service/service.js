@@ -173,7 +173,7 @@ var service = {
                     ssh.new( data.request_key, function( data ) {
                         console.log( data );
                     }, function( err ) {
-                        service.showError( err );
+                        service.showError( 'Error: ' + err );
                         service.enable();
                     }, function() {
                         service.completeCommand( 'success', 'Complete' );

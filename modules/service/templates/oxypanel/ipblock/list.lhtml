@@ -3,6 +3,11 @@
 ?>
 <? if self:get( 'ipblocks' ) then ?>
 
+<form action="" method="get" class="inline search">
+	<input type="text" name="q" value="type to search..." onfocus="if( this.value == 'type to search...' ) { this.value = ''; }" onblur="if( this.value == '' ) { this.value = 'type to search...'; }" />
+	<button type="submit">&#187;</button>
+</form>
+
 <form action="" method="get" class="inline">
 	<select name="type">
 		<option value="">Filter by type</option>
@@ -28,10 +33,10 @@
 <table cellspacing="0" cellpadding="0">
 	<thead><tr>
 		<th>ID</th>
-		<th>Owners</th>
+		<? if request.get.action == 'all' then ?><th>Owners</th><? end ?>
 		<th>Name</th>
 		<th>Type</th>
-		<th width="180px">Linked</th>
+		<? if request.get.action == 'all' then ?><th width="180px">Linked</th><? end ?>
 		<th width="180px">Actions</th>
 	</tr></thead>
 
@@ -39,22 +44,30 @@
 	<? for k, ipblock in pairs( self:get( 'ipblocks' ) ) do ?>
 	<tr>
 		<td><?=ipblock.id ?></td>
-		<td>
-			<? if ipblock.user_id > 0 then ?><a class="button" href="/user/<?=ipblock.user_id ?>">User</a><? end ?> 
-			<? if ipblock.group_id > 0 then ?><a class="button" href="/group/<?=ipblock.group_id ?>">Group</a><? end ?>
-		</td>
+
+		<? if request.get.action == 'all' then ?><td>
+			<? if ipblock.user_id > 0 then ?><a class="button admin" href="/user/<?=ipblock.user_id ?>">User</a><? end ?>
+			<? if ipblock.group_id > 0 then ?><a class="button admin" href="/group/<?=ipblock.group_id ?>">Group</a><? end ?>
+		</td><? end ?>
+
 		<td><?=ipblock.name ?></td>
 		<td><?=ipblock.type ?></td>
-		<td>
-			<? if ipblock.service_id > 0 then ?><a href="/service/<?=ipblock.service_id ?>" class="button blue">Service</a><? end ?>
-			<? if ipblock.service_group_id > 0 then ?><a href="/group/<?=ipblock.service_group_id ?>" class="button blue">Group</a><? end ?>
-		</td>
+
+		<? if request.get.action == 'all' then ?><td>
+			<? if ipblock.service_id > 0 then ?><a href="/service/<?=ipblock.service_id ?>" class="button admin">Service</a><? end ?>
+			<? if ipblock.service_group_id > 0 then ?><a href="/group/<?=ipblock.service_group_id ?>" class="button admin">Group</a><? end ?>
+		</td><? end ?>
+
 		<td>
 			<a href="/ipblock/<?=ipblock.id ?>" class="button green">View</a>
 			<? if ipblock.permissions.edit then ?><a href="/ipblock/<?=ipblock.id ?>/edit" class="button black">Edit</a><? end ?>
 			<? if ipblock.permissions.delete then ?><button class="admin red">Delete</button><? end ?>
 		</td>
 	</tr>
+	<? end if #self:get( 'ipblocks' ) == 0 then ?>
+		<tr>
+			<td colspan="6">No IP blocks found</td>
+		</tr>
 	<? end ?>
 	</tbody>
 </table>

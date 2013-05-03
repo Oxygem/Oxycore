@@ -92,7 +92,7 @@ end
 ]]
 function service:getServiceConfig( type )
     --since we start with our service and work 'up' to the 'base' we must check each time before adding a command so as to not overwrite the lower config
-    local object = require( oxy.config.root .. 'modules/service/services/' .. type .. '/config' )
+    local object = require( oxy.config.root .. 'modules/service/services/' .. type )
     object.commands, object.js, object.tabs = object.commands or {}, object.js or {}, object.tabs or {}
 
     --parent?

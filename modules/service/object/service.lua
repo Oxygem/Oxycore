@@ -23,7 +23,7 @@ function service:prepare()
     self.config = oxyservice:getServiceConfig( self.type )
 end
 
---when getting service
+--when getting service (ie GET /service/id)
 function service:get()
     --get service IP's
     local service_ips = database:select(

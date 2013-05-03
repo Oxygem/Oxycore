@@ -40,6 +40,13 @@ $( document ).ready( function() {
     if( oxypanel.node_port ) {
         //connect
         ssh.socket = io.connect( 'http://' + window.location.hostname + ':' + oxypanel.node_port );
+
+        //fail to connect?
+        ssh.socket.on( 'error', function( err ) {
+            service.showError( 'Could not connect to Node SSH-proxy' );
+        });
+
+        //connected
         ssh.socket.on( 'connect', function() {
             console.log( 'Connected to Node' );
 
