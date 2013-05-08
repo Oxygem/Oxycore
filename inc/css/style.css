@@ -3,14 +3,11 @@
 body {
 	width: auto;
 	margin: 0;
-	background: url( ../img/top_bg.png ) left -30px repeat-x;
+	background: url( ../img/top_bg.png ) left -47px repeat-x;
 	line-height: 24px;
 	font-size: 14px;
 	color: #1A1B1B;
 	font-family: Arial;
-}
-body#in_module {
-	background-position: left -47px;
 }
 
 img {
@@ -377,22 +374,16 @@ div#wrap {
 div#header {
 	float: left;
 	width: 100%;
-	height: 110px;
-	position: relative;
-}
-body#in_module div#header {
 	height: 90px;
+	position: relative;
 }
 
 ul#nav {
 	font-family: PTSansRegular;
-	margin: 37px 0 0 0px;
+	margin: 20px 0 0 0px;
 	padding: 0;
 	float: left;
 	width: 100%;
-}
-body#in_module ul#nav {
-	margin-top: 20px;
 }
 	ul#nav li {
 		list-style: none;
@@ -433,47 +424,75 @@ body#in_module ul#nav {
 		ul#nav li a:hover, ul#nav li.active a {
 			color: #F9F9F9;
 		}
+
 		ul#nav li.admin a {
 			background: url( ../img/icons/admin.png ) left top no-repeat;
 		}
-		ul#nav li.admin.active a {
+		ul#nav li.admin a:hover {
 			background: url( ../img/icons/admin_hover.png ) left top no-repeat;
 		}
+		ul#nav li.admin.active a {
+			background: url( ../img/icons/admin_active.png ) left top no-repeat;
+		}
+
 		ul#nav li.dashboard a {
 			background: url( ../img/icons/dashboard.png ) left top no-repeat;
 		}
-		ul#nav li.dashboard.active a {
+		ul#nav li.dashboard a:hover {
 			background: url( ../img/icons/dashboard_hover.png ) left top no-repeat;
 		}
+		ul#nav li.dashboard.active a {
+			background: url( ../img/icons/dashboard_active.png ) left top no-repeat;
+		}
+
 		ul#nav li.service a {
 			background: url( ../img/icons/services.png ) left top no-repeat;
 		}
-		ul#nav li.service.active a {
+		ul#nav li.service a:hover {
 			background: url( ../img/icons/services_hover.png ) left top no-repeat;
 		}
+		ul#nav li.service.active a {
+			background: url( ../img/icons/services_active.png ) left top no-repeat;
+		}
+
 		ul#nav li.billing a {
 			background: url( ../img/icons/billing.png ) left top no-repeat;
 		}
-		ul#nav li.billing.active a {
+		ul#nav li.billing a:hover {
 			background: url( ../img/icons/billing_hover.png ) left top no-repeat;
 		}
+		ul#nav li.billing.active a {
+			background: url( ../img/icons/billing_active.png ) left top no-repeat;
+		}
+
 		ul#nav li.support a {
 			background: url( ../img/icons/support.png ) left top no-repeat;
 		}
-		ul#nav li.support.active a {
+		ul#nav li.support a:hover {
 			background: url( ../img/icons/support_hover.png ) left top no-repeat;
 		}
+		ul#nav li.support.active a {
+			background: url( ../img/icons/support_active.png ) left top no-repeat;
+		}
+
 		ul#nav li.profile a {
 			background: url( ../img/icons/profile.png ) left top no-repeat;
 		}
-		ul#nav li.profile.active a {
+		ul#nav li.profile a:hover {
 			background: url( ../img/icons/profile_hover.png ) left top no-repeat;
 		}
+		ul#nav li.profile.active a {
+			background: url( ../img/icons/profile_active.png ) left top no-repeat;
+		}
+
 		ul#nav li.cloud a {
 			background: url( ../img/icons/clouds.png ) left top no-repeat;
 		}
-		ul#nav li.cloud.active a {
+		ul#nav li.cloud a:hover {
 			background: url( ../img/icons/clouds_hover.png ) left top no-repeat;
+		}
+		ul#nav li.cloud.active a {
+			background: url( ../img/icons/clouds_active.png ) left top no-repeat;
 		}
 
 ul#subnav {
@@ -893,6 +912,30 @@ div#dashboard {
 				background: red;
 			}
 
+
+
+
+/*
+	info boxes (sidebar) */
+div.info {
+	padding: 2%;
+	background: #FAFAFA;
+	margin-bottom: 20px;
+	float: left;
+	width: 96%;
+}
+	div.info h5 {
+		margin: 0;
+		font-size: 14px;
+	}
+	div.info span {
+		margin-top: 3px;
+		float: left;
+	}
+	div.info a.button {
+		float: right;
+		margin-left: 5px;
+	}
 
 
 

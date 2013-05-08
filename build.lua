@@ -25,7 +25,7 @@ lua_shared_dict ]] .. luawaconf.shm_prefix .. [[user 10m;
 server {
     #port & domains
     listen ]] .. luawaconf.oxyngx.port .. [[;
-    server_name oxypanel.dev api.oxypanel.dev;
+    server_name ]] .. config.urls .. [[;
 
     #dev mode
     lua_code_cache off;
@@ -134,7 +134,11 @@ local function tableToLua( table, indent )
             out = out .. '\t'
         end
         if type( v ) == 'table' then
-            out = out .. k .. ' = {' .. tableToLua( v, indent + 1 ) .. '\n'
+            if type( k ) == 'string' and k:find( '%.' ) then
+                out = out .. '[\'' .. k .. '\'] = {' .. tableToLua( v, indent + 1 ) .. '\n'
+            else
+                out = out .. k .. ' = {' .. tableToLua( v, indent + 1 ) .. '\n'
+            end
             for i = 0, indent do
                 out = out .. '\t'
             end
@@ -188,6 +192,7 @@ local function build()
     local _autoconf = {
         modules = {},
         objects = {},
+        brands = {},
         oxyngx = luawaconf.oxyngx,
         oxynode = luawaconf.oxynode
     }
@@ -203,6 +208,17 @@ local function build()
     root = root .. '/'
     _autoconf.root = root
     print( '\tRoot directory set to: ' .. root )
+
+    --scan for brands
+    print( 'Scanning for brands...' )
+    for k, brand in pairs( ls( 'app/brands/' ) ) do
+        brand = brand:sub( 0, -5 )
+        brand = require( 'app/brands/' .. brand )
+        local url = brand.url
+        brand.url = nil
+        _autoconf.brands[url] = brand
+        print( '\tAdded brand: ' .. url )
+    end
 
     --scan for modules
     print( 'Scanning for modules...' )
@@ -296,23 +312,14 @@ luawa:run()]]
     print( 'Writing config.nginx...' )
     local f, err = io.open( 'config.nginx', 'w' )
     if not f then error( err ) end
-    local status, err = f:write( nginx_config( { root = _autoconf.root } ) )
+    local urls = ''
+    for k, v in pairs( _autoconf.brands ) do if k ~= 'default' then urls = urls .. ' ' .. k end end
+    local status, err = f:write( nginx_config( { root = _autoconf.root, urls = urls } ) )
     if not status then error( err ) end
     print( '\tconfig.nginx written' )
 
     print( 'BUILD COMPLETE' )
 end
-
-
---nginx/oxypanel status
-local function status()
-    print( 'status' )
-    --get nginx pid /status
-    local status = io.popen( 'pidfile status' )
-    print( status:read( '*a' ) )
-end
-
-
 
 
 

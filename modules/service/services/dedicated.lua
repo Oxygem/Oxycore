@@ -1,11 +1,15 @@
 --[[
-    file: service/services/dedicated/config.lua
-    desc: file does nothing, everything inherits from generic linux (but need to be called 'dedicated', vm's use this as a base too!)
+    file: service/services/dedicated.lua
+    desc: adds hardware info for dedicated Linux
 ]]
 local config = {
     parent = 'linux',
 	name = 'Dedicated',
-    names = 'Dedicated'
+    names = 'Dedicated',
+
+    tabs = {
+        { name = 'Hardware', js = 'hardware', permission = 'view', order = 7 }
+	}
 }
 
 return config

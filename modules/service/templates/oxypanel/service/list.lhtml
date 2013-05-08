@@ -55,7 +55,7 @@
 
 	<tbody>
 	<? for k, service in pairs( self:get( 'services' ) ) do
-		local name = oxyservice.config.services[service.type].names or oxyservice.config.services[service.type].name ?>
+		local type = oxyservice.config.services[service.type].names or oxyservice.config.services[service.type].name ?>
 	<tr>
 		<td><?=service.id ?></td>
 
@@ -74,7 +74,7 @@
 		</td><? end ?>
 
 		<td><?=service.name ?></td>
-		<td><?=name ?></td>
+		<td><?=type ?></td>
 		<td><?=service.status ?></td>
 
 		<? if request.get.action == 'all' then ?><td>

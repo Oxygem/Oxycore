@@ -4,8 +4,8 @@
 ]]
 local config = {
     parent = 'base',
-	name = 'Single',
-    names = 'Singles'
+	name = 'Dedicated/Single',
+    names = 'Dedicated/Single'
 }
 
 return config

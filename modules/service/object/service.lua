@@ -37,7 +37,7 @@ function service:get()
         'service_service_software', 'software, directory',
         { service_id = self.id }
     )
-    self.software = service_software
+    self.software = service_software or {}
 
     --add any js
     if self.config.js and request.get.type == 'service' then
@@ -148,7 +148,7 @@ function service:command()
     end
 end
 
---POST to edit date
+--POST to edit data (ajax)
 function service:setdata()
     if not request.post.key or not request.post.value then
         return template:set( 'error', 'Invalid details', true )
@@ -168,7 +168,21 @@ end
 
 --POST to edit (just name!)
 function service:edit()
-    template:set( 'success', 'Service updated' )
+    if not request.post.name then
+        return template:set( 'error', 'Please enter a name', true )
+    end
+
+    --update service
+    local update, err = database:update(
+        'service_service',
+        { name = request.post.name },
+        { id = self.id }
+    )
+    if not update then
+        template:set( 'error', err, true )
+    else
+        template:set( 'success', 'Service updated', true )
+    end
 
     --just load this will load GET page
     luawa:processFile( 'app/get/object' )

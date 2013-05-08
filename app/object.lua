@@ -15,7 +15,8 @@ function object:new( type )
     if not oxy.config.objects[type] then return false end
 
     --create new object, set type
-    local object = { type = type, module = oxy.config.objects[type].module }
+    local object = { type = type, module = oxy.config.objects[type].module, cache = {} }
+    object.fields = oxy.config.objects[type].fields or '*'
 
     --make object use self as index
     self.__index = self
@@ -26,19 +27,13 @@ function object:new( type )
 end
 
 
---get an object as lua object
-function object:get( id, permission )
-    --permission
-    permission = permission or 'view'
-    --not logged in?
-    if not user:checkLogin() then return false, 'You need to be logged in' end
-
-    --we got permission?
-    if not self:permission( id, permission ) then return false, 'You don\'t have permission to ' .. permission .. ' this ' .. self.type end
+--fetch an object as lua object (NO permission checks - ie internal)
+function object:fetch( id, prepare )
+    if self.cache[id] then return self.cache[id] end --cache so we can 'accidentally' load the same object multiple times w/o extra mysql
 
     --get object from mysql
     local object, err = database:select(
-        self.module .. '_' .. self.type, '*',
+        self.module .. '_' .. self.type, self.fields,
         { id = id },
         order, limit, offset
     )
@@ -57,9 +52,26 @@ function object:get( id, permission )
     setmetatable( object, type ) --this + above essentially makes object inherit type's methods
 
     --run any prepare function
-    if object.prepare then object:prepare() end
+    if prepare and object.prepare then object:prepare() end
+
+    --add to our cache
+    self.cache[id] = object
 
     return object
+end
+
+--get an object w/ permission check on active user
+function object:get( id, permission )
+    --permission
+    permission = permission or 'view'
+    --not logged in?
+    if not user:checkLogin() then return false, 'You need to be logged in' end
+
+    --we got permission?
+    if not self:permission( id, permission ) then return false, 'You don\'t have permission to ' .. permission .. ' this ' .. self.type end
+
+    --fetch!
+    return self:fetch( id, true )
 end
 
 --check current user permissions on object (Admin, View, Edit)
@@ -125,7 +137,7 @@ function object:getList( wheres, order, limit, offset, all )
 
     --get objects from mysql
     local objects = database:select(
-        self.module .. '_' .. self.type, '*',
+        self.module .. '_' .. self.type, self.fields,
         wheres,
         order, limit, offset
     )

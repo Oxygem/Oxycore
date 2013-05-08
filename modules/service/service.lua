@@ -95,6 +95,14 @@ function service:getServiceConfig( type )
     local object = require( oxy.config.root .. 'modules/service/services/' .. type )
     object.commands, object.js, object.tabs = object.commands or {}, object.js or {}, object.tabs or {}
 
+    --sort out tabs
+    local newtabs = {}
+    for k, v in pairs( object.tabs ) do
+        local order = v.order or k
+        newtabs[order] = v
+    end
+    object.tabs = newtabs
+
     --parent?
     if object.parent then
         local parent = self:getServiceConfig( object.parent )
@@ -119,7 +127,8 @@ function service:getServiceConfig( type )
         --add tabs
         if parent.tabs then
             for k, v in pairs( parent.tabs ) do
-                table.insert( object.tabs, v )
+                local order = v.order or #object.tabs + 1
+                table.insert( object.tabs, order, v )
             end
         end
     end
