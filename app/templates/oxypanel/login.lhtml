@@ -19,10 +19,10 @@
 		<div id="header">
 			<ul id="nav">
 				<!--logo-->
-				<li id="logo"><a href="./"><img src="/inc/img/brand/logo.png" alt="Afterburst" /></a></li>
+				<li id="logo"><a href="/login"><img src="/inc/<?=oxy.brand.logo ?>" alt="Afterburst" /></a></li>
 
 
-				<li class="profile active right"><a href="#">Login</a></li>
+				<li class="profile active right"><a href="/login">Login</a></li>
 			</ul>
 
 			</ul>
@@ -32,7 +32,7 @@
 
 		<div id="login">
 			<div id="main">
-				<h2>Login to BrandName</h2>
+				<h2>Login to <?=oxy.brand.name ?></h2>
 
 				<? if self:get( 'error' ) then ?><div class="message error">
 					<?=self:get( 'error' ) ?>

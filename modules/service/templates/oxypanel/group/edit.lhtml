@@ -1,8 +1,0 @@
-<form action="/group/<?=self:get( 'group' ).id ?>/edit" method="post" class="wide">
-    <label for="name">Name:</label>
-    <input type="text" name="name" id="name" value="<?=self:get( 'group' ).name ?>" />
-
-    <input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
-    <button type="submit" class="submit" name="update" value="profile">Update Service &#187;</button>&nbsp;&nbsp;
-    <a href="/group/<?=self:get( 'group' ).id ?>">back to group</a>
-</form>

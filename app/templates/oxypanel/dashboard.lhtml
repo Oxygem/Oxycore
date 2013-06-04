@@ -1,4 +1,57 @@
-<h1>main dashboard</h1>
+<div id="dashboard">
+    <div class="item third one">
+        <h3>Services <span class="right"><a href="/service/services">My Services</a></span></h3>
+        <table cellborder="0" cellspacing="0" cellpadding="0" width="100%">
+            <tr>
+                <th width="25px"></th>
+                <th>Name</th>
+                <th>Type</th>
+                <th width="80px"></th>
+            </tr>
+            <tr>
+                <td><img src="_img/icons/bullet_green.png" alt="" class="status" /></td>
+                <td>vps.server.com</td>
+                <td>VPS/OpenVZ</td>
+                <td><a href="#">Manage &rarr;</a></td>
+            </tr>
+            <tr>
+                <td><img src="_img/icons/bullet_green.png" alt="" class="status" /></td>
+                <td>vps.server.com</td>
+                <td>VPS/OpenVZ</td>
+                <td><a href="#">Manage &rarr;</a></td>
+            </tr>
+            <tr>
+                <td><img src="_img/icons/bullet_green.png" alt="" class="status" /></td>
+                <td>vps.server.com</td>
+                <td>VPS/OpenVZ</td>
+                <td><a href="#">Manage &rarr;</a></td>
+            </tr>
+            <tr>
+                <td><img src="_img/icons/bullet_red.png" alt="" class="status" /></td>
+                <td>google.com</td>
+                <td>VPS/OpenVZ</td>
+                <td><a href="#">Manage &rarr;</a></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="item third two">
+        <h3>Billing <span class="right"><a href="/billing/invoices">My Invoices</a></span></h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    </div>
+
+    <div class="item third three">
+        <h3>Support <span class="right"><a href="/support/tickets">My Tickets</a> &bull; <a href="/support/tickets/add">New Ticket</a></span></h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    </div>
+
+    <div class="item third one">
+        <h3>Another Module</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    </div>
+
+
+</div><!--end dashboard-->
 
 <? for module, data in pairs( self:get( 'dashboard' ) ) do ?>
     <h3>Module: <a href="/<?=module ?>"><?=module ?></a></h3>

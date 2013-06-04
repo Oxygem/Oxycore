@@ -1,7 +1,7 @@
 local brand = {
     url = 'oxypanel.dev',
-    name = 'OxyPanel',
-    logo = 'img/brand/logo.png'
+    name = 'Oxypanel',
+    logo = 'img/brand/oxypanel.png'
 }
 
 return brand

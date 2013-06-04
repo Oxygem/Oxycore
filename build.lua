@@ -92,7 +92,7 @@ local node_config = function( files )
     client_port: ]] .. luawaconf.oxynode.client_port .. [[,
     server_port: ]] .. server_port .. [[,
     share_key: ']] .. luawaconf.oxynode.share_key .. [[',
-    user_strength: ]] .. luawaconf.user.strength .. [[
+    user_keys: ]] .. luawaconf.user.keys .. [[
 
 };]] .. '\n\n'
 
@@ -107,7 +107,7 @@ end
 --do clientside javascript
 local client_js = function() return [[
 var oxypanel = {
-    user_strength: ]] .. luawaconf.user.strength .. [[,
+    user_keys: ]] .. luawaconf.user.keys .. [[,
     node_port: ]] .. luawaconf.oxynode.client_port .. [[
 
 };]] end
@@ -281,8 +281,14 @@ luawa:setConfig( _autoconf.root, 'config' )
 oxy = require( _autoconf.root .. 'app/core' )
 oxy:setConfig( _autoconf )
 
---run luawa
-luawa:run()]]
+--luawa:run w/ oxy 'injected'
+if not luawa:prepareRequest() then
+    return luawa:error( 500, 'Invalid Request' )
+end
+--oxy
+oxy.brand:setup()
+--go!
+luawa:processRequest()]]
 
     --open oxypanel.lua + write
     print( 'Writing oxypanel.lua...' )

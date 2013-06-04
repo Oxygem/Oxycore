@@ -21,6 +21,8 @@ function oxy:setConfig( config )
     self.template = require( self.config.root .. 'app/template' )
     --get & set email
     self.email = require( self.config.root .. 'app/email' )
+    --get brand
+    self.brand = require( self.config.root .. 'app/brand' )
 end
 
 --load module

@@ -2,7 +2,7 @@
 
 		<div id="footer">
 			<span class="left">
-				&copy; <a href="#">BrandName</a> 2013
+				&copy; <a href="#"><?=oxy.brand.name ?></a> 2013
 			</span>
 			<span class="right">
 				Powered by <a href="#">Oxypanel</a>
@@ -11,11 +11,20 @@
 	</div><!--end wrap-->
 
 	<script type="text/javascript" src="/inc/js/jquery.min.js"></script>
+	<script type="text/javascript" src="/inc/js/tablesorter.min.js"></script>
+	<script type="text/javascript" src="/inc/js/search.js"></script>
 	<? if self:get( 'module_js' ) then
 		for k, file in pairs( self:get( 'module_js' ) ) do ?>
 <script type="text/javascript" src="/inc/js/<?=file ?>"></script>
 	<? end
 	end ?>
 
+	<script type="text/javascript" src="/inc/js/admin/chardinjs.min.js"></script>
+	<script type="text/javascript" src="/inc/js/admin/tour.js"></script>
+	<link rel="stylesheet" href="/inc/css/admin/chardin.css" media="all" />
+
+	<script type="text/javascript">
+		$( 'table' ).tablesorter();
+	</script>
 </body>
 </html>

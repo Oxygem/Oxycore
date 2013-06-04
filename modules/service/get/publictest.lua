@@ -1,1 +1,0 @@
-luawa.template:put( 'hi' )

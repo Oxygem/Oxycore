@@ -4,20 +4,23 @@
 	<? local request, oxy, user = luawa.request, oxy, luawa.user ?>
 	<!--title-->
 	<? if self:get( 'page_title' ) then ?>
-	    <title><?=self:get( 'page_title' ) ?> - BrandName</title>
+	    <title><?=self:get( 'page_title' ) ?> - <?=oxy.brand.name ?></title>
 	<? else ?>
-		<title>BrandName</title>
+		<title><?=oxy.brand.name ?></title>
 	<? end ?>
 
 	<!--meta-->
 	<meta charset="UTF-8" />
 
-	<!--style-->
-	<link rel="stylesheet" href="/inc/font/ptsans/font.css" media="all" />
-	<link rel="stylesheet" href="/inc/css/style.css" media="all" />
+	<!--favicon-->
+	<link rel="shortcut icon" href="/inc/core/img/favicon.png" />
 
-	<!--oxypanel js, reset @ footer-->
-	<script type="text/javascript" src="/inc/js/oxypanel.js"></script>
+	<!--style-->
+	<link rel="stylesheet" href="/inc/core/font/ptsans/font.css" media="all" />
+	<link rel="stylesheet" href="/inc/core/css/style.css" media="all" />
+
+	<!--oxypanel here, rest @ footer-->
+	<script type="text/javascript" src="/inc/core/js/oxypanel.js"></script>
 </head>
 <body id="in_module">
 
@@ -26,7 +29,7 @@
 		<div id="header">
 			<ul id="nav">
 				<!--logo-->
-				<li id="logo"><a href="/"><img src="/inc/img/brand/logo.png" alt="Afterburst" /></a></li>
+				<li id="logo"><a href="/"><img src="/inc/core/<?=oxy.brand.logo ?>" alt="Afterburst" /></a></li>
 
 				<? if user:cookieLogin() then ?>
 					<? if request.get.request == 'dashboard' then ?>
@@ -68,8 +71,6 @@
 					</form>
 				</li>
 
-				<!--<li<? if not request.get.mreq then ?> class="active"<? end ?>><a href="/<?=request.get.module ?>">Home</a></li>-->
-
 				<? if request.get.module and oxy[request.get.module].subnav then
 					for k, link in pairs( oxy[request.get.module]:subnav() ) do
 						local isadmin = false
@@ -96,11 +97,50 @@
 
 				<li class="right"><a href="#">Help</a></li>
 			</ul>
+
+			<div id="search">
+				<ul>
+					<li class="title">Services</li>
+					<li><a href="#">
+						<strong>vps.server.com</strong>
+						<span>Dedicated/OpenVZ</span>
+					</a></li>
+					<li><a href="#">
+						<strong>vps.server.com</strong>
+						<span>Dedicated/OpenVZ</span>
+					</a></li>
+					<li><a href="#">
+						<strong>vps.server.com</strong>
+						<span>Dedicated/OpenVZ</span>
+					</a></li>
+				</ul>
+
+				<ul>
+					<li class="title">Invoices</li>
+					<li><a href="#">
+						<strong>Invoice: vps.server.com</strong>
+						<span>Due: 2/3/13</span>
+					</a></li>
+				</ul>
+				<ul>
+					<li class="title">Users</li>
+					<li><a href="#">
+						<strong>vpsbob</strong>
+						<span>User</span>
+					</a></li>
+					<li><a href="#">
+						<strong>Fizzadar</strong>
+						<span>Keymaster</span>
+					</a></li>
+				</ul>
+			</div><!--end search-->
 		</div><!--end header-->
 
 
 
 		<div id="main">
+			<noscript><div class="message warning" style="margin-top:20px;"><strong>JavaScript disabled</strong>: many features will not work. It is highly recommended to enable it.</div></noscript>
+
 			<h2>
 				<?=self:get( 'page_title' ) ?> <span class="meta"><?=self:get( 'page_title_meta' ) ?></span>
 				<span class="right"><? if self:get( 'page_title_buttons' ) then
