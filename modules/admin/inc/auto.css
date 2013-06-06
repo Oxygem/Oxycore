@@ -1,0 +1,9 @@
+ul#nav li.admin a {
+    background-image: url( ../admin/img/icons/admin.png );
+}
+ul#nav li.admin a:hover {
+    background-image: url( ../admin/img/icons/admin_hover.png );
+}
+ul#nav li.admin.active a {
+    background-image: url( ../admin/img/icons/admin_active.png );
+}
