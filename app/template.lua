@@ -10,6 +10,12 @@ local template = {}
 luawa.template.__index = luawa.template
 setmetatable( template, luawa.template )
 
+function template:setup()
+    if luawa.request.get._api then
+        luawa.template.api = true
+    end
+end
+
 function template:load( template )
     local dir = 'app/templates/' .. oxy.config.oxyngx.template .. '/' .. template
 

@@ -18,9 +18,10 @@
 	<!--style-->
 	<link rel="stylesheet" href="/inc/core/font/ptsans/font.css" media="all" />
 	<link rel="stylesheet" href="/inc/core/css/style.css" media="all" />
+	<link rel="stylesheet" href="/inc/auto/oxypanel.css" media="all" />
 
 	<!--oxypanel here, rest @ footer-->
-	<script type="text/javascript" src="/inc/core/js/oxypanel.js"></script>
+	<script type="text/javascript" src="/inc/auto/oxypanel.js"></script>
 </head>
 <body id="in_module">
 

@@ -99,14 +99,14 @@ form {
 		background: #F9F9F9;
 	}
 	form select:hover {
-		background: #F9F9F9 url( ../img/icons/select_arrow.png ) 97% center no-repeat;
+		background: #F9F9F9 url( ../img/form/select_arrow.png ) 97% center no-repeat;
 	}
 	form input:focus, form textarea:focus, form select:focus {
 		background: #FFFECC;
 		border: 1px solid #A1A1A1;
 	}
 	form select:focus {
-		background: #FFFECC url( ../img/icons/select_arrow.png ) 97% center no-repeat;
+		background: #FFFECC url( ../img/form/select_arrow.png ) 97% center no-repeat;
 	}
 	form button.submit {
 		margin-left: 0px;

@@ -7,8 +7,8 @@
 	<meta charset="UTF-8" />
 
 	<!--style-->
-	<link rel="stylesheet" href="/inc/font/ptsans/font.css" media="all" />
-	<link rel="stylesheet" href="/inc/css/style.css" media="all" />
+	<link rel="stylesheet" href="/inc/core/font/ptsans/font.css" media="all" />
+	<link rel="stylesheet" href="/inc/core/css/style.css" media="all" />
 
 	<!--scripts-->
 </head>
@@ -19,7 +19,7 @@
 		<div id="header">
 			<ul id="nav">
 				<!--logo-->
-				<li id="logo"><a href="/login"><img src="/inc/<?=oxy.brand.logo ?>" alt="Afterburst" /></a></li>
+				<li id="logo"><a href="/login"><img src="/inc/core/<?=oxy.brand.logo ?>" alt="Afterburst" /></a></li>
 
 
 				<li class="profile active right"><a href="/login">Login</a></li>

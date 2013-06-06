@@ -10,18 +10,14 @@
 		</div><!--end footer-->
 	</div><!--end wrap-->
 
-	<script type="text/javascript" src="/inc/js/jquery.min.js"></script>
-	<script type="text/javascript" src="/inc/js/tablesorter.min.js"></script>
-	<script type="text/javascript" src="/inc/js/search.js"></script>
+	<script type="text/javascript" src="/inc/core/js/lib/jquery.min.js"></script>
+	<script type="text/javascript" src="/inc/core/js/lib/tablesorter.min.js"></script>
+	<script type="text/javascript" src="/inc/core/js/search.js"></script>
 	<? if self:get( 'module_js' ) then
 		for k, file in pairs( self:get( 'module_js' ) ) do ?>
-<script type="text/javascript" src="/inc/js/<?=file ?>"></script>
+<script type="text/javascript" src="/inc/<?=file ?>"></script>
 	<? end
 	end ?>
-
-	<script type="text/javascript" src="/inc/js/admin/chardinjs.min.js"></script>
-	<script type="text/javascript" src="/inc/js/admin/tour.js"></script>
-	<link rel="stylesheet" href="/inc/css/admin/chardin.css" media="all" />
 
 	<script type="text/javascript">
 		$( 'table' ).tablesorter();

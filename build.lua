@@ -110,6 +110,7 @@ local client_js = function( auto_js ) return [[
 var oxypanel = {
     user_keys: ]] .. luawaconf.user.keys .. [[,
     node_port: ]] .. luawaconf.oxynode.client_port .. [[
+
 };
 ]] .. auto_js end
 
@@ -193,7 +194,6 @@ end
 
 --copy a directory s(ource)_dir -> d(irectory)_dir
 function cpdir( s_dir, d_dir, exclude )
-    if not isdir( d_dir ) then mkdir( d_dir ) end
     exclude = exclude or '^$'
 
     --recursive list
@@ -213,6 +213,13 @@ function cpdir( s_dir, d_dir, exclude )
         return out
     end
     local list = list( s_dir )
+
+    local count = 0
+    for k, v in pairs( list ) do
+        count = count + 1
+    end
+    if count == 0 then return end
+    if not isdir( d_dir ) then mkdir( d_dir ) end
 
     --copy a file
     local function copyfile( s, d )
@@ -370,9 +377,9 @@ local function build()
                     local data, err = f:read( '*a' )
                     if not data then error( err ) end
                     if v == 'auto.css' then
-                        _auto.css = _auto.css .. data
+                        _auto.css = _auto.css .. '\n' .. data
                     else
-                        _auto.js = _auto.js .. data
+                        _auto.js = _auto.js .. '\n' .. data
                     end
                 end
             end
@@ -402,7 +409,7 @@ if not luawa:prepareRequest() then
     return luawa:error( 500, 'Invalid Request' )
 end
 --oxy
-oxy.brand:setup()
+oxy:setup()
 --go!
 luawa:processRequest()]]
 
@@ -421,6 +428,13 @@ luawa:processRequest()]]
     local status, err = f:write( node_config( node_files ) )
     if not status then error( err ) end
     print( '\toxynode.js written' )
+
+    --core inc directory
+    cpdir( 'app/inc', 'inc/core' )
+    --auto directory?
+    if not isdir( 'inc/auto' ) then
+        mkdir( 'inc/auto' )
+    end
 
     --oxypanel.js clientside
     print( 'Writing oxypanel.js...' )

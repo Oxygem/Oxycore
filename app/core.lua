@@ -40,5 +40,11 @@ function oxy:loadModule( module )
     return self[module]
 end
 
+--setup (post luawa setup)
+function oxy:setup()
+    self.brand:setup()
+    self.template:setup()
+end
+
 
 return oxy
