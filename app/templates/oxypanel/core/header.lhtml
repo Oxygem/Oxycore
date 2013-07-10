@@ -80,6 +80,13 @@
 					<li<? if mreqlink == mreq then ?> class="active"<? end ?>>
 						<? if link.submenus then ?>
 							<ul class="dropdown">
+							<? for k, submenu in ipairs( link.submenus ) do ?>
+								<li><ul>
+									<? for c, sublink in pairs( submenu ) do ?>
+										<li><a href="/<?=request.get.module ?><?=sublink.link ?>"><?=sublink.title ?></a></li>
+									<? end ?>
+								</ul></li>
+							<? link.submenus[k] = nil end ?>
 							<? for title, submenu in pairs( link.submenus ) do ?>
 								<li><ul>
 									<li<? if title == 'Admin' then isadmin = true ?> class="red"<? end ?>><?=title ?></li>
@@ -90,8 +97,17 @@
 							<? end ?>
 							</ul>
 						<? end ?>
+						<? if link.submenu then ?>
+							<ul class="dropdown">
+								<li><ul>
+									<? for k, sublink in pairs( link.submenu ) do ?>
+										<li><a href="/<?=request.get.module ?><?=sublink.link ?>"><?=sublink.title ?></a></li>
+									<? end ?>
+								</ul></li>
+							</ul>
+						<? end ?>
 
-						<a <? if link.admin then ?>class="red" <? end ?>href="/<?=request.get.module ?><?=link.link ?>"><?=link.title ?><? if link.submenus then if isadmin then ?> <span class="red">&darr;</span> <? else ?> &darr;<? end end ?></a>
+						<a <? if link.admin then ?>class="red" <? end ?>href="/<?=request.get.module ?><?=link.link ?>"><?=link.title ?><? if link.submenus or link.submenu then if isadmin then ?> <span class="red">&darr;</span> <? else ?> &darr;<? end end ?></a>
 					</li>
 				<? 	end
 				end ?>

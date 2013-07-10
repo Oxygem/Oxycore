@@ -6,7 +6,7 @@ var search = {
 
 
 //bind
-$( 'form.search' ).bind( 'submit', function( ev ) {
+$( '#header form.search' ).bind( 'submit', function( ev ) {
     ev.preventDefault();
     search.toggle();
 });

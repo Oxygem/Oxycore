@@ -30,7 +30,10 @@ local action = 'view'
 --edit template?
 if request.get.action == 'edit' then
 	action = 'edit'
-	--LOAD USER GROUPS FOR EDIT PAGE?
+end
+if request.get.action == 'owner' then
+	action = 'owner'
+	--get GROUPS for OWNER CHANGE PAGE?
 end
 
 --get our object
@@ -38,8 +41,11 @@ local object, err = module[request.get.type]:get( request.get.id, action )
 if not object then
 	return template:error( err )
 else
-	--run get on object if we're not editing
-	if action == 'view' and object.get then object:get() end
+	--run prepare on object if we're viewing
+	if action == 'view' and object.prepareView then object:prepareView() end
+	--run prepare on object if we're editing
+	if action == 'edit' and object.prepareEdit then object:prepareEdit() end
+
 	--add to template
 	template:set( request.get.type, object, true )
 
