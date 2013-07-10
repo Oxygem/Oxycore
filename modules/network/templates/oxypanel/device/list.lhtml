@@ -1,0 +1,114 @@
+<?
+	local request, user, network = luawa.request, luawa.user, oxy.network
+?>
+<? if self:get( 'devices' ) then ?>
+
+<form action="" method="get" class="inline search">
+	<input type="text" name="q" value="Type to search..." onfocus="if( this.value == 'Type to search...' ) { this.value = ''; }" onblur="if( this.value == '' ) { this.value = 'Type to search...'; }" />
+	<button type="submit">&#187;</button>
+</form>
+
+<form action="" method="get" class="inline">
+	<select name="type">
+		<option value="">Filter by type</option>
+		<option value="server"<? if request.get.type == 'server' then ?> selected<? end ?>>Server</option>
+		<option value="network"<? if request.get.type == 'network' then ?> selected<? end ?>>Network</option>
+		<option value="storage"<? if request.get.type == 'storage' then ?> selected<? end ?>>Storage</option>
+		<option value="">All</option>
+	</select>
+
+	<select name="config">
+		<option value="">Filter by config</option>
+		<? for k, v in pairs( network:getDeviceList() ) do ?>
+				<? for c, d in pairs( v ) do ?>
+					<option value="<?=c ?>"<? if request.get.config == c then ?> selected<? end ?>><?=d ?></option>
+				<? end ?>
+		<? end ?>
+		<option value="">All</option>
+	</select>
+
+	<select name="status">
+		<option value="">Filter by status</option>
+		<option value="active"<? if request.get.status == 'active' then ?> selected<? end ?>>Active</option>
+		<option value="suspended"<? if request.get.status == 'suspended' then ?> selected<? end ?>>Suspended</option>
+		<option value="">All</option>
+	</select>
+
+	<input type="submit" class="submit" value="Update &#187;" />
+
+	<span class="right admin">
+
+			<? if request.get.action ~= 'all' then ?>
+				<a href="/network/devices/all" class="button admin">All devices</a>
+			<? else ?>
+				<a href="/network/devices" class="button">My devices</a>
+			<? end ?>
+
+		<? if user:cookiePermission( 'Adddevice' ) then ?><a href="/network/devices/add" class="button admin">Add device</a><? end ?>
+	</span>
+</form>
+
+<table cellspacing="0" cellpadding="0">
+	<thead><tr>
+		<th>ID</th>
+		<? if request.get.action == 'all' then ?><th>Owners</th><? end ?>
+		<th>Name</th>
+		<th>Type</th>
+		<th>Config</th>
+		<th>Status</th>
+		<th width="180px">Linked</th>
+		<th width="180px">Actions</th>
+	</tr></thead>
+
+	<tbody>
+	<? for k, service in pairs( self:get( 'devices' ) ) do
+		local config = network.config.devices[service.config].names or network.config.devices[service.config].name ?>
+	<tr>
+		<td><?=service.id ?></td>
+
+		<? if request.get.action == 'all' then ?><td>
+			<? if service.user_id > 0 then ?>
+				<div class="pop_info">
+					<div class="pop">
+						<strong><a href="#">Fizzadar</a></strong>
+						<a class="button blue">View</a>
+						<span></span>
+					</div>
+					<a class="button admin" href="/user/<?=service.user_id ?>">User</a>
+				</div>
+			<? end ?>
+			<? if service.group_id > 0 then ?><a class="button admin" href="/admin/users?group=<?=service.group_id ?>">Group</a><? end ?>
+		</td><? end ?>
+
+		<td><?=service.name ?></td>
+		<td><?=service.type ?></td>
+		<td><?=config ?></td>
+		<td><?=service.status ?></td>
+
+		<td>
+			<? if service.device_group_id > 0 then ?>
+				<div class="pop_info">
+					<div class="pop">
+						<strong><a href="#">Afterburst US</a></strong>
+						<a class="button blue">View</a>
+						<span></span>
+					</div>
+					<a href="/group/<?=service.device_group_id ?>" class="button admin">Group</a>
+				</div>
+			<? end ?>
+		</td>
+
+		<td>
+			<a href="/device/<?=service.id ?>" class="button green">View</a>
+			<? if service.permissions.edit then ?><a href="/device/<?=service.id ?>/edit" class="button black">Edit</a><? end ?>
+			<? if service.permissions.delete then ?><form class="inline"><button config="submit" class="admin red">Delete</button></form><? end ?>
+		</td>
+	</tr>
+	<? end if #self:get( 'devices' ) == 0 then ?>
+		<tr>
+			<td colspan="6">No devices found</td>
+		</tr>
+	<? end ?>
+	</tbody>
+</table>
+<? end ?>

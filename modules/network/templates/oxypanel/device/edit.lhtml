@@ -1,0 +1,8 @@
+<form action="/device/<?=self:get( 'device' ).id ?>/edit" method="post" class="wide">
+    <label for="name">Name:</label>
+    <input type="text" name="name" id="name" value="<?=self:get( 'device' ).name ?>" />
+
+    <input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+    <button type="submit" class="submit" name="update" value="profile">Update Service &#187;</button>&nbsp;&nbsp;
+    <a href="/device/<?=self:get( 'device' ).id ?>">back to device</a>
+</form>

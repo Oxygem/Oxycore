@@ -1,0 +1,31 @@
+<? local network = oxy.network ?>
+<table cellborder="0" cellspacing="0">
+    <thead><tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Config</th>
+        <th>Status</th>
+        <th width="150px"></th>
+    </tr></thead>
+    <tbody>
+        <? for k, v in pairs( self:get( 'group' ).devices ) do
+            local type = network.config.devices[v.config].names or network.config.devices[v.config].name ?>
+        <tr>
+            <td><?=v.id ?></td>
+            <td><?=v.name ?></td>
+            <td><?=v.type ?></td>
+            <td><?=type ?></td>
+            <td><?=v.status ?></td>
+            <td>
+                <a href="/device/<?=v.id ?>" class="button green">View</a>
+                <a href="#" class="button red">Remove</a>
+            </td>
+        </tr>
+        <? end if #self:get( 'group' ).devices <= 0 then ?>
+        <tr>
+            <td colspan="4">No devices found</td>
+        </tr>
+        <? end ?>
+    </tbody>
+</table>

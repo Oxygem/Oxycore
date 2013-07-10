@@ -1,0 +1,51 @@
+<div class="twothird left" id="tabs">
+    <ul class="tabs">
+        <? for k, v in pairs( self:get( 'device' ).config.tabs ) do
+            if not v.permission or oxy.network.device:permission( self:get( 'device' ).id, v.permission ) then ?>
+            <li class="service_tab<? if v.default then ?> active<? end ?>" data-tab="<?=v.js ?>"><a href="#"><?=v.name ?></a></li>
+        <?  end
+        end ?>
+    </ul>
+
+    <div id="device_console" class="terminal hidden"><pre></pre></div>
+
+    <? for k, v in pairs( self:get( 'device' ).config.tabs ) do ?>
+        <div class="<?=v.js ?> tab<? if not v.default then ?> hidden<? end ?>" data-tab="<?=v.js ?>">
+            <div class="content"></div>
+
+            <div class="buttons"><? if v.buttons then
+                for k, v in pairs( v.buttons ) do
+                    if oxy.network.device:permission( self:get( 'device' ).id, self:get( 'device' ).config.commands[v.command].permission ) then ?>
+                <button class="service_button <?=v.color ?>" data-command="<?=v.command ?>"<? if v.data then ?> data-needed="<?=v.data.id ?>" data-name="<?=v.data.name ?>"<? end if v.confirm then ?> data-confirm="<?=v.confirm ?>"<? end ?>><?=v.name ?></button>
+            <?      end
+                end
+            end ?></div>
+        </div>
+    <? end ?>
+</div><!--end left-->
+
+<div class="third right">
+    <div class="feedback"></div><!--end feedback-->
+
+    <ul class="stats">
+        <li><strong>Status:</strong> <?=self:get( 'device' ).status ?></li>
+        <li><strong>Type:</strong> <?=self:get( 'device' ).type ?></li>
+        <li><strong>OS:</strong> <?=self:get( 'device' ).config.name ?></li>
+        <? for k, v in pairs( self:get( 'device' ).ips ) do ?>
+            <li><strong>IP:</strong> <?=v.address ?></li>
+        <? end ?>
+    </ul>
+</div><!--end right-->
+
+
+<script type="text/javascript">
+    //token
+    oxypanel.luawa_token = '<?=self:get( 'token' ) ?>';
+    //tell ssh.device.js our status key
+    oxypanel.device = {
+        status_request_key: '<?=self:get( 'device' ).status_request_key ?>',
+        status_request_error: '<?=self:get( 'device' ).status_request_error ?>',
+        service_os_type: '<?=self:get( 'device' ).os_type ?>',
+        service_os_version: '<?=self:get( 'device' ).os_version ?>'
+    };
+</script>

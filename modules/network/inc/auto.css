@@ -1,0 +1,130 @@
+ul#nav li.network a {
+    background-image: url( ../network/img/icons/network.png );
+}
+ul#nav li.network a:hover {
+    background-image: url( ../network/img/icons/network_hover.png );
+}
+ul#nav li.network.active a {
+    background-image: url( ../network/img/icons/network_active.png );
+}
+
+
+/*
+	service commands */
+ul.tabs {
+	margin: 0 0 10px 0;
+	padding: 0;
+	height: 30px;
+	border-bottom: 1px solid #D7D7D7;
+}
+	ul.tabs li {
+		list-style: none;
+		float: left;
+		height: 19px;
+	}
+		ul.tabs li a {
+			padding: 10px 10px 9px 10px;
+			border: none;
+		}
+		ul.tabs li.active a {
+			background: #F7F7F7;
+			color: #000;
+		}
+		ul.tabs li.disabled a {
+			opacity: 0.5;
+			cursor: progress;
+		}
+	div#main div.tab button.service_button {
+		width: 120px;
+		height: 40px;
+	}
+	div#main div.tab div.content, div#main div.tab div.buttons {
+		float: left;
+		width: 100%;
+	}
+	div#main div#tabs div#device_console {
+		margin-top: -11px;
+	}
+
+div.feedback {
+}
+	div.feedback form.inline {
+	}
+		div.feedback form.inline input {
+			margin: 0;
+			padding: 3px;
+		}
+
+div.terminal {
+	margin-bottom: 20px;
+}
+	div.terminal pre {
+		height: 180px;
+		width: 100%;
+		overflow: auto;
+		border: 1px solid #000;
+		border-top: 1px solid #D7D7D7;
+		padding: 5px;
+		resize: both;
+		position: relative;
+		background: #FFF;
+		margin: 0;
+		border-radius: 0 0 3px 3px;
+	}
+
+
+/*
+	service stats */
+div#status_text {
+	margin-bottom: 5px;
+}
+div#main ul.stats {
+	margin: 0;
+	padding: 0;
+}
+	div#main ul.stats li {
+		list-style: none;
+		float: left;
+		width: 50%;
+		padding: 5px 2%;
+		margin-left: 0px;
+		background: #F7F7F7;
+	}
+
+
+
+/*
+	overview device tab status */
+div#main div.overview h4 {
+	margin: 0;
+}
+div#main div.overview div.bar {
+	float: left;
+	width: 100%;
+	border-radius: 3px;
+	margin-bottom: 10px;
+	background: #555;
+}
+	div#main div.overview div.bar span {
+		position: absolute;
+		color: #FFF;
+		text-shadow: 1px 1px 1px #000;
+		margin: 5px 10px;
+	}
+	div#main div.overview div.bar div {
+		background: black;
+		float: left;
+		height: 100%;
+		height: 34px;
+		border-radius: 3px;
+		padding: 0;
+	}
+	div#main div.overview div.bar.green div {
+		background: green;
+	}
+	div#main div.overview div.bar.orange div {
+		background: orange;
+	}
+	div#main div.overview div.bar.red div {
+		background: red;
+	}

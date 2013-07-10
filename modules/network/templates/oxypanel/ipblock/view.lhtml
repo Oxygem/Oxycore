@@ -1,0 +1,27 @@
+<table cellborder="0" cellspacing="0">
+	<thead><tr>
+		<th>IP</th>
+		<th>Status</th>
+		<th>Linked</th>
+		<th width="150px">Actions</th>
+	</tr></thead>
+	<tbody>
+		<? for k, v in pairs( self:get( 'ipblock' ).ips ) do ?>
+		<tr>
+			<td><?=v.address ?></td>
+			<td><?=v.status ?></td>
+			<td><? if v.device_id > 0 then ?>
+				<a href="/device/<?=v.device_id ?>" class="button admin">Device</a>
+			<? end ?></td>
+			<td>
+				<a href="#" class="button blue">Unreserve</a>
+				<a href="#" class="button red">Delete</a>
+			</td>
+		</tr>
+		<? end if #self:get( 'ipblock' ).ips <= 0 then ?>
+		<tr>
+			<td colspan="4">No IP's found</td>
+		</tr>
+		<? end ?>
+	</tbody>
+</table>
