@@ -75,20 +75,28 @@ end
 --load a server type => deals with inheriting commands from parent services
 function network:getDeviceConfig( type )
     --since we start with our service and work 'up' to the 'base' we must check each time before adding a command so as to not overwrite the lower config
-    local object = require( oxy.config.root .. 'modules/network/devices/' .. type )
-    object.commands, object.js, object.tabs = object.commands or {}, object.js or {}, object.tabs or {}
+    local config = require( oxy.config.root .. 'modules/network/devices/' .. type )
+    config.tabs, config.commands, config.js = config.tabs or {}, config.commands or {}, config.js or {}
+
+    --setup new object
+    config.__index = config
+    local object = {}
+    setmetatable( object, config )
 
     --sort out tabs
-    local newtabs = {}
-    for k, v in pairs( object.tabs ) do
-        local order = v.order or k
-        newtabs[order] = v
+    local tabs = {}
+    for k, v in pairs( config.tabs ) do
+        if v.order then
+            tabs[v.order] = v
+        else
+            table.insert( tabs, v )
+        end
     end
-    object.tabs = newtabs
+    object.tabs = tabs
 
     --parent?
-    if object.parent then
-        local parent = self:getDeviceConfig( object.parent )
+    if config.parent then
+        local parent = self:getDeviceConfig( config.parent )
         --dont overwrite commands
         if parent.commands then
             for k, v in pairs( parent.commands ) do
@@ -96,10 +104,6 @@ function network:getDeviceConfig( type )
                     object.commands[k] = v
                 end
             end
-        end
-        --add filter if not got one
-        if not object.filter and parent.filter then
-            object.filter = parent.filter
         end
         --add js
         if parent.js then

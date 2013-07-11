@@ -1,6 +1,6 @@
 <div class="twothird left" id="tabs">
     <ul class="tabs">
-        <? for k, v in pairs( self:get( 'device' ).config.tabs ) do
+        <? for k, v in pairs( self:get( 'device' ).configuration.tabs ) do
             if not v.permission or oxy.network.device:permission( self:get( 'device' ).id, v.permission ) then ?>
             <li class="service_tab<? if v.default then ?> active<? end ?>" data-tab="<?=v.js ?>"><a href="#"><?=v.name ?></a></li>
         <?  end
@@ -9,13 +9,13 @@
 
     <div id="device_console" class="terminal hidden"><pre></pre></div>
 
-    <? for k, v in pairs( self:get( 'device' ).config.tabs ) do ?>
+    <? for k, v in pairs( self:get( 'device' ).configuration.tabs ) do ?>
         <div class="<?=v.js ?> tab<? if not v.default then ?> hidden<? end ?>" data-tab="<?=v.js ?>">
             <div class="content"></div>
 
             <div class="buttons"><? if v.buttons then
                 for k, v in pairs( v.buttons ) do
-                    if oxy.network.device:permission( self:get( 'device' ).id, self:get( 'device' ).config.commands[v.command].permission ) then ?>
+                    if oxy.network.device:permission( self:get( 'device' ).id, self:get( 'device' ).configuration.commands[v.command].permission ) then ?>
                 <button class="service_button <?=v.color ?>" data-command="<?=v.command ?>"<? if v.data then ?> data-needed="<?=v.data.id ?>" data-name="<?=v.data.name ?>"<? end if v.confirm then ?> data-confirm="<?=v.confirm ?>"<? end ?>><?=v.name ?></button>
             <?      end
                 end
@@ -30,7 +30,7 @@
     <ul class="stats">
         <li><strong>Status:</strong> <?=self:get( 'device' ).status ?></li>
         <li><strong>Type:</strong> <?=self:get( 'device' ).type ?></li>
-        <li><strong>OS:</strong> <?=self:get( 'device' ).config.name ?></li>
+        <li><strong>OS:</strong> <?=self:get( 'device' ).configuration.name ?></li>
         <? for k, v in pairs( self:get( 'device' ).ips ) do ?>
             <li><strong>IP:</strong> <?=v.address ?></li>
         <? end ?>

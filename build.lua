@@ -29,7 +29,7 @@ server {
     server_name ]] .. config.urls .. [[;
 
     #dev mode
-    lua_code_cache off;
+    lua_code_cache ]] .. luawaconf.oxyngx.cache .. [[;
 
     #logging
     error_log ]] .. config.root .. [[logs/error.log;

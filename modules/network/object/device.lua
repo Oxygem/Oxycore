@@ -7,7 +7,7 @@ local device = {}
 --prepare function
 function device:prepare()
     --get the device config
-    self.config = network:getDeviceConfig( self.config )
+    self.configuration = network:getDeviceConfig( self.config )
 end
 
 --when getting device (ie GET /device/id)
@@ -20,11 +20,12 @@ function device:prepareView()
     self.ips = service_ips or {}
 
     --add any js
-    if self.config.js and request.get.type == 'device' then
-        for k, v in pairs( self.config.js ) do
-            self.config.js[k] = 'network/js/' .. v
+    if self.configuration.js and request.get.type == 'device' then
+        local js = {}
+        for k, v in pairs( self.configuration.js ) do
+            js[k] = 'network/js/' .. v
         end
-        template:add( 'module_js', self.config.js )
+        template:add( 'module_js', js )
     end
 
     --status request to node
@@ -45,10 +46,10 @@ function device:command( command, args )
 	args = args or {}
 
 	--get our commands list, check command
-	if not self.config.commands[command] then
+	if not self.configuration.commands[command] then
 		return false, 'Invalid command'
 	end
-    local command = self.config.commands[command]
+    local command = self.configuration.commands[command]
 
     --function type?
     if type( command.ssh ) == 'function' then
@@ -100,7 +101,7 @@ end
 --allowed post functions
 device.posts = { runCommand = true, edit = true }
 
---POST to request a command
+--POST to request a command - API mode only
 function device:runCommand()
     if not request.post.command then
         return template:set( 'error', 'Invalid command', true )
@@ -114,10 +115,12 @@ function device:runCommand()
     end
 end
 
---POST to edit (just name!)
+--POST to edit (just name!) - non API
 function device:edit()
+    local request = luawa.request
+
     if not request.post.name then
-        return template:set( 'error', 'Please enter a name', true )
+        return template:error( 'Please enter a name' )
     end
 
     --set

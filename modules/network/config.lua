@@ -13,16 +13,19 @@ local config = {
             title_meta = 'status',
             filters = { 'type', 'config', 'status', 'device_group_id' },
             searches = { 'name' },
+            permission = 'Device',
             permissions = { 'data', 'suspend' } --for non view/edit/delete permissions (ie edit does most, but not suspend / data commands (for admins/certain groups/etc))
         },
         group = {
             name = 'Group',
             names = 'Groups',
+            permission = 'Group',
             --search_fields = { 'name' }
         },
         ipblock = {
             name = 'IP Block',
             names = 'IP Blocks',
+            permission = 'IPBlock',
             filters = { 'type', 'server_id', 'server_group_id' },
             --search_fields = { 'name' }
         }
