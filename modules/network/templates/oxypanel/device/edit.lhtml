@@ -1,8 +1,43 @@
+<?
+    local network = oxy.network
+?>
 <form action="/device/<?=self:get( 'device' ).id ?>/edit" method="post" class="wide">
     <label for="name">Name:</label>
     <input type="text" name="name" id="name" value="<?=self:get( 'device' ).name ?>" />
 
-    <input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
-    <button type="submit" class="submit" name="update" value="profile">Update Service &#187;</button>&nbsp;&nbsp;
+    <label for="name">Status:</label>
+    <select name="status">
+    	<option value="Active"<? if self:get( 'device' ).status == 'Active' then ?> selected<? end ?>>Active</option>
+    	<option value="Suspended"<? if self:get( 'device' ).status == 'Suspended' then ?> selected<? end ?>>Suspended</option>
+    </select>
+
+    <label for="type">Type:</label>
+    <select name="type">
+    	<option value="Server"<? if self:get( 'device' ).type == 'Server' then ?> selected<? end ?>>Server</option>
+    	<option value="Network"<? if self:get( 'device' ).type == 'Network' then ?> selected<? end ?>>Network</option>
+    	<option value="Storage"<? if self:get( 'device' ).type == 'Storage' then ?> selected<? end ?>>Storage</option>
+    </select>
+
+    <label for="config">Config:</label>
+    <select name="config">
+        <? for k, v in pairs( network:getDeviceList() ) do ?>
+                <? for c, d in pairs( v ) do ?>
+                    <option value="<?=c ?>"<? if self:get( 'device' ).config == c then ?> selected<? end ?>><?=d ?></option>
+                <? end ?>
+        <? end ?>
+    </select>
+
+    <label for="group">Group:</label>
+    <select name="group">
+        <option value="0">Select Group</option>
+        <? for k, v in pairs( self:get( 'groups' ) ) do ?>
+            <option value="<?=v.id ?>"<? if self:get( 'device' ).device_group_id == v.id then ?> selected<? end ?>><?=v.name ?></option>
+        <? end ?>
+        <option value="0">None</option>
+    </select>
+
+    <button type="submit" class="submit green" name="update" value="profile">Update Service &#187;</button>&nbsp;&nbsp;
     <a href="/device/<?=self:get( 'device' ).id ?>">back to device</a>
+
+    <input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
 </form>

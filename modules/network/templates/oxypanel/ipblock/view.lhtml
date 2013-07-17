@@ -11,7 +11,7 @@
 			<td><?=v.address ?></td>
 			<td><?=v.status ?></td>
 			<td><? if v.device_id > 0 then ?>
-				<a href="/device/<?=v.device_id ?>" class="button admin">Device</a>
+				<a href="/device/<?=v.device_id ?>" class="button lightblue pop" data-object-type="device" data-object-id="<?=v.device_id ?>">Device</a>
 			<? end ?></td>
 			<td>
 				<a href="#" class="button blue">Unreserve</a>

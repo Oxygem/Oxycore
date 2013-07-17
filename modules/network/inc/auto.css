@@ -8,6 +8,10 @@ ul#nav li.network.active a {
     background-image: url( ../network/img/icons/network_active.png );
 }
 
+div.message.info img {
+
+}
+
 
 /*
 	service commands */
@@ -15,16 +19,20 @@ ul.tabs {
 	margin: 0 0 10px 0;
 	padding: 0;
 	height: 30px;
-	border-bottom: 1px solid #D7D7D7;
+	width: 100%;
 }
 	ul.tabs li {
 		list-style: none;
-		float: left;
 		height: 19px;
+		float: left;
+		width: 50%;
+		height: 34px;
 	}
 		ul.tabs li a {
-			padding: 10px 10px 9px 10px;
 			border: none;
+			float: left;
+			width: 100%;
+			padding: 5px;
 		}
 		ul.tabs li.active a {
 			background: #F7F7F7;
@@ -41,9 +49,6 @@ ul.tabs {
 	div#main div.tab div.content, div#main div.tab div.buttons {
 		float: left;
 		width: 100%;
-	}
-	div#main div#tabs div#device_console {
-		margin-top: -11px;
 	}
 
 div.feedback {
@@ -62,14 +67,14 @@ div.terminal {
 		height: 180px;
 		width: 100%;
 		overflow: auto;
-		border: 1px solid #000;
-		border-top: 1px solid #D7D7D7;
+		border: 1px solid #A7A7A7;
 		padding: 5px;
 		resize: both;
 		position: relative;
 		background: #FFF;
 		margin: 0;
-		border-radius: 0 0 3px 3px;
+		overflow-x: auto;
+		border-radius: 3px;
 	}
 
 
@@ -81,6 +86,8 @@ div#status_text {
 div#main ul.stats {
 	margin: 0;
 	padding: 0;
+	clear: both;
+	padding-top: 20px;
 }
 	div#main ul.stats li {
 		list-style: none;

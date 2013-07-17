@@ -14,7 +14,7 @@ local config = {
             filters = { 'type', 'config', 'status', 'device_group_id' },
             searches = { 'name' },
             permission = 'Device',
-            permissions = { 'data', 'suspend' } --for non view/edit/delete permissions (ie edit does most, but not suspend / data commands (for admins/certain groups/etc))
+            permissions = {} --for non view/edit/delete permissions (ie edit does most, but not suspend / data commands (for admins/certain groups/etc))
         },
         group = {
             name = 'Group',
@@ -65,9 +65,6 @@ local config = {
             end
             return software
         end
-    },
-    --permissions
-    permissions = {
     },
     --node files to include
     ngxnode = {

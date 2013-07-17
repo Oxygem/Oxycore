@@ -29,13 +29,19 @@ function device:prepareView()
     end
 
     --status request to node
-    local key, err = self:command( 'status' )
-    if err then self.status_request_error = err else self.status_request_key = key end
+    if self.status == 'Active' then
+        local key, err = self:command( 'status' )
+        if err then self.status_request_error = err else self.status_request_key = key end
+    else
+        self.status_request_error = 'Device currently suspended'
+    end
 end
 
 --when getting edit page of device (ie GET /device/id/edit)
-function prepareEdit()
-    --get device groups <= owned?
+function device:prepareEdit()
+    --get owned device groups
+    local groups, err = network.group:getOwned()
+    template:set( 'groups', groups or {} )
 end
 
 
@@ -99,10 +105,12 @@ end
 
 
 --allowed post functions
-device.posts = { runCommand = true, edit = true }
+device.posts = { runCommand = 'view', edit = 'edit' }
 
 --POST to request a command - API mode only
 function device:runCommand()
+    if self.status == 'Suspended' then return template:set( 'error', 'Device currently suspended', true ) end
+
     if not request.post.command then
         return template:set( 'error', 'Invalid command', true )
     end
@@ -119,18 +127,34 @@ end
 function device:edit()
     local request = luawa.request
 
-    if not request.post.name then
-        return template:error( 'Please enter a name' )
+    if not request.post.name or not request.post.status or not request.post.type or not request.post.config or not request.post.group then
+        return template:error( 'Please complete all fields' )
+    end
+
+    --make group number for immediate page load
+    request.post.group = tonumber( request.post.group ) or 0
+    --check we can use this group
+    if not network.group:permission( request.post.group, 'edit' ) then
+        return template:error( 'You do not have permission to add the device to that group' )
     end
 
     --set
     self.name = request.post.name
+    self.status = request.post.status
+    self.type = request.post.type
+    self.config = request.post.config
+    self.device_group_id = request.post.group
 
     --update service
     local update, err = database:update(
         'network_device',
-        { name = request.post.name },
-        { id = self.id }
+        {
+            name = request.post.name,
+            status = request.post.status,
+            type = request.post.type,
+            config = request.post.config,
+            device_group_id = request.post.group
+        }, { id = self.id }
     )
     if not update then
         template:set( 'error', err, true )

@@ -21,12 +21,12 @@
 	<span class="right admin">
 		<? if user:cookiePermission( 'ViewAnyIpblock' ) then ?>
 			<? if request.get.action ~= 'all' then ?>
-				<a href="/service/ipblocks/all" class="button admin">All IP Blocks</a>
+				<a href="/network/ipblocks/all" class="button admin">All IP Blocks</a>
 			<? else ?>
-				<a href="/service/ipblocks" class="button">My IP Blocks</a>
+				<a href="/network/ipblocks" class="button">My IP Blocks</a>
 			<? end ?>
 		<? end ?>
-		<? if user:cookiePermission( 'AddIpblock' ) then ?><a href="/service/ipblocks/add" class="button admin">Add IP Block</a><? end ?>
+		<? if user:cookiePermission( 'AddIpblock' ) then ?><a href="/network/ipblocks/add" class="button admin">Add IP Block</a><? end ?>
 	</span>
 </form>
 
@@ -36,7 +36,8 @@
 		<? if request.get.action == 'all' then ?><th>Owners</th><? end ?>
 		<th>Name</th>
 		<th>Type</th>
-		<? if request.get.action == 'all' then ?><th width="180px">Linked</th><? end ?>
+		<th>Subnet</th>
+		<th width="220px">Linked</th>
 		<th width="180px">Actions</th>
 	</tr></thead>
 
@@ -52,11 +53,13 @@
 
 		<td><?=ipblock.name ?></td>
 		<td><?=ipblock.type ?></td>
+		<td><?=ipblock.subnet ?></td>
 
-		<? if request.get.action == 'all' then ?><td>
-			<? if ipblock.server_id > 0 then ?><a href="/service/<?=ipblock.server_id ?>" class="button admin">Server</a><? end ?>
-			<? if ipblock.server_group_id > 0 then ?><a href="/group/<?=ipblock.server_group_id ?>" class="button admin">Group</a><? end ?>
-		</td><? end ?>
+		<td>
+			<? if ipblock.parent_id > 0 then ?><a href="/ipblock/<?=ipblock.parent_id ?>" class="button lightblue pop" data-object-type="ipblock" data-object-id="<?=ipblock.parent_id ?>">Parent</a><? end ?>
+			<? if ipblock.device_id > 0 then ?><a href="/device/<?=ipblock.device_id ?>" class="button lightblue pop" data-object-type="device" data-object-id="<?=ipblock.device_id ?>">Device</a><? end ?>
+			<? if ipblock.device_group_id > 0 then ?><a href="/group/<?=ipblock.device_group_id ?>" class="button lightblue pop" data-object-type="group" data-object-id="<?=ipblock.device_group_id ?>">Group</a><? end ?>
+		</td>
 
 		<td>
 			<a href="/ipblock/<?=ipblock.id ?>" class="button green">View</a>

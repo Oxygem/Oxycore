@@ -67,16 +67,7 @@
 		<td><?=service.id ?></td>
 
 		<? if request.get.action == 'all' then ?><td>
-			<? if service.user_id > 0 then ?>
-				<div class="pop_info">
-					<div class="pop">
-						<strong><a href="#">Fizzadar</a></strong>
-						<a class="button blue">View</a>
-						<span></span>
-					</div>
-					<a class="button admin" href="/user/<?=service.user_id ?>">User</a>
-				</div>
-			<? end ?>
+			<? if service.user_id > 0 then ?><a class="button admin" href="/user/<?=service.user_id ?>">User</a><? end ?>
 			<? if service.group_id > 0 then ?><a class="button admin" href="/admin/users?group=<?=service.group_id ?>">Group</a><? end ?>
 		</td><? end ?>
 
@@ -87,14 +78,7 @@
 
 		<td>
 			<? if service.device_group_id > 0 then ?>
-				<div class="pop_info">
-					<div class="pop">
-						<strong><a href="#">Afterburst US</a></strong>
-						<a class="button blue">View</a>
-						<span></span>
-					</div>
-					<a href="/group/<?=service.device_group_id ?>" class="button admin">Group</a>
-				</div>
+				<a href="/group/<?=service.device_group_id ?>" class="button lightblue pop" data-object-id="<?=service.device_group_id ?>" data-object-type="group">Group</a>
 			<? end ?>
 		</td>
 

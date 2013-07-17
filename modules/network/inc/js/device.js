@@ -63,11 +63,11 @@ var server = {
 
     //show console
     showConsole: function() {
-        $( '#device_console.terminal' ).slideDown().removeClass( 'hidden' );
+        $( '#device_console.terminal' ).slideDown( 200 ).removeClass( 'hidden' );
         sessionStorage.setItem( 'service_console', 'true' );
     },
     hideConsole: function() {
-        $( '#device_console.terminal' ).slideUp().addClass( 'hidden' );
+        $( '#device_console.terminal' ).slideUp( 200 ).addClass( 'hidden' );
         sessionStorage.setItem( 'service_console', 'false' );
     },
     toggleConsole: function() {
@@ -109,7 +109,6 @@ var server = {
         if( this.disabled )
             return;
 
-        $( '.feedback' ).html( '' );
         //switch tab
         $( 'div.tab' ).addClass( 'hidden' );
         $( 'div.' + tab ).removeClass( 'hidden' );
