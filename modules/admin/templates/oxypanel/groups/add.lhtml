@@ -1,0 +1,11 @@
+<h2>Add Group</h2>
+
+<div class="third left">
+	<form class="wide" action="/admin/groups/add" method="post">
+		<label for="name">Name:</label>
+		<input type="text" name="name" />
+
+		<button type="submit" class="submit green">Add Group &#187;</button>
+		&nbsp;&nbsp;<a href="/admin/groups">back to groups</a>
+	</form>
+</div>

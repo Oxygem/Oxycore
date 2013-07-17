@@ -1,0 +1,40 @@
+<? local user = luawa.user ?>
+
+<form class="inline" action="/admin/users">
+	<select name="group">
+		<option>Filter by group</option>
+		<? local group_names = {} for k, group in pairs( self:get( 'groups' ) ) do group_names[group.id] = group.name ?>
+			<option value="<?=group.id ?>"<? if group.id == tonumber( luawa.request.get.group ) then ?> selected<? end ?>><?=group.name ?></option>
+		<? end ?>
+		<option>All</option>
+	</select>
+
+	<input type="submit" value="Update &#187;" />
+</form>
+
+<span class="right admin">
+	<? if user:cookiePermission( 'AddUser' ) then ?><a href="/admin/users/add" class="button admin">Add user</a><? end ?>
+</span>
+
+<table cellborder="0" cellpadding="0">
+	<thead><tr>
+		<th>ID</th>
+		<th>Group</th>
+		<th>Display Name</th>
+		<th>Real Name</th>
+		<th>Email</th>
+		<th width="150px">Actions</th>
+	</tr></thead>
+	<tbody>
+		<? for k, user in pairs( self:get( 'users' ) ) do ?>
+			<tr>
+				<td><?=user.id ?></td>
+				<td><?=group_names[user.group] ?></td>
+				<td><?=user.name ?></td>
+				<td><?=user.real_name ?></td>
+				<td><?=user.email ?></td>
+				<td><a href="/admin/users/edit?id=<?=user.id ?>" class="button black">Edit</a> <a class="button red">Delete</a></td>
+			</tr>
+		<? end ?>
+	</tbody>
+</table>

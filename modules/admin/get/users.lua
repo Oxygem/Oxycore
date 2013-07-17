@@ -3,60 +3,48 @@
     desc: admin users
 ]]
 
-local template, database, request = oxy.template, luawa.database, luawa.request
-local action = 'user/list'
+local template, database, request, user = oxy.template, luawa.database, luawa.request, luawa.user
 
---permissions page
-if request.get.action == 'permissions' then
-	--select groups
-	local groups = database:select( 'user_groups', '*' )
+--groups
+local groups = database:select( 'user_groups', '*' )
+template:set( 'groups', groups )
 
-	--select/build set permissions table
-	local set_permissions = {}
-	for k, v in pairs( database:select( 'user_permissions', '*' ) ) do
-		set_permissions[v.group .. v.permission] = true
-	end
+--add user?
+if request.get.action == 'add' then
+	if not user:cookiePermission( 'AddUser' ) then return template:error( 'You don\'t have permission to do that' ) end
+	return template:wrap( template:loadModule( 'admin', 'users/add', true ) )
 
-	--generate permissions list based on modules & objects
-	local full_permissions = {}
-	--add modules
-	for k, v in pairs( oxy.config.modules ) do
-		table.insert( full_permissions, 'Module' .. oxy.config[k].name )
-	end
-	--add objects
-	for k, v in pairs( oxy.config.objects ) do
-		v.module = oxy.config[v.module].name
-		if not full_permissions[v.module] then full_permissions[v.module] = {} end
-		full_permissions[v.module][v.name] = {
-			'Add' .. v.permission,
-			'ViewOwn' .. v.permission,
-			'ViewAny' .. v.permission,
-			'EditOwn' .. v.permission,
-			'EditAny' .. v.permission,
-			'OwnerOwn' .. v.permission,
-			'OwnerAny' .. v.permission,
-			'DeleteOwn' .. v.permission,
-			'DeleteAny' .. v.permission
-		}
-	end
+--edit
+elseif request.get.action == 'edit' then
+	if not user:checkPermission( 'EditUser' ) then return template:error( 'You don\'t have permission to do that' ) end
+	if not request.get.id then return template:error( 'You must specify a group ID' ) end
 
-	template:set( 'page_title', 'User Permissions' )
-	template:set( 'full_permissions', full_permissions )
-	template:set( 'set_permissions', set_permissions )
-	template:set( 'groups', groups )
-	action = 'user/permissions'
+	--select user
+	local user, err = database:select( 'user', '*', { id = request.get.id } )
+	if err then return template:error( err ) end
+	template:set( 'user', user[1] )
 
---groups page
-elseif request.get.action == 'groups' then
-
---add user page
-elseif request.get.action == 'add' then
-
---list
-else
-
+	return template:wrap( template:loadModule( 'admin', 'users/edit', true ) )
 end
 
+
+--default: list users
+
+--permission?
+if not user:checkPermission( 'ViewUser' ) then
+	return template:error( 'You don\'t have permission to do that' )
+end
+
+
+--group user filter
+local wheres = {}
+if request.get.group then wheres.group = request.get.group end
+--get users
+local users = database:select( 'user', '*', wheres )
+
+template:set( 'page_title', 'Users' )
+template:set( 'users', users )
+
 template:load( 'core/header' )
-template:loadModule( 'admin', action )
+template:loadModule( 'admin', 'users/list' )
 template:load( 'core/footer' )

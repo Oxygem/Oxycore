@@ -26,13 +26,18 @@ function admin:subnav()
     table.insert( nav, settings )
 
     --users
-    local admin, isadmin = {}, false
     local users = { title = 'Users', link = '/users', admin = true, submenus = {} }
-    table.insert( admin, { title = 'Permissions', link = '/users/permissions' } )
-    table.insert( admin, { title = 'Groups', link = '/users/add' } )
-    table.insert( admin, { title = 'Add User', link = '/users/add' } )
-    table.insert( users.submenus, admin )
+    table.insert( users.submenus, { { title = 'Add User', link = '/users/add' } } )
     table.insert( nav, users )
+
+    --groups
+    local groups = { title = 'Groups', link = '/groups', admin = true, submenus = {} }
+    table.insert( groups.submenus, { { title = 'Add Group', link = '/groups/add' } } )
+    table.insert( nav, groups )
+
+    --permissions
+    local permissions = { title = 'Permissions', link = '/permissions', admin = true }
+    table.insert( nav, permissions )
 
     return nav
 end
