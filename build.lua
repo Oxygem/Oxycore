@@ -355,6 +355,8 @@ local function build()
         --do requests
         _autoconf[module].requests = config.requests
         print( '\t' .. ( tableCount( config.requests.get ) + tableCount( config.requests.post ) ) .. ' requests added' )
+        --permissions
+        _autoconf[module].permissions = config.permissions
 
         --do objects
         for object, d in pairs( config.objects ) do

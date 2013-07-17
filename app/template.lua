@@ -16,17 +16,24 @@ function template:setup()
     end
 end
 
-function template:load( template )
+function template:load( template, inline )
     local dir = 'app/templates/' .. oxy.config.oxyngx.template .. '/' .. template
 
-    return luawa.template:load( dir )
+    return luawa.template:load( dir, inline )
 end
 
 --loading module templates
-function template:loadModule( module, template )
+function template:loadModule( module, template, inline )
     local dir = 'modules/' .. module .. '/templates/' .. oxy.config.oxyngx.template .. '/' .. template
 
-    return luawa.template:load( dir )
+    return luawa.template:load( dir, inline )
+end
+
+--wrap template w/ header+footer
+function template:wrap( template, inline )
+    self:load( 'core/header' )
+    self:put( template )
+    self:load( 'core/footer' )
 end
 
 --error only w/ api

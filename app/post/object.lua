@@ -32,9 +32,14 @@ request.get.module = type.module
 request.get.mreq = request.get.type .. 's'
 
 --get our object
-local object, err = module[request.get.type]:get( request.get.id, action )
+local object, err = module[request.get.type]:get( request.get.id, 'view' )
 if err or not object.posts[request.get.action] or not object[request.get.action] then
     return template:error( 'Could not find action ' .. request.get.action .. ' for this object' )
+
+--no permission (cant be done when GETTING as we need GET.post to get the permission to check)?
+elseif not module[request.get.type]:permission( request.get.id, object.posts[request.get.action] ) then
+	return template:error( 'You do not have permission to do that' )
+
 else
     local func = object[request.get.action]
     return func( object )

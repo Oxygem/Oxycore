@@ -68,7 +68,7 @@ function object:get( id, permission )
     if not user:checkLogin() then return false, 'You need to be logged in' end
 
     --we got permission?
-    if not self:permission( id, permission ) then return false, 'You don\'t have permission to ' .. permission .. ' this ' .. self.type end
+    if not self:permission( id, permission ) then return false, 'You do not have permission to ' .. permission .. ' this ' .. self.type end
 
     --fetch!
     return self:fetch( id, true )
@@ -116,19 +116,21 @@ function object:getList( wheres, order, limit, offset, all )
     --not logged in?
     if not user:checkLogin() then return false, 'You need to be logged in' end
     --type edit/delete permissions
-    local type, edit, delete = self.type, false, false
+    local type, edit, delete, ownedit, owndelete = self.type, false, false, false, false
 
     wheres = wheres or {}
 
     --are we looking for all objects, or just owned
     if all then
         --do we have permission to ViewAny<Object>
-        if not user:checkPermission( 'ViewAny' .. type ) then return false, 'You don\'t have permission view all ' .. type .. 's' end
+        if not user:checkPermission( 'ViewAny' .. type ) then return false, 'You do not have permission view all ' .. type .. 's' end
         if user:cookiePermission( 'EditAny' .. type ) then edit = true end
+        if user:cookiePermission( 'EditOwn' .. type ) then ownedit = true end
         if user:cookiePermission( 'DeleteAny' .. type ) then delete = true end
+        if user:cookiePermission( 'DeleteOwn' .. type ) then owndelete = true end
     else
         --do we have permission to ViewOwn<Object>
-        if not user:checkPermission( 'ViewOwn' .. type ) then return false, 'You don\'t have permission view owned ' .. type .. 's' end
+        if not user:checkPermission( 'ViewOwn' .. type ) then return false, 'You do not have permission view owned ' .. type .. 's' end
         if user:cookiePermission( 'EditOwn' .. type ) then edit = true end
         if user:cookiePermission( 'DeleteOwn' .. type ) then delete = true end
         --make sure we match user or group id
@@ -144,6 +146,10 @@ function object:getList( wheres, order, limit, offset, all )
     --assign edit & delete permissions
     for k, object in pairs( objects ) do
         object.permissions = { edit = edit, delete = delete }
+        if all and ( object.user_id == user:getData().id or object.group_id == user:getData().group ) then
+            if not delete then object.permissions.delete = owndelete end
+            if not edit then object.permissions.edit = ownedit end
+        end
     end
     return objects
 end

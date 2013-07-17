@@ -21,17 +21,14 @@ end
 --update address?
 if request.post.update == 'address' then
 	--make sure we have stuff
-	if not request.post.address1 or not request.post.address2 or not request.post.postcode or not request.post.city or not request.post.country then
+	if not request.post.address or not request.post.country then
 		template:set( 'error', 'Please include all address details' )
 	elseif not countries[request.post.country] then
 		template:set( 'error', 'Please use a valid country' )
 	else
 		--update
 		local status, err = user:setData({
-			address1 = request.post.address1,
-			address2 = request.post.address2,
-			postcode = request.post.postcode,
-			city = request.post.city,
+			address = request.post.address,
 			country = request.post.country
 		})
 		if not status then

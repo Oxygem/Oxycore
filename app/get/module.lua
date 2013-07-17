@@ -3,13 +3,13 @@
     desc: Pass module requests on to the module
 ]]
 
-local oxy, luawa, header, request, user = oxy, luawa, luawa.header, luawa.request, luawa.user
+local oxy, luawa, header, request, user, template = oxy, luawa, luawa.header, luawa.request, luawa.user, oxy.template
 
 --try to load the module in question
 local module = oxy:loadModule( request.get.module )
 --fail? cya!
 if not module or not user:checkPermission( 'Module' .. request.get.module ) then
-    header:redirect( '/' )
+    return template:error( 'You don\'t have permission to do that' )
 end
 
 local req

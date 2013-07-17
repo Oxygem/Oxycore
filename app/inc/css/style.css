@@ -8,7 +8,8 @@
 }
 
 body {
-	width: auto;
+	width: 100%;
+	overflow-x: hidden;
 	margin: 0;
 	background: url( ../img/top_bg.png ) left -47px repeat-x;
 	line-height: 24px;
@@ -125,6 +126,9 @@ form {
 		width: auto;
 		display: inline;
 	}
+	form textarea.short {
+		height: 100px;
+	}
 
 table {
 	width: 100%;
@@ -195,6 +199,12 @@ table {
 }
 .twothird {
 	width: 64%;
+}
+.quarter {
+	width: 24%;
+}
+.threequarter {
+	width: 74%;
 }
 
 .hidden {
@@ -309,10 +319,7 @@ form.inline {
 		margin-top: 4px;
 		margin-bottom: 15px;
 	}
-	form.wide textarea {
-		padding: 10px;
-	}
-	form.wide input, form.wide select {
+	form.wide input, form.wide select, form.wide textarea {
 		max-width: 422px;
 		padding: 10px;
 	}
@@ -368,11 +375,6 @@ div.message.info {
 	text-shadow: 1px 1px 1px #FFF;
 	border: 1px solid #000;
 	width: 100%;
-}
-div.message.command {
-	border-bottom: none;
-	margin-bottom: 0;
-	border-radius: 3px 3px 0 0;
 }
 
 
@@ -717,56 +719,51 @@ div#dashboard {
 			}
 
 
-
-/*
-	info boxes (sidebar) */
-div.info {
-	padding: 2%;
-	background: #FAFAFA;
-	margin-bottom: 20px;
-	float: left;
-	width: 96%;
-}
-	div.info h5 {
-		margin: 0;
-		font-size: 14px;
-	}
-	div.info span {
-		margin-top: 3px;
-		float: left;
-	}
-	div.info a.button {
-		float: right;
-		margin-left: 5px;
-	}
-
-
-
 /*
 	pop infoboxes */
-div.pop_info {
-	display: inline;
+a.pop {
+	display: block;
+	width: auto;
+	float: left;
+	margin-top: 0px;
+	margin-right: 3px;
 }
-	div.pop_info div {
-		position: absolute;
+	a.pop span.container {
 		display: none;
+		position: absolute;
+		margin-top: -58px;
 		background: #FFFFFF;
 		border: 1px solid #D7D7D7;
-		margin: -48px 0 0 0;
 		border-radius: 2px;
 		padding: 5px;
-		width: 200px;
-		height: 25px;
+		width: auto;
+		height: 45px;
 		box-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.1 );
+		color: #1A1B1B;
+		text-shadow: none;
 	}
-	div.pop_info:hover div {
+	a.pop:hover span.container {
 		display: block;
 	}
-		div.pop_info div span {
+		a.pop span.container img {
+			float: left;
+			margin: 0 5px;
+		}
+		a.pop span.container span.arrow {
 			display: block;
 			position: absolute;
 			width: 80px;
 			height: 20px;
 			margin-left: -5px;
-			background: url( ../img/pop_bottom.png ) 10px 5px no-repeat;
+			background: url( ../img/pop_bottom.png ) 10px 4px no-repeat;
+		}
+		a.pop span.container strong {
+			font-size: 14px;
+		}
+		a.pop span.container span.meta {
+			display: block;
+			color: #666;
+			margin-top: -3px;
+			font-family: Verdana;
+			font-size: 11px;
 		}

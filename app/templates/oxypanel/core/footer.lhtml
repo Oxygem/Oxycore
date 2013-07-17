@@ -14,6 +14,7 @@
 	<script type="text/javascript" src="/inc/core/js/lib/tablesorter.min.js"></script>
 	<script type="text/javascript" src="/inc/core/js/search.js"></script>
 	<script type="text/javascript" src="/inc/core/js/menu.js"></script>
+	<script type="text/javascript" src="/inc/core/js/popinfo.js"></script>
 	<? if self:get( 'module_js' ) then
 		for k, file in pairs( self:get( 'module_js' ) ) do ?>
 <script type="text/javascript" src="/inc/<?=file ?>"></script>
@@ -21,7 +22,7 @@
 	end ?>
 
 	<script type="text/javascript">
-		$( 'table' ).tablesorter();
+		$( 'table' ).not( '.nosort' ).tablesorter();
 	</script>
 </body>
 </html>
