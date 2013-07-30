@@ -1,21 +1,43 @@
-<? if self:get( 'services' ) then ?>
-<table cellspacing="0" cellpadding="0">
-	<thead><tr>
-	<? for header, v in pairs( self:get( 'services' )[1] ) do ?>
-		<th><?=header ?></th>
-	<? end ?>
-		<th></th>
-	</tr></thead>
+<div class="third">
+	<form class="wide" action="/network/ipblocks/add" method="post">
+		<label for="name">Name:</label>
+		<input type="text" name="name" id="name" />
 
-	<tbody>
-	<? for k, service in pairs( self:get( 'services' ) ) do ?>
-	<tr>
-		<? for c, value in pairs( service ) do ?>
-		<td><?=value ?></td>
-		<? end ?>
-		<td><a href="/service/<?=service.id ?>">View &rarr;</a></td>
-	</tr>
-	<? end ?>
-	</tbody>
-</table>
-<? end ?>
+		<label for="type">Type:</label>
+		<select name="type" id="type">
+			<option>IPv4</option>
+			<option>IPv6</option>
+		</select>
+
+		<label for="ip">IP: 3.34.1.2 / 20af:3011::a340</label>
+		<input type="text" name="ip" id="ip" />
+
+		<label for="mask">Mask/Size:</label>
+		<select name="mask" id="mask">
+			<optgroup label="IPv4">
+				<option>/32</option>
+				<option>/31</option>
+				<option>/30</option>
+			</optgroup>
+			<optgroup label="IPv6">
+				<option>/128</option>
+				<option>/124</option>
+				<option>/120</option>
+				<option>/116</option>
+				<option>/112</option>
+				<option>/108</option>
+				<option>/104</option>
+			</optgroup>
+		</select>
+
+		<button type="submit" class="submit lightgreen">Add IP Block &#187;</button>
+		&nbsp;&nbsp;<a href="/network/ipblocks">back to ip blocks</a>
+
+		<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+	</form>
+</div>
+
+
+<div class="third">
+	<div class="message info">All IP blocks must be associated with a subnet (down to /32 or /128 = 1 IP subnets). This will be used to generate individual IP's and/or create sub-IP blocks/subnets.</div>
+</div>

@@ -11,90 +11,15 @@ linux.start = function() {
     }
 }
 
-//firewall list
-linux.list_firewall = function( key ) {
-    server.showCommand( 'Listing firewall rules...' );
-
-    ssh.new( key, function( data ) {
-        $( '#tabs .firewall .content' ).html( '<pre>' + data + '</pre>' );
-    }, function( err ) {
-        server.showError( err );
-        server.enable();
-    }, function() {
-        server.completeCommand( 'success', 'Complete' );
-        server.enable();
-    });
-}
-
-//update packages
-linux.update_packages = function( key ) {
-    server.showCommand( 'Updating packages...' );
-
-    ssh.new( key, function( data ) {
-        $( '#tabs .packages .content' ).html( '<pre>' + data + '</pre>' );
-    }, function( err ) {
-        server.showError( err );
-        server.enable();
-    }, function() {
-        server.completeCommand( 'success', 'Complete' );
-        server.enable();
-    });
-}
-
-//search packages
-linux.search_packages = function( key ) {
-    server.showCommand( 'Searching packages...' );
-
-    ssh.new( key, function( data ) {
-        $( '#tabs .packages .content' ).html( '<pre>' + data + '</pre>' );
-    }, function( err ) {
-        server.showError( err );
-        server.enable();
-    }, function() {
-        server.completeCommand( 'success', 'Complete' );
-        server.enable();
-    });
-}
-
-//list packages
-linux.list_packages = function( key ) {
-    server.showCommand( 'Listing packages...' );
-
-    ssh.new( key, function( data ) {
-        $( '#tabs .packages .content' ).html( '<pre>' + data + '</pre>' );
-    }, function( err ) {
-        server.showError( err );
-        server.enable();
-    }, function() {
-        server.completeCommand( 'success', 'Complete' );
-        server.enable();
-    });
-}
-
-//install package
-linux.install_package = function( key ) {
-    server.showCommand( 'Installing package...' );
-
-    ssh.new( key, function( data ) {
-        $( '#tabs .packages .content' ).html( '<pre>' + data + '</pre>' );
-    }, function( err ) {
-        server.showError( err );
-        server.enable();
-    }, function() {
-        server.completeCommand( 'success', 'Complete' );
-        server.enable();
-    });
-}
-
 //server status
 linux.status = function( key ) {
     server.showCommand( 'Updating status...' );
 
     //setup tab
     var tab = $( 'div[data-tab=overview] .content' );
-    tab.html( '<div class="third left"><h4>Loads:</h4><div id="status_text"><img src="/inc/core/img/loader.gif" alt="loading..." /></div></div>' );
-    tab.append( '<div class="third left"><h4>Memory:</h4><div id="memory_bars"><img src="/inc/core/img/loader.gif" alt="loading..." /></div></div>' );
-    tab.append( '<div class="third right"><h4>Disk Space:</h4><div id="disk_bars"><img src="/inc/core/img/loader.gif" alt="loading..." /></div></div>' );
+    tab.html( '<div class="third"><h4>Loads:</h4><div id="status_text"><img src="/inc/core/img/loader.gif" alt="loading..." /></div></div>' );
+    tab.append( '<div class="third"><h4>Memory:</h4><div id="memory_bars"><img src="/inc/core/img/loader.gif" alt="loading..." /></div></div>' );
+    tab.append( '<div class="third last"><h4>Disk Space:</h4><div id="disk_bars"><img src="/inc/core/img/loader.gif" alt="loading..." /></div></div>' );
 
 	//make new request
     ssh.new( key, function( data ) {
@@ -159,49 +84,6 @@ linux.status = function( key ) {
     //complete function
     }, function() {
         server.completeCommand( 'success', 'Status complete' );
-        server.enable();
-    });
-}
-
-//list cpu
-linux.list_cpu = function( key ) {
-    server.showCommand( 'Listing CPUs...' );
-
-    ssh.new( key, function( data ) {
-        $( '#tabs .hardware .content' ).html( '<pre>' + data + '</pre>' );
-    }, function( err ) {
-        server.showError( err );
-        server.enable();
-    }, function() {
-        server.completeCommand( 'success', 'Complete' );
-        server.enable();
-    });
-}
-
-linux.list_memory = function( key ) {
-    server.showCommand( 'Listing Memory...' );
-
-    ssh.new( key, function( data ) {
-        $( '#tabs .hardware .content' ).html( '<pre>' + data + '</pre>' );
-    }, function( err ) {
-        server.showError( err );
-        server.enable();
-    }, function() {
-        server.completeCommand( 'success', 'Complete' );
-        server.enable();
-    });
-}
-
-linux.list_disks = function( key ) {
-    server.showCommand( 'Listing Disks...' );
-
-    ssh.new( key, function( data ) {
-        $( '#tabs .hardware .content' ).html( '<pre>' + data + '</pre>' );
-    }, function( err ) {
-        server.showError( err );
-        server.enable();
-    }, function() {
-        server.completeCommand( 'success', 'Complete' );
         server.enable();
     });
 }

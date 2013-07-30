@@ -1,27 +1,133 @@
-<table cellborder="0" cellspacing="0">
-	<thead><tr>
-		<th>IP</th>
-		<th>Status</th>
-		<th>Linked</th>
-		<th width="150px">Actions</th>
-	</tr></thead>
-	<tbody>
-		<? for k, v in pairs( self:get( 'ipblock' ).ips ) do ?>
-		<tr>
-			<td><?=v.address ?></td>
-			<td><?=v.status ?></td>
-			<td><? if v.device_id > 0 then ?>
-				<a href="/device/<?=v.device_id ?>" class="button lightblue pop" data-object-type="device" data-object-id="<?=v.device_id ?>">Device</a>
-			<? end ?></td>
-			<td>
-				<a href="#" class="button blue">Unreserve</a>
-				<a href="#" class="button red">Delete</a>
-			</td>
-		</tr>
-		<? end if #self:get( 'ipblock' ).ips <= 0 then ?>
-		<tr>
-			<td colspan="4">No IP's found</td>
-		</tr>
-		<? end ?>
-	</tbody>
-</table>
+<div class="twothird left">
+	<h2>IP's</h2>
+	<table cellborder="0" cellspacing="0">
+		<thead><tr>
+			<th>IP</th>
+			<th>Status</th>
+			<th>Linked</th>
+			<th width="150px">Actions</th>
+		</tr></thead>
+		<tbody>
+			<? for k, v in pairs( self:get( 'ipblock' ).ips ) do ?>
+			<tr>
+				<td><?=v.address ?></td>
+				<td><?=v.status ?></td>
+				<td><? if v.device_id > 0 then ?>
+					<a href="/device/<?=v.device_id ?>" class="button lightblue pop" data-object-type="device" data-object-id="<?=v.device_id ?>">Device</a>
+				<? end ?></td>
+				<td>
+					<a href="#" class="button blue">Unreserve</a>
+					<a href="#" class="button red">Delete</a>
+				</td>
+			</tr>
+			<? end if #self:get( 'ipblock' ).ips <= 0 then ?>
+			<tr>
+				<td colspan="4">No IP's found</td>
+			</tr>
+			<? end ?>
+		</tbody>
+	</table>
+
+	<br />
+	<form class="half left">
+		<strong>Add IP's: </strong><br />
+		<label for="ip">list/range: 1.2.3.0 - 1.2.3.254, 1.2.3.0, 1.2.3.1</label>
+		<input type="text" name="ip" id="ip" />
+
+		<button type="submit" class="green">Add IP's &#187;</button>
+	</form>
+
+	<br />
+	<? if self:get( 'ipblock' ).type == 'IPv4' then ?>
+
+		<form class="half right">
+			<button class="green">Auto Add Subnet IP's &#187;</button><br />
+			<small>This will add all IP's in the IP Block's subnet</small>
+		</form>
+	<? else ?>
+		<form class="half right inline">
+			<label>IP Count:</label>
+			<input type="text" value="100" />
+			<button class="green">Auto Generate IP's &#187;</button><br />
+			<small>Automatically generate and add IP's to this block</small>
+		</form>
+	<? end ?>
+</div><!--end three q left-->
+
+
+
+
+<div class="third right">
+	<h2>Subnet IP Blocks</h2>
+
+	<table cellborder="0" cellspacing="0">
+		<thead><tr>
+			<th>ID</th>
+			<th>Name</th>
+			<th>Subnet</th>
+			<th>Actions</th>
+		</tr></thead>
+		<tbody>
+			<tr>
+				<td>1</td>
+				<td>Bloc</td>
+				<td>2.4.54.235/28</td>
+				<td><a class="button green">View</a></td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>Bloc</td>
+				<td>2.4.54.235/28</td>
+				<td><a class="button green">View</a></td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>Bloc</td>
+				<td>2.4.54.235/28</td>
+				<td><a class="button green">View</a></td>
+			</tr>
+		</tbody>
+	</table>
+
+	<br />
+	<strong>Add Subnet:</strong><br />
+	<form class="inline">
+		<div class="wide">
+			<div class="left">
+				<label for="ip">Prefix IP</label><br />
+				<input type="text" id="ip" name="ip" value="23.34" class="disabled right_align" disabled />
+			</div>
+			<div class="left">
+				<label for="mask"></label><br />
+				.<select name="mast" id="mask">
+					<option>246</option>
+					<option>26</option>
+					<option>28</option>
+					<option>30</option>
+				</select>
+			</div>
+			<div class="left right_margin">
+				<label for="mask"></label><br />
+				.<select name="mast" id="mask">
+					<option>246</option>
+					<option>26</option>
+					<option>28</option>
+					<option>30</option>
+				</select>
+			</div>
+
+			<div class="left right_margin">
+				<label for="mask">Mask</label><br />
+				<select name="mast" id="mask">
+					<option>/24</option>
+					<option>/26</option>
+					<option>/28</option>
+					<option>/30</option>
+				</select>
+			</div>
+		</div><!--end wide-->
+		
+		<label for="mask">&nbsp;</label><br />
+		<button type="submit" class="green">Add Subnet &#187;</button>
+	</form>
+</div><!--end quarter right-->

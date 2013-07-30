@@ -72,7 +72,7 @@ function device:command( command, args )
 	end
 
     --host, port & user
-    local host, port, user = self.ssh_host, self.ssh_port, self.ssh_user
+    local host, port, user = self.host, self.ssh_port, self.ssh_user
     --missing details?
     if not host or not port or not user then
         return false, 'Invalid SSH details'
@@ -104,8 +104,8 @@ end
 
 
 
---allowed post functions
-device.posts = { runCommand = 'view', edit = 'edit' }
+--allowed post functions (command => permission)
+device.posts = { runCommand = 'view', edit = 'edit', ssh = 'edit', snmp = 'edit' }
 
 --POST to request a command - API mode only
 function device:runCommand()
@@ -123,11 +123,11 @@ function device:runCommand()
     end
 end
 
---POST to edit (just name!) - non API
+--POST to edit - non API
 function device:edit()
     local request = luawa.request
 
-    if not request.post.name or not request.post.status or not request.post.type or not request.post.config or not request.post.group then
+    if not request.post.name or not request.post.host or not request.post.status or not request.post.type or not request.post.config or not request.post.group then
         return template:error( 'Please complete all fields' )
     end
 
@@ -144,6 +144,7 @@ function device:edit()
     self.type = request.post.type
     self.config = request.post.config
     self.device_group_id = request.post.group
+    self.host = request.post.host
 
     --update service
     local update, err = database:update(
@@ -153,7 +154,8 @@ function device:edit()
             status = request.post.status,
             type = request.post.type,
             config = request.post.config,
-            device_group_id = request.post.group
+            device_group_id = request.post.group,
+            host = request.post.host
         }, { id = self.id }
     )
     if not update then
@@ -166,5 +168,12 @@ function device:edit()
     luawa:processFile( 'app/get/object' )
 end
 
+--POST to edit ssh details
+function device:ssh()
+end
+
+--POST to edit snmp details
+function device:snmp()
+end
 
 return device

@@ -3,7 +3,7 @@
     desc: most basic service with Linux commands available to all
 ]]
 local config = {
-    group = 'unix',
+    group = 'linux',
     parent = 'linux',
     name = 'Linux: Debian',
 

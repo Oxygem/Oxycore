@@ -14,7 +14,11 @@ local network = {
     group = oxy.object:new( 'group' ),
 
     --ssh connecting
-    ssh = require( oxy.config.root .. 'modules/network/ssh' )
+    ssh = require( oxy.config.root .. 'modules/network/ssh' ),
+
+    --ip/subnet processing
+    ipv4 = require( oxy.config.root .. 'modules/network/ipv4' ),
+    ipv6 = require( oxy.config.root .. 'modules/network/ipv6' )
 }
 
 

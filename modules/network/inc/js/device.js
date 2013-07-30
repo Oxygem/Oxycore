@@ -163,6 +163,7 @@ var server = {
                     server.commands[command]( data.request_key );
                 //default
                 } else {
+                    server.showConsole();
                     server.disable();
                     server.showCommand( 'Running command...' );
 

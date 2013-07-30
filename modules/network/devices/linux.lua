@@ -3,8 +3,8 @@
     desc: most basic service with Linux commands available to all
 ]]
 local config = {
-    group = 'unix',
-    parent = 'unix',
+    group = 'linux',
+    parent = 'base',
     name = 'Linux: Generic',
 
     --javascript file(s) to load on service page
@@ -15,6 +15,11 @@ local config = {
 
     --tabs
     tabs = {
+        { name = 'Overview', js = 'overview', permission = 'view', order = 0, default = true, buttons = {
+            { name = 'Status', command = 'status', color = 'lightgreen' },
+            { name = 'Process List', command = 'list_process', color = 'green' }
+        } },
+
         {
             name = 'Power',
             js = 'power',
@@ -35,8 +40,7 @@ local config = {
             },
             permission = 'edit'
         },
-        { name = 'File Browser', js = 'files', permission = 'edit' },
-        { name = 'Console', js = 'console', permission = 'edit' }
+        { name = 'File Browser', js = 'files', permission = 'edit' }
     },
 
 
@@ -50,6 +54,12 @@ local config = {
                 { action = 'exec', out = 'uptime', command = 'uptime' },
                 { action = 'exec', out = 'memory', command = 'free -m' },
                 { action = 'exec', out = 'disk', command = 'df -m' }
+            }
+        },
+        list_process = {
+            permission = 'view',
+            actions = {
+                { action = 'exec', out = 'processes', command = 'ps aux' }
             }
         },
 

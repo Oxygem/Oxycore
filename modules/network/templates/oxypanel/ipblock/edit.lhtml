@@ -1,14 +1,16 @@
-<form action="/ipblock/<?=self:get( 'ipblock' ).id ?>/edit" method="post" class="wide">
-    <label for="name">Name:</label>
-    <input type="text" name="name" id="name" value="<?=self:get( 'ipblock' ).name ?>" />
+<div class="left third">
+    <form action="/ipblock/<?=self:get( 'ipblock' ).id ?>/edit" method="post" class="wide">
+        <label for="name">Name:</label>
+        <input type="text" name="name" id="name" value="<?=self:get( 'ipblock' ).name ?>" />
 
-    <label for="type">Type:</label>
-    <select name="type">
-    	<option>IPv4</option>
-    	<option>IPv6</option>
-    </select>
-    
-    <input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
-    <button type="submit" class="submit" name="update" value="profile">Update IP Block &#187;</button>&nbsp;&nbsp;
-    <a href="/ipblock/<?=self:get( 'ipblock' ).id ?>">back to ipblock</a>
-</form>
+        <label for="type">Type:</label>
+        <select name="type">
+        	<option>IPv4</option>
+        	<option>IPv6</option>
+        </select>
+        
+        <input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+        <button type="submit" class="submit lightgreen" name="update" value="profile">Update IP Block &#187;</button>&nbsp;&nbsp;
+        <a href="/ipblock/<?=self:get( 'ipblock' ).id ?>">back to ipblock</a>
+    </form>
+</div><!--end third left-->

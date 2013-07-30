@@ -25,6 +25,7 @@ local config = {
         ipblock = {
             name = 'IP Block',
             names = 'IP Blocks',
+            title_meta = 'subnet',
             permission = 'IPBlock',
             filters = { 'type', 'server_id', 'server_group_id' },
             --search_fields = { 'name' }

@@ -8,8 +8,8 @@ local config = {
 
     --tabs
     tabs = {
-        { name = 'Overview', js = 'overview', permission = 'view', order = 0, default = true, buttons = {
-            { name = 'Status', command = 'status', color = 'lightgreen' }
+        { name = 'Console', js = 'console', permission = 'edit', order = 98, buttons = {
+            { name = 'Start Console', command = 'status', color = 'lightgreen' }
         } },
 
         { name = 'Monitors', js = 'monitor', permission = 'view', order = 99, buttons = {
