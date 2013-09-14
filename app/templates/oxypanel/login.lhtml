@@ -1,9 +1,9 @@
-
+<? local request = luawa.request ?>
 <!DOCTYPE html>
 <html>
 <head>
 	<!--meta-->
-	<title>Login / Oxypanel</title>
+	<title>Login / <?=oxy.brand.name ?></title>
 	<meta charset="UTF-8" />
 
 	<!--style-->
@@ -19,7 +19,7 @@
 		<div id="header">
 			<ul id="nav">
 				<!--logo-->
-				<li id="logo"><a href="/login"><img src="/inc/core/<?=oxy.brand.logo ?>" alt="Afterburst" /></a></li>
+				<li id="logo"><a href="/login"><img src="/inc/core/<?=oxy.brand.logo ?>" alt="<?=oxy.brand.name ?>" /></a></li>
 
 
 				<li class="profile active right"><a href="/login">Login</a></li>
@@ -40,13 +40,13 @@
 
 				<form class="wide" action="/login" method="post">
 					<div><label for="email">Email:</label>
-					<input type="text" name="email" id="email" /></div>
+					<input type="text" name="email" id="email" value="<?=request.get.email ?>" /></div>
 
 					<div><label for="password">Password:</label>
-					<input type="password" name="password" id="password" /></div>
+					<input type="password" name="password" id="password" value="<?=request.get.password ?>" /></div>
 
 					<div>
-						<button type="submit" class="submit">Login &#187;</button>
+						<button type="submit" class="lightgreen submit">Login &#187;</button>
 						or <a href="#">reset your password</a>
 					</div>
 					<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />

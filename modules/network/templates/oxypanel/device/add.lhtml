@@ -1,21 +1,45 @@
-<? if self:get( 'services' ) then ?>
-<table cellspacing="0" cellpadding="0">
-	<thead><tr>
-	<? for header, v in pairs( self:get( 'services' )[1] ) do ?>
-		<th><?=header ?></th>
-	<? end ?>
-		<th></th>
-	</tr></thead>
+<?
+	local network = oxy.network
+?>
 
-	<tbody>
-	<? for k, service in pairs( self:get( 'services' ) ) do ?>
-	<tr>
-		<? for c, value in pairs( service ) do ?>
-		<td><?=value ?></td>
-		<? end ?>
-		<td><a href="/service/<?=service.id ?>">View &rarr;</a></td>
-	</tr>
-	<? end ?>
-	</tbody>
-</table>
-<? end ?>
+<form action="/network/devices/add" method="post" class="wide">
+	<div class="third">
+		<label for="name">Name</label>
+		<input type="text" name="name" id="name" />
+
+		<label for="config">Config:</label>
+        <select name="config" id="config">
+            <? for k, v in pairs( network:getDeviceList() ) do ?>
+                    <? for c, d in pairs( v ) do ?>
+                        <option value="<?=c ?>"><?=d ?></option>
+                    <? end ?>
+            <? end ?>
+        </select>
+
+		<label for="hostname">Hostname/IP</label>
+		<input type="text" name="hostname" id="hostname" />
+	</div>
+
+	<div class="third">
+		<label for="port">SSH Port</label>
+		<input type="text" name="port" id="port" />
+
+		<label for="user">SSH User</label>
+		<input type="text" name="user" id="user" />
+
+		<label for="password">SSH Password</label>
+		<input type="password" name="password" id="password" />
+
+		<div class="right">
+			<a href="/network/devices">back to devices</a>&nbsp;&nbsp;
+			<button class="submit lightgreen">Add Device &#187;</button>
+		</div>
+	</div>
+
+	<div class="third last">
+		<br />
+		<div class="message info">The SSH password is needed once (not stored) to login &amp; add this servers key. <a class="button lightblue" href="http://doc.oxypanel.com/Network/Devices/Add">Read more &#187;</a><br /><br />The device can be added to a device group after it's creation.</div>
+	</div>
+
+	<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+</form>

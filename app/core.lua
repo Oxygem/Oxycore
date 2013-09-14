@@ -23,12 +23,14 @@ function oxy:setConfig( config )
     self.email = require( self.config.root .. 'app/email' )
     --get brand
     self.brand = require( self.config.root .. 'app/brand' )
+    --get users (note not luawa.user)
+    self.users = require( self.config.root .. 'app/users' )
 end
 
 --load module
 function oxy:loadModule( module )
     --module folder exists?
-    if not self.config.modules[module] then return false end
+    if not self.config[module] then return false end
 
     --need to load it?
     if not self[module] then

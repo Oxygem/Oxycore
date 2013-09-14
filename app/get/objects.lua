@@ -3,7 +3,7 @@
     desc: get objects list
 ]]
 
-local oxy, request, header, template, user = oxy, luawa.request, luawa.header, oxy.template, luawa.user
+local oxy, request, header, template, user, session = oxy, luawa.request, luawa.header, oxy.template, luawa.user, luawa.session
 
 --no object set, no object match or hidden object
 if not request.args.type or not oxy.config.objects[request.args.type] or oxy.config.objects[request.args.type].hidden then return header:redirect( '/' ) end
@@ -17,7 +17,7 @@ if request.get.action == 'add' then
 	template:set( 'page_title', 'Add ' .. object_conf.name )
 
 	if not user:checkPermission( 'Add' .. object_type ) then
-		template:set( 'error', 'You do not have permission to add ' .. object_type .. 's' )
+		session:addMessage( 'error', 'You do not have permission to add ' .. object_type .. 's' )
 	else
 		action_template = 'add'
 	end
@@ -54,7 +54,7 @@ else
 	end
 	--error (permissions error normally/hopefully)
 	if err then
-		template:set( 'error', err )
+		session:addMessage( 'error', err )
 	else
 		template:set( object_type .. 's', objects, true )
 	end

@@ -30,7 +30,7 @@ function template:loadModule( module, template, inline )
 end
 
 --wrap template w/ header+footer
-function template:wrap( template, inline )
+function template:wrap( template )
     self:load( 'core/header' )
     self:put( template )
     self:load( 'core/footer' )
@@ -38,7 +38,7 @@ end
 
 --error only w/ api
 function template:error( message )
-    self:set( 'error', message, true )
+    luawa.session:addMessage( 'error', message )
     self:load( 'core/header' )
     self:load( 'core/footer' )
 end

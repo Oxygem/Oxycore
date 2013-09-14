@@ -3,12 +3,7 @@
     desc: admin users
 ]]
 
-local template, database, request, session, user = oxy.template, luawa.database, luawa.request, luawa.session, luawa.user
-
---token?
-if not request.post.token or not session:checkToken( request.post.token ) then
-    return template:error( 'Invalid form token' )
-end
+local template, database, request, session, user, header = oxy.template, luawa.database, luawa.request, luawa.session, luawa.user, luawa.header
 
 --login & permission
 if not user:checkLogin() or not user:checkPermission( 'EditPermission' ) then
@@ -34,7 +29,8 @@ database:delete( 'user_permissions' )
 --re-add new permissions
 database:insert( 'user_permissions', { 'group', 'permission' }, permissions )
 
-template:set( 'success', 'Permissions updated' )
+--flush the user shared memory, force permission reload
+ngx.shared[luawa.shm_prefix .. 'user']:flush_all()
 
---end
-luawa:processFile( 'modules/admin/get/permissions' )
+--redirect
+header:redirect( '/admin/permissions', 'success', 'Permissions updated' )

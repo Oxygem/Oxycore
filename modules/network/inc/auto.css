@@ -50,6 +50,9 @@ ul.tabs {
 		float: left;
 		width: 100%;
 	}
+	div#main div.tab div.content {
+		margin-top: 20px;
+	}
 
 div.feedback {
 }

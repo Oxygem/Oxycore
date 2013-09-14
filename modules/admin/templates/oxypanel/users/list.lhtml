@@ -13,7 +13,7 @@
 </form>
 
 <span class="right admin">
-	<? if user:cookiePermission( 'AddUser' ) then ?><a href="/admin/users/add" class="button admin">Add user</a><? end ?>
+	<? if user:checkPermission( 'AddUser' ) then ?><a href="/admin/users/add" class="button admin">Add user</a><? end ?>
 </span>
 
 <table cellborder="0" cellpadding="0">
@@ -33,7 +33,14 @@
 				<td><?=user.name ?></td>
 				<td><?=user.real_name ?></td>
 				<td><?=user.email ?></td>
-				<td><a href="/admin/users/edit?id=<?=user.id ?>" class="button black">Edit</a> <a class="button red">Delete</a></td>
+				<td>
+					<a href="/admin/users/edit?id=<?=user.id ?>" class="button black">Edit</a>
+					<form class="inline" method="post" action="/admin/users/delete">
+						<input type="hidden" name="id" value="<?=user.id ?>" />
+						<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+						<button type="submit" class="button red">Delete</button>
+					</form>
+				</td>
 			</tr>
 		<? end ?>
 	</tbody>

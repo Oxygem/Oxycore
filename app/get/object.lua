@@ -3,7 +3,7 @@
     desc: Pass object requests to the module
 ]]
 
-local oxy, luawa, header, request, user, template = oxy, luawa, luawa.header, luawa.request, luawa.user, oxy.template
+local oxy, luawa, header, request, user, template, utils = oxy, luawa, luawa.header, luawa.request, luawa.user, oxy.template, luawa.utils
 
 --id not set?
 if not request.get.id or not request.get.type then return template:error( 'Invalid ID or type' ) end
@@ -25,26 +25,34 @@ end
 --set our request module to the module (for header)
 request.get.module = type.module
 request.get.mreq = request.get.type .. 's'
+
 --default template = view
-local action = 'view'
---edit template?
+local action, permission, wrap = 'view', 'view', true
+
+--edit action?
 if request.get.action == 'edit' then
-	action = 'edit'
-end
-if request.get.action == 'owner' then
-	action = 'owner'
+	action, permission = 'edit', 'edit'
+
+--owner action
+elseif request.get.action == 'owner' then
+	action, permission = 'owner', 'owner'
 	--get GROUPS for OWNER CHANGE PAGE?
+
+--custom action
+else
+	if type.actions and type.actions[request.get.action] then
+		action, permission = request.get.action, type.actions[request.get.action].permission
+		if type.actions[request.get.action].wrap ~= nil then wrap = type.actions[request.get.action].wrap end
+	end
 end
 
 --get our object
-local object, err = module[request.get.type]:get( request.get.id, action )
+local object, err = module[request.get.type]:get( request.get.id, permission )
 if not object then
 	return template:error( err )
 else
-	--run prepare on object if we're viewing
-	if action == 'view' and object.prepareView then object:prepareView() end
-	--run prepare on object if we're editing
-	if action == 'edit' and object.prepareEdit then object:prepareEdit() end
+	--prepare function?
+	if object['prepare' .. utils.capitalizeFirst( action )] then object['prepare' .. utils.capitalizeFirst( action )]( object ) end
 
 	--add to template
 	template:set( request.get.type, object, true )
@@ -68,6 +76,10 @@ else
 end
 
 --templates
-template:load( 'core/header' )
-template:loadModule( type.module, request.get.type .. '/' .. action )
-template:load( 'core/footer' )
+if wrap then
+	template:load( 'core/header' )
+	template:loadModule( type.module, request.get.type .. '/' .. action )
+	template:load( 'core/footer' )
+else
+	template:loadModule( type.module, request.get.type .. '/' .. action )
+end

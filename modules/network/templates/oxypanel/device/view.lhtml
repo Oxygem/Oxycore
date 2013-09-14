@@ -21,18 +21,24 @@
 
 <div class="threequarter right" id="tabs">
     <div id="device_console" class="terminal hidden"><pre></pre></div><!--end console-->
+    <div id="device_data_input" class="hidden"></div><!--end device data input-->
 
     <? for k, v in pairs( self:get( 'device' ).configuration.tabs ) do ?>
         <div class="<?=v.js ?> tab<? if not v.default then ?> hidden<? end ?>" data-tab="<?=v.js ?>">
-            <div class="content"></div>
-
             <div class="buttons"><? if v.buttons then
                 for k, v in pairs( v.buttons ) do
                     if oxy.network.device:permission( self:get( 'device' ).id, self:get( 'device' ).configuration.commands[v.command].permission ) then ?>
-                <button class="service_button <?=v.color ?>" data-command="<?=v.command ?>"<? if v.data then ?> data-needed="<?=v.data.id ?>" data-name="<?=v.data.name ?>"<? end if v.confirm then ?> data-confirm="<?=v.confirm ?>"<? end ?>><?=v.name ?></button>
+                <button class="service_button <?=v.color ?>"
+                    <? if v.js then ?> data-js="<?=v.js ?>"<? elseif v.command then ?> data-command="<?=v.command ?>"<? end ?>
+                    <? if v.data then ?> data-needed="<?=v.data.id ?>" data-name="<?=v.data.name ?>"<? end ?>
+                    <? if v.confirm then ?> data-confirm="<?=v.confirm ?>"<? end ?>><?=v.name ?>
+                </button>
             <?      end
                 end
             end ?></div>
+
+            <div class="content">
+            </div>
         </div>
     <? end ?>
 </div><!--end left-->

@@ -26,7 +26,7 @@ end
 local full_permissions = {}
 --add modules
 for k, v in pairs( oxy.config.modules ) do
-	local module = oxy.config[k]
+	local module = oxy.config[v]
 	table.insert( full_permissions, 'Module' .. module.name )
 	--custom permissions?
 	if module.permissions then

@@ -15,7 +15,7 @@
 				<option value="<?=group.id ?>"<? if group.id == self:get( 'user' ).group then ?> selected<? end ?>><?=group.name ?></option>
 			<? end ?>
 		</select>
-		<button type="submit" class="submit green">Update User &#187;</button>
+		<button type="submit" class="submit lightgreen">Update User &#187;</button>
 		&nbsp;&nbsp;<a href="/admin/users">back to users</a>
 
 		<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />

@@ -97,7 +97,6 @@ form {
 		cursor: pointer;
 	}
 	form textarea {
-		max-width: 600px;
 		width: 100%;
 		height: 200px;
 	}
@@ -113,6 +112,10 @@ form {
 	}
 	form select:focus {
 		background: #FFFECC url( ../img/form/select_arrow.png ) 97% center no-repeat;
+	}
+	form input.disabled {
+		background: #FFF;
+		opacity: 0.8;
 	}
 	form button.submit {
 		margin-left: 0px;
@@ -182,26 +185,45 @@ table {
 }
 
 .left_margin {
-	margin-left: 40px;
+	margin-left: 1%;
 }
 .right_margin {
-	margin-right: 40px;
+	margin-right: 1%;
+}
+
+.right_align {
+	text-align: right;
 }
 
 .wide {
 	width: 100%;
 }
 .half {
-	width: 48%;
+	width: 49%;
+	display: inline-block;
+	vertical-align: top;
+	margin-right: 1%;
+}
+.half.last {
+	margin-right: 0;
 }
 .third {
 	width: 32%;
+	display: inline-block;
+	vertical-align: top;
+	margin-right: 1.5%;
+}
+.third.last {
+	margin-right: 0;
 }
 .twothird {
-	width: 64%;
+	width: 65%;
 }
 .quarter {
 	width: 24%;
+}
+.quarter.inner {
+	margin-left: 1%;
 }
 .threequarter {
 	width: 74%;
@@ -244,12 +266,12 @@ button.blue:hover, .button.blue:hover {
 }
 button.lightblue, .button.lightblue {
 	color: #fff;
-	background: rgb( 60, 60, 200 );
+	background: rgb( 100, 100, 240 );
 	text-shadow: 1px 1px 1px #000;
 	border: 1px solid #000;
 }
 button.lightblue:hover, .button.lightblue:hover {
-	background: rgb( 42, 41, 150 );
+	background: rgb( 70, 70, 220 );
 }
 button.red, .button.red {
 	color: #fff;
@@ -308,20 +330,14 @@ form.inline {
 	form.inline input, form.inline select {
 		display: inline;
 		width: auto;
+		max-width: 100%;
 	}
 	form.inline select {
 		padding-right: 25px;
 	}
-	form.inline input.submit2 {
-		margin-left: -7px;
-	}
 	form.inline span.admin {
 		margin-top: 4px;
 		margin-bottom: 15px;
-	}
-	form.wide input, form.wide select, form.wide textarea {
-		max-width: 422px;
-		padding: 10px;
 	}
 form.inline.search {
 	margin-right: 30px;
@@ -338,6 +354,11 @@ form.inline.search {
 		cursor: pointer;
 		color: #999;
 		border-radius: 0;
+	}
+form.wide {
+}
+	form.wide input, form.wide select, form.wide textarea {
+		padding: 10px;
 	}
 
 div.message {
@@ -418,6 +439,7 @@ ul#nav {
 		height: 66px;
 		margin-left: -40px;
 		float: left;
+		margin-right: 2px;
 		margin-top: -20px;
 	}
 		ul#nav li#logo img {
@@ -505,6 +527,7 @@ ul#subnav {
 			margin: 28px 0 0 -13px;
 			display: none;
 			width: 500px;
+			z-index: 99;
 		}
 		ul#subnav li:hover ul.dropdown {
 			display: block;

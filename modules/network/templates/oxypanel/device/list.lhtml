@@ -44,7 +44,7 @@
 				<a href="/network/devices" class="button">My devices</a>
 			<? end ?>
 
-		<? if user:cookiePermission( 'Adddevice' ) then ?><a href="/network/devices/add" class="button admin">Add device</a><? end ?>
+		<? if user:checkPermission( 'Adddevice' ) then ?><a href="/network/devices/add" class="button admin">Add device</a><? end ?>
 	</span>
 </form>
 
@@ -56,7 +56,7 @@
 		<th>Type</th>
 		<th>Config</th>
 		<th>Status</th>
-		<th width="180px">Linked</th>
+		<th width="80px">Linked</th>
 		<th width="180px">Actions</th>
 	</tr></thead>
 
@@ -67,8 +67,8 @@
 		<td><?=service.id ?></td>
 
 		<? if request.get.action == 'all' then ?><td>
-			<? if service.user_id > 0 then ?><a class="button admin" href="/user/<?=service.user_id ?>">User</a><? end ?>
-			<? if service.group_id > 0 then ?><a class="button admin" href="/admin/users?group=<?=service.group_id ?>">Group</a><? end ?>
+			<? if service.user_id > 0 then ?><a class="button admin" href="/admin/users?id=<?=service.user_id ?>">User</a><? end ?>
+			<? if service.group_id > 0 then ?><a class="button admin" href="/admin/groups?id=<?=service.group_id ?>">Group</a><? end ?>
 		</td><? end ?>
 
 		<td><?=service.name ?></td>

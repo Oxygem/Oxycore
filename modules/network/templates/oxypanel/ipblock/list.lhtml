@@ -19,14 +19,14 @@
 	<input type="submit" class="submit" value="Update &#187;" />
 
 	<span class="right admin">
-		<? if user:cookiePermission( 'ViewAnyIpblock' ) then ?>
+		<? if user:checkPermission( 'ViewAnyIpblock' ) then ?>
 			<? if request.get.action ~= 'all' then ?>
 				<a href="/network/ipblocks/all" class="button admin">All IP Blocks</a>
 			<? else ?>
 				<a href="/network/ipblocks" class="button">My IP Blocks</a>
 			<? end ?>
 		<? end ?>
-		<? if user:cookiePermission( 'AddIpblock' ) then ?><a href="/network/ipblocks/add" class="button admin">Add IP Block</a><? end ?>
+		<? if user:checkPermission( 'AddIpblock' ) then ?><a href="/network/ipblocks/add" class="button admin">Add IP Block</a><? end ?>
 	</span>
 </form>
 
@@ -37,7 +37,7 @@
 		<th>Name</th>
 		<th>Type</th>
 		<th>Subnet</th>
-		<th width="220px">Linked</th>
+		<th width="150px">Linked</th>
 		<th width="180px">Actions</th>
 	</tr></thead>
 
@@ -47,8 +47,8 @@
 		<td><?=ipblock.id ?></td>
 
 		<? if request.get.action == 'all' then ?><td>
-			<? if ipblock.user_id > 0 then ?><a class="button admin" href="/user/<?=ipblock.user_id ?>">User</a><? end ?>
-			<? if ipblock.group_id > 0 then ?><a class="button admin" href="/group/<?=ipblock.group_id ?>">Group</a><? end ?>
+			<? if ipblock.user_id > 0 then ?><a class="button admin" href="/admin/users?id=<?=ipblock.user_id ?>">User</a><? end ?>
+			<? if ipblock.group_id > 0 then ?><a class="button admin" href="/admin/groups?id=<?=ipblock.group_id ?>">Group</a><? end ?>
 		</td><? end ?>
 
 		<td><?=ipblock.name ?></td>
@@ -56,7 +56,6 @@
 		<td><?=ipblock.subnet ?></td>
 
 		<td>
-			<? if ipblock.parent_id > 0 then ?><a href="/ipblock/<?=ipblock.parent_id ?>" class="button lightblue pop" data-object-type="ipblock" data-object-id="<?=ipblock.parent_id ?>">Parent</a><? end ?>
 			<? if ipblock.device_id > 0 then ?><a href="/device/<?=ipblock.device_id ?>" class="button lightblue pop" data-object-type="device" data-object-id="<?=ipblock.device_id ?>">Device</a><? end ?>
 			<? if ipblock.device_group_id > 0 then ?><a href="/group/<?=ipblock.device_group_id ?>" class="button lightblue pop" data-object-type="group" data-object-id="<?=ipblock.device_group_id ?>">Group</a><? end ?>
 		</td>

@@ -1,3 +1,4 @@
+<? local network = oxy.network ?>
 <div class="third">
 	<form class="wide" action="/network/ipblocks/add" method="post">
 		<label for="name">Name:</label>
@@ -5,28 +6,26 @@
 
 		<label for="type">Type:</label>
 		<select name="type" id="type">
-			<option>IPv4</option>
-			<option>IPv6</option>
+			<option value="ipv4">IPv4</option>
+			<option value="ipv6">IPv6</option>
 		</select>
 
-		<label for="ip">IP: 3.34.1.2 / 20af:3011::a340</label>
-		<input type="text" name="ip" id="ip" />
+		<label for="prefix">Prefix IP: 3.34.1.2 / 20af:3011::a340</label>
+		<input type="text" name="prefix" id="prefix" />
 
 		<label for="mask">Mask/Size:</label>
 		<select name="mask" id="mask">
 			<optgroup label="IPv4">
-				<option>/32</option>
-				<option>/31</option>
-				<option>/30</option>
+				<? for k, v in pairs( network.ipv4.masks ) do if k > 7 then 
+					v[1], v[2], v[3], v[4] = 255 - v[1], 255 - v[2], 255 - v[3], 255 - v[4] ?>
+					<option value="<?=k ?>">/<?=k ?> (<?=v[1] ?>.<?=v[2] ?>.<?=v[3] ?>.<?=v[4] ?>)</option>
+				<? end end ?>
 			</optgroup>
 			<optgroup label="IPv6">
-				<option>/128</option>
-				<option>/124</option>
-				<option>/120</option>
-				<option>/116</option>
-				<option>/112</option>
-				<option>/108</option>
-				<option>/104</option>
+				<? for i = 4, 32 do
+					local v = i * 4 ?>
+					<option value="<?=v ?>">/<?=v ?></option>
+				<? end ?>
 			</optgroup>
 		</select>
 
@@ -39,5 +38,5 @@
 
 
 <div class="third">
-	<div class="message info">All IP blocks must be associated with a subnet (down to /32 or /128 = 1 IP subnets). This will be used to generate individual IP's and/or create sub-IP blocks/subnets.</div>
+	<div class="message info">All IP blocks must be associated with a subnet (down to /32 or /128 = 1 IP subnets). This will be used to generate individual IP's and/or create sub-IP blocks/subnets.<br /><br />The block can be assigned to a device and device group after it's creation.</div>
 </div>

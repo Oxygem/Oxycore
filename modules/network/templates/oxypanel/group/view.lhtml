@@ -6,7 +6,7 @@
         <th>Type</th>
         <th>Config</th>
         <th>Status</th>
-        <th width="150px"></th>
+        <th width="150px">Actions</th>
     </tr></thead>
     <tbody>
         <? for k, v in pairs( self:get( 'group' ).devices ) do

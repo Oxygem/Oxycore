@@ -13,7 +13,7 @@ template:set( 'groups', network.group:getOwned( {}, 'id DESC', 20 ), true )
 --page title
 template:set( 'page_title', 'Devices' )
 template:set( 'page_title_meta', 'owned by you' )
-if user:cookiePermission( 'ViewAnyDevice' ) then
+if user:checkPermission( 'ViewAnyDevice' ) then
 	template:set( 'page_title_buttons', { { class = 'admin', link = '/network/devices/all', text = 'View All' } } )
 end
 

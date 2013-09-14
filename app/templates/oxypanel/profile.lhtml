@@ -1,4 +1,4 @@
-<div class="half left">
+<div class="third">
 	<form action="/profile" method="post" class="wide">
 		<label for="name">Display Name:</label>
 		<input type="text" name="name" id="name" value="<?=self:get( 'user' ).name ?>" />
@@ -16,11 +16,13 @@
 		<input type="checkbox" class="checkbox" name="twofactor" id="twofactor" /><div></div>
 
 		<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
-		<button type="submit" class="submit green" name="update" value="profile">Update Profile &#187;</button>
+		<button type="submit" class="submit lightgreen" name="update" value="profile">Update Profile &#187;</button>
 	</form>
 </div><!--end left-->
 
-<div class="half right">
+<div class="third">
+	<h2>Address</h2>
+
 	<form action="/profile" method="post" class="wide">
 		<label for="real_name">Company or Individual Name:</label>
 		<input type="text" name="real_name" id="real_name" value="<?=self:get( 'user' ).real_name ?>" />
@@ -37,6 +39,13 @@
 		</select>
 
 		<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
-		<button type="submit" class="submit green" name="update" value="address">Update Address &#187;</button>
+		<button type="submit" class="submit lightgreen" name="update" value="address">Update Address &#187;</button>
 	</form>
 </div><!--end right-->
+
+<div class="third last">
+	<div class="message info">
+		<strong>Profile:</strong> display name &amp; login details.<br />
+		<strong>Address:</strong> for invoicing &amp; verification.
+	</div>
+</div>

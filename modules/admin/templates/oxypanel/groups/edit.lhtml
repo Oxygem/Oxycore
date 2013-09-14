@@ -5,7 +5,7 @@
 		<label for="name">Name:</label>
 		<input type="text" name="name" value="<?=self:get( 'group' ).name ?>" />
 
-		<button type="submit" class="submit green">Update Group &#187;</button>
+		<button type="submit" class="submit lightgreen">Update Group &#187;</button>
 		&nbsp;&nbsp;<a href="/admin/groups">back to groups</a>
 
 		<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />

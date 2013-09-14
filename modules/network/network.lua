@@ -33,44 +33,55 @@ function network:subnav()
     local nav = {}
 
     --servers (+define nav)
-    local devices = self:getDeviceList()
-    local servernav = { title = 'Devices', link = '/devices', submenus = {} }
-    for k, v in pairs( devices ) do
-        local links = {}
-        for c, d in pairs( v ) do
-            table.insert( links, { title = d, link = '/devices?type=' .. c } )
+    if user:checkPermission( 'ViewOwnDevice' ) then
+        local servernav = { title = 'Devices', link = '/devices', submenus = {} }
+
+        local admin = {}
+        if user:checkPermission( 'ViewAnyDevice' ) then table.insert( admin, { title = 'View All', link = '/devices/all' } ) end
+        if user:checkPermission( 'AddDevice' ) then table.insert( admin, { title = 'Add Device', link = '/devices/add' } ) end
+        if #admin > 0 then servernav.submenus['Admin'] = admin end
+
+        local devices = self:getDeviceList()
+        for k, v in pairs( devices ) do
+            local links = {}
+            for c, d in pairs( v ) do
+                table.insert( links, { title = d, link = '/devices?type=' .. c } )
+            end
+            servernav.submenus['Config'] = links
         end
-        table.insert( servernav.submenus, links )
+        servernav.submenus['Type'] = {
+            { title = 'Server', link = '/devices?type=server' },
+            { title = 'Storage', link = '/devices?type=storage' }
+        }
+
+        table.insert( nav, servernav )
     end
-    servernav.submenus['Type'] = {
-        { title = 'Server', link = '/devices?type=server' },
-        { title = 'Storage', link = '/devices?type=storage' }
-    }
-    local admin = {}
-    if user:cookiePermission( 'ViewAnyDevice' ) then table.insert( admin, { title = 'View All', link = '/devices/all' } ) end
-    if user:cookiePermission( 'AddDevice' ) then table.insert( admin, { title = 'Add Device', link = '/devices/add' } ) end
-    if #admin > 0 then servernav.submenus['Admin'] = admin end
-    table.insert( nav, servernav )
 
     --ip blocks
-    local ipblocknav = { title = 'IP Blocks', link = '/ipblocks', submenus = {} }
-    ipblocknav.submenus['Type'] = {
-        { title = 'IPv4', link = '/ipblocks?type=ipv4' },
-        { title = 'IPv6', link = '/ipblocks?type=ipv6' }
-    }
-    local admin = {}
-    if user:cookiePermission( 'ViewAnyIPBlock' ) then table.insert( admin, { title = 'View All', link = '/ipblocks/all' } ) end
-    if user:cookiePermission( 'AddIPBlock' ) then table.insert( admin, { title = 'Add IP Block', link = '/ipblocks/add' } ) end
-    if #admin > 0 then ipblocknav.submenus['Admin'] = admin end
-    table.insert( nav, ipblocknav )
+    if user:checkPermission( 'ViewOwnIPBlock' ) then
+        local ipblocknav = { title = 'IP Blocks', link = '/ipblocks', submenus = {} }
+
+        local admin = {}
+        if user:checkPermission( 'ViewAnyIPBlock' ) then table.insert( admin, { title = 'View All', link = '/ipblocks/all' } ) end
+        if user:checkPermission( 'AddIPBlock' ) then table.insert( admin, { title = 'Add IP Block', link = '/ipblocks/add' } ) end
+        if #admin > 0 then ipblocknav.submenus['Admin'] = admin end
+
+        ipblocknav.submenus['Type'] = {
+            { title = 'IPv4', link = '/ipblocks?type=ipv4' },
+            { title = 'IPv6', link = '/ipblocks?type=ipv6' }
+        }
+        table.insert( nav, ipblocknav )
+    end
 
     --groups
-    local groupnav = { title = 'Groups', link = '/groups' }
-    local admin = {}
-    if user:cookiePermission( 'ViewAnyGroup' ) then table.insert( admin, { title = 'View All', link = '/groups/all' } ) end
-    if user:cookiePermission( 'AddGroup' ) then table.insert( admin, { title = 'Add Group', link = '/groups/add' } ) end
-    if #admin > 0 then groupnav.submenus = { ['Admin'] = admin } end
-    table.insert( nav, groupnav )
+    if user:checkPermission( 'ViewOwnGroup' ) then
+        local groupnav = { title = 'Groups', link = '/groups' }
+        local admin = {}
+        if user:checkPermission( 'ViewAnyGroup' ) then table.insert( admin, { title = 'View All', link = '/groups/all' } ) end
+        if user:checkPermission( 'AddGroup' ) then table.insert( admin, { title = 'Add Group', link = '/groups/add' } ) end
+        if #admin > 0 then groupnav.submenus = { ['Admin'] = admin } end
+        table.insert( nav, groupnav )
+    end
 
     return nav
 end

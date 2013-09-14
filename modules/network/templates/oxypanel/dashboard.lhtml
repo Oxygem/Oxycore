@@ -28,9 +28,9 @@
 		</table>
 	</div>
 
-<? if user:cookiePermission( 'ViewOwnIPBlock' ) then ?>
+<? if user:checkPermission( 'ViewOwnIPBlock' ) then ?>
 	<div class="item half one">
-		<h3>Your IP Blocks <span class="right"><a href="/network/ipblocks">View Owned</a><? if user:cookiePermission( 'ViewAnyIpblock' ) then ?> &bull; <a class="red" href="/network/ipblocks/all">View All</a><? end ?></span></h3>
+		<h3>Your IP Blocks <span class="right"><a href="/network/ipblocks">View Owned</a><? if user:checkPermission( 'ViewAnyIpblock' ) then ?> &bull; <a class="red" href="/network/ipblocks/all">View All</a><? end ?></span></h3>
 		<table cellborder="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<th width="25px">ID</th>
@@ -52,9 +52,9 @@
 	</div>
 <? end ?>
 
-<? if user:cookiePermission( 'ViewOwnGroup' ) then ?>
+<? if user:checkPermission( 'ViewOwnGroup' ) then ?>
 	<div class="item half two">
-		<h3>Your Groups <span class="right"><a href="/network/groups">View Owned</a><? if user:cookiePermission( 'ViewAnyGroup' ) then ?> &bull; <a class="red" href="/network/groups/all">View All</a><? end ?></span></h3>
+		<h3>Your Groups <span class="right"><a href="/network/groups">View Owned</a><? if user:checkPermission( 'ViewAnyGroup' ) then ?> &bull; <a class="red" href="/network/groups/all">View All</a><? end ?></span></h3>
 		<table cellborder="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<th width="25px">ID</th>

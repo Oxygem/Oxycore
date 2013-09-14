@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<? local request, oxy, user = luawa.request, oxy, luawa.user ?>
+	<? local request, oxy, user, session = luawa.request, oxy, luawa.user, luawa.session ?>
 	<!--title-->
 	<? if self:get( 'page_title' ) then ?>
 	    <title><?=self:get( 'page_title' ) ?> - <?=oxy.brand.name ?></title>
@@ -32,7 +32,7 @@
 				<!--logo-->
 				<li id="logo"><a href="/"><img src="/inc/core/<?=oxy.brand.logo ?>" alt="Afterburst" /></a></li>
 
-				<? if user:cookieLogin() then ?>
+				<? if user:checkLogin() then ?>
 					<? if request.get.request == 'dashboard' then ?>
 						<li class="dashboard active"><a href="/">Dashboard</a></li>
 					<? else ?>
@@ -40,7 +40,7 @@
 					<? end ?>
 
 					<? for k, module in pairs( oxy.config.modules ) do
-						if user:cookiePermission( 'Module' .. module ) then ?>
+						if user:checkPermission( 'Module' .. module ) then ?>
 					    <? if request.get.module == module then ?>
 					        <li class="<?=module ?> active"><a href="/<?=module ?>"><?=oxy.config[module].name ?></a></li>
 					    <? else ?>
@@ -51,9 +51,9 @@
 
 					<li class="right noimg"><a href="/logout">Logout</a></li>
 					<? if request.get.request == 'profile' then ?>
-						<li class="profile right active"><a href="/profile"><?=user:cookieName() ?></a></li>
+						<li class="profile right active"><a href="/profile"><?=user:getData().name ?></a></li>
 					<? else ?>
-						<li class="profile right"><a href="/profile"><?=user:cookieName() ?></a></li>
+						<li class="profile right"><a href="/profile"><?=user:getData().name ?></a></li>
 					<? end ?>
 				<? else ?>
 					<? if request.get.request == 'login' then ?>
@@ -167,9 +167,6 @@
 				end ?></span>
 			</h2>
 
-			<? if self:get( 'error' ) then ?>
-				<div class="message error"><strong>Error:</strong> <?=self:get( 'error' ) ?></div>
-			<? end ?>
-			<? if self:get( 'success' ) then ?>
-				<div class="message success"><strong>Success:</strong> <?=self:get( 'success' ) ?></div>
+			<? for k, message in pairs( session:getMessages() ) do ?>
+				<div class="message <?=message.type ?>"><?=message.text ?></div>
 			<? end ?>

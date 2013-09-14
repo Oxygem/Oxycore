@@ -5,6 +5,7 @@
 local config = {
     --nice name
     name = 'Admin',
+    order = 7,
     objects = {
     },
     --requests to capture

@@ -55,7 +55,7 @@ server {
 
     #catch objects
     rewrite ^/([aA-zZ]+)/([0-9]+)$    /?request=object&type=$1&id=$2 last;      #get
-    rewrite ^/([aA-zZ]+)/([0-9]+)/([aA-zZ]+)$    /?request=object&type=$1&id=$2&action=$3 last;      #get+post
+    rewrite ^/([aA-zZ]+)/([0-9]+)/([aA-zZ\.]+)$    /?request=object&type=$1&id=$2&action=$3 last;      #get+post
 
     #catch modules
     rewrite ^/([aA-zZ]+)$               /?request=module&module=$1 last;         #get+post
@@ -218,8 +218,6 @@ function cpdir( s_dir, d_dir, exclude )
                 else
                     out[k] = v
                 end
-            else
-                print( 'File excluded: ' .. v )
             end
         end
         return out
@@ -271,7 +269,7 @@ end
 
 --check if is a directory
 function isdir( dir )
-    local f, err = io.popen( 'find ' .. dir .. ' -type d' )
+    local f, err = io.popen( 'find ' .. dir .. ' -type d 2>/dev/null' )
     if not f then error( err ) end
     local out = dir == f:read( '*l' )
     f:close()
@@ -280,7 +278,7 @@ end
 
 --check if is a file
 function isFile( file )
-    local f, err = io.popen( 'find ' .. file .. ' -type f' )
+    local f, err = io.popen( 'find ' .. file .. ' -type f 2>/dev/null' )
     if not f then error( err ) end
     local out = file == f:read( '*l' )
     f:close()
@@ -336,31 +334,31 @@ local function build()
         print( '\tAdded brand: ' .. url )
     end
 
-    --scan for modules
-    print( 'Scanning for modules...' )
-    for k, module in pairs( ls( 'modules/' ) ) do
-        _autoconf.modules[module] = module
-        _autoconf[module] = {}
-        print( '\tFound module: ' .. module )
-        module = f:read( '*l' )
-    end
-
     --for each module, load their objects from their config
-    for k, module in pairs( _autoconf.modules ) do
-        print( 'Building ' .. module .. ' config...' )
+    print( 'Configuring modules...' )
+    for k, module in pairs( ls( 'modules/' ) ) do
         local config = require( 'modules/' .. module .. '/config' )
 
+        --add module
+        print( '\tFound module: ' .. module )
+        _autoconf.modules[config.order] = module
+        _autoconf[module] = {}
+
+        --start config
+        print( '\tBuilding ' .. module .. ' config...' )
         --name
         _autoconf[module].name = config.name
         --do requests
         _autoconf[module].requests = config.requests
-        print( '\t' .. ( tableCount( config.requests.get ) + tableCount( config.requests.post ) ) .. ' requests added' )
+        print( '\t\t' .. ( tableCount( config.requests.get ) + tableCount( config.requests.post ) ) .. ' requests added' )
         --permissions
         _autoconf[module].permissions = config.permissions
+        --custom actions
+        _autoconf[module].actions = config.actions
 
         --do objects
         for object, d in pairs( config.objects ) do
-            print( '\tObject added: ' .. object )
+            print( '\t\tObject added: ' .. object )
             d.module = module
             _autoconf.objects[object] = d
             if not d.hidden then
@@ -372,7 +370,7 @@ local function build()
         if config.autoconf then
             for key, conf in pairs( config.autoconf ) do
                 _autoconf[module][key] = conf()
-                print( '\tData configured: ' .. key )
+                print( '\t\tData configured: ' .. key )
             end
         end
 

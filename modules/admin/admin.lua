@@ -26,18 +26,24 @@ function admin:subnav()
     table.insert( nav, settings )
 
     --users
-    local users = { title = 'Users', link = '/users', admin = true, submenus = {} }
-    table.insert( users.submenus, { { title = 'Add User', link = '/users/add' } } )
-    table.insert( nav, users )
+    if user:checkPermission( 'ViewUser' ) then
+        local users = { title = 'Users', link = '/users', admin = true, submenus = {} }
+        if user:checkPermission( 'AddUser' ) then users.submenus = { { { title = 'Add User', link = '/users/add' } } } end
+        table.insert( nav, users )
+    end
 
     --groups
-    local groups = { title = 'Groups', link = '/groups', admin = true, submenus = {} }
-    table.insert( groups.submenus, { { title = 'Add Group', link = '/groups/add' } } )
-    table.insert( nav, groups )
+    if user:checkPermission( 'ViewUserGroup' ) then
+        local groups = { title = 'Groups', link = '/groups', admin = true }
+        if user:checkPermission( 'AddUserGroup' ) then groups.submenus = { { { title = 'Add Group', link = '/groups/add' } } } end
+        table.insert( nav, groups )
+    end
 
     --permissions
-    local permissions = { title = 'Permissions', link = '/permissions', admin = true }
-    table.insert( nav, permissions )
+    if user:checkPermission( 'ViewPermission' ) then
+        local permissions = { title = 'Permissions', link = '/permissions', admin = true }
+        table.insert( nav, permissions )
+    end
 
     return nav
 end

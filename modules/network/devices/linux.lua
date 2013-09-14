@@ -16,37 +16,76 @@ local config = {
     --tabs
     tabs = {
         { name = 'Overview', js = 'overview', permission = 'view', order = 0, default = true, buttons = {
-            { name = 'Status', command = 'status', color = 'lightgreen' },
-            { name = 'Process List', command = 'list_process', color = 'green' }
+            { name = 'Refresh Status', command = 'status', color = 'lightgreen' },
+            { name = 'Process List', command = 'list_process', color = 'green' },
+            { name = 'Open Console', js = 'console', command = 'console', color = 'black' }
         } },
 
-        {
-            name = 'Power',
-            js = 'power',
-            permission = 'edit',
-            buttons = {
+        { name = 'Power', js = 'power', permission = 'edit', buttons = {
                 { name = 'Reboot', command = 'reboot', color = 'lightblue', confirm = 'Are you sure you wish to reboot this server' },
                 { name = 'Shutdown', command = 'shutdown', color = 'red', confirm = 'You will not be able to reboot the server via Oxypanel' }
-            }
-        },
-        {
-            name = 'Firewall',
-            js = 'firewall',
-            buttons = {
+        } },
+
+        { name = 'Users', js = 'users', permission = 'edit', buttons = {
+                { name = 'List Users', command = 'status', color = 'black' },
+                { name = 'Add User', command = 'status', color = 'green', data = { name = 'IP or subnet', id = 'ip' } }
+        } },
+
+        { name = 'Firewall', js = 'firewall', permission = 'edit', buttons = {
                 { name = 'List Rules', command = 'list_firewall', color = 'black' },
                 { name = 'Allow IP', command = 'allow_firewall', color = 'green', data = { name = 'IP or subnet', id = 'ip' } },
                 { name = 'Block IP', command = 'block_firewall', color = 'blue', data = { name = 'IP or subnet', id = 'ip' } },
                 { name = 'Flush Rules', command = 'flush_firewall', color = 'red', confirm = 'This will delete all non-saved firewall rules' }
-            },
-            permission = 'edit'
-        },
-        { name = 'File Browser', js = 'files', permission = 'edit' }
+        } },
+
+        { name = 'Monitors', js = 'monitor', permission = 'view', order = 99, buttons = {
+            { name = 'Setup SNMP', command = 'status', color = 'green' },
+            { name = 'Add Monitor', command = 'status', color = 'lightgreen' }
+        } }
     },
 
 
 
     --list of our commands
     commands = {
+        --add linux device
+        add = {
+            actions = function( args )
+                --get ssh pubkey
+                local f, err = io.open( oxy.config.oxyngx.ssh_key .. '.pub', 'r' )
+                if not f then return false, err end
+                local key, err = f:read( '*a' )
+                f:close()
+                if not key then return false, err end
+
+                --list actions
+                local out = {
+                    --check if .ssh exists
+                    { action = 'exec', command = 'find ~/.ssh/',
+                        expect = { signal = 0, fail = {
+                            { action = 'exec', command = 'mkdir ~/.ssh/', expect = { signal = 0, error = 'Could not create ~/.ssh' } }
+                        }}
+                    },
+
+                    --check if .ssh/authorized_keys exists
+                    { action = 'exec', command = 'find ~/.ssh/authorized_keys',
+                        expect = { signal = 0, fail = {
+                            { action = 'exec', command = 'touch ~/.ssh/authorized_keys', expect = { signal = 0, error = 'Could not create ~/.ssh/authorized_keys' } }
+                        }}
+                    },
+
+                    --check if the key is already in .ssh/authorized_keys
+                    { action = 'exec', command = 'grep -q "' .. key .. '" ~/.ssh/authorized_keys',
+                        expect = { signal = 0, fail = {
+                            { action = 'exec', command = 'echo "' .. key .. '" >> ~/.ssh/authorized_keys', expect = { signal = 0, error = 'Could not add key to ~/.ssh/authorized_keys' } }
+                        }}
+                    }
+                }
+
+                return out
+            end
+        },
+
         --basic status
         status = {
             permission = 'view',

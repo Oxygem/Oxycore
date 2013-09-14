@@ -3,14 +3,10 @@
     desc: admin users
 ]]
 
-local template, database, request, user, session = oxy.template, luawa.database, luawa.request, luawa.user, luawa.session
+local template, database, request, user, session, header = oxy.template, luawa.database, luawa.request, luawa.user, luawa.session, luawa.header
 
 --action set?
-if not request.get.action then return template:error( 'No action set' ) end
-
---token
-if not request.post.token or not session:checkToken( request.post.token ) then return template:error( 'Invalid token' ) end
-
+if not request.get.action then return template:error( 'No action set') end
 
 --add user?
 if request.get.action == 'add' then
@@ -22,11 +18,9 @@ if request.get.action == 'add' then
 	--register user
 	local status, err = user:register( request.post.email, request.post.password, request.post.name )
 	if err then
-		template:set( 'error', err )
+		return header:redirect( '/admin/users/add', 'error', err )
 	else
-		template:set( 'success', 'User added' )
-		--back to list users
-		request.get.action = nil
+		return header:redirect( '/admin/users', 'success', 'User added' )
 	end
 
 --edit user
@@ -46,12 +40,9 @@ elseif request.get.action == 'edit' then
 		group = request.post.group
 	}, { id = request.post.id } )
 	if err then
-		template:set( 'error', err )
-		request.get.id = request.post.id
+		return header:redirect( '/admin/users/edit?id=' .. request.post.id, 'error', err )
 	else
-		template:set( 'success', 'User updated' )
-		--back to list
-		request.get.action = nil
+		return header:redirect( '/admin/users', 'success', 'User updated' )
 	end
 
 --delete user
@@ -61,11 +52,14 @@ elseif request.get.action == 'delete' then
 	--permission
 	if not user:checkPermission( 'DeleteUser' ) then return template:error( 'You do not have permission to do that' ) end
 
+	--delete the user
+	local status, err = database:delete( 'user', { id = request.post.id } )
+	if err then
+		return header:redirect( '/admin/users', 'error', err )
+	else
+		return header:redirect( '/admin/users', 'success', 'User deleted' )
+	end
 --invalid
 else
 	return template:error( 'Invalid action' )
 end
-
-
---list/add users page
-luawa:processFile( 'modules/admin/get/users' )

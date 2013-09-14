@@ -47,6 +47,6 @@
 		</table>
 	<? end ?>
 
-	<button type="submit" class="green submit right">Update Permissions &#187;</button>
+	<button type="submit" class="lightgreen submit right">Update Permissions &#187;</button>
 	<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
 </form>

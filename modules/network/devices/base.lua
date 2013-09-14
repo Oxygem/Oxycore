@@ -8,13 +8,16 @@ local config = {
 
     --tabs
     tabs = {
-        { name = 'Console', js = 'console', permission = 'edit', order = 98, buttons = {
-            { name = 'Start Console', command = 'status', color = 'lightgreen' }
-        } },
+    },
 
-        { name = 'Monitors', js = 'monitor', permission = 'view', order = 99, buttons = {
-            { name = 'Add Monitor', command = 'status', color = 'lightgreen' }
-        } }
+    commands = {
+        --ssh console
+        console = {
+            permission = 'console',
+            actions = {
+                { action = 'console' }
+            }
+        },
     },
 
     --javascript file(s) to load on service page

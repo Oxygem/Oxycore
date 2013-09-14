@@ -1,5 +1,5 @@
 --locals
-local database, user, network, ssh, template, request, header = luawa.database, luawa.user, oxy.network, oxy.network.ssh, oxy.template, luawa.request, luawa.header
+local database, user, network, ssh, template, request, header, session, json = luawa.database, luawa.user, oxy.network, oxy.network.ssh, oxy.template, luawa.request, luawa.header, luawa.session, require( 'cjson.safe' )
 
 --service object
 local device = {}
@@ -29,12 +29,8 @@ function device:prepareView()
     end
 
     --status request to node
-    if self.status == 'Active' then
-        local key, err = self:command( 'status' )
-        if err then self.status_request_error = err else self.status_request_key = key end
-    else
-        self.status_request_error = 'Device currently suspended'
-    end
+    local key, err = self:command( 'status' )
+    if err then self.status_request_error = err else self.status_request_key = key end
 end
 
 --when getting edit page of device (ie GET /device/id/edit)
@@ -42,6 +38,13 @@ function device:prepareEdit()
     --get owned device groups
     local groups, err = network.group:getOwned()
     template:set( 'groups', groups or {} )
+end
+
+--when getting console page of device (ie GET /device/id/console) - popup page
+function device:prepareConsole()
+    --console request to node
+    local key, err = self:command( 'console' )
+    if err then self.console_request_error = err else self.console_request_key = key end
 end
 
 
@@ -57,15 +60,6 @@ function device:command( command, args )
 	end
     local command = self.configuration.commands[command]
 
-    --function type?
-    if type( command.ssh ) == 'function' then
-        local status, err = command.ssh( args )
-        if not status then
-            return false, err
-        end
-        command.ssh = status
-    end
-
 	--check we can do this command to this object
 	if not network.device:permission( self.id, command.permission ) then
 		return false, 'No permission'
@@ -80,7 +74,7 @@ function device:command( command, args )
 
     --commands a function?
     if type( command.actions ) == 'function' then
-        local actions, err = command.actions( self )
+        local actions, err = command.actions( args )
         if err then return false, err end
         command.actions = actions
     end
@@ -109,6 +103,12 @@ device.posts = { runCommand = 'view', edit = 'edit', ssh = 'edit', snmp = 'edit'
 
 --POST to request a command - API mode only
 function device:runCommand()
+    if not request.get._api then return template:error( 'API only' ) end
+
+    --token validated by core module, add token here for api even if error
+    template:set( 'token', session:getToken(), true )
+
+    --no if suspended
     if self.status == 'Suspended' then return template:set( 'error', 'Device currently suspended', true ) end
 
     if not request.post.command then
@@ -125,8 +125,6 @@ end
 
 --POST to edit - non API
 function device:edit()
-    local request = luawa.request
-
     if not request.post.name or not request.post.host or not request.post.status or not request.post.type or not request.post.config or not request.post.group then
         return template:error( 'Please complete all fields' )
     end
@@ -134,7 +132,7 @@ function device:edit()
     --make group number for immediate page load
     request.post.group = tonumber( request.post.group ) or 0
     --check we can use this group
-    if not network.group:permission( request.post.group, 'edit' ) then
+    if request.post.group ~= 0 and not network.group:permission( request.post.group, 'edit' ) then
         return template:error( 'You do not have permission to add the device to that group' )
     end
 
@@ -159,17 +157,52 @@ function device:edit()
         }, { id = self.id }
     )
     if not update then
-        template:set( 'error', err, true )
+        return header:redirect( '/device/' .. self.id .. '/edit', 'error', err )
     else
-        template:set( 'success', 'Device updated', true )
+        return header:redirect( '/device/' .. self.id .. '/edit', 'success', 'Device updated' )
     end
-
-    --just load this will load GET page
-    luawa:processFile( 'app/get/object' )
 end
 
 --POST to edit ssh details
 function device:ssh()
+    if not request.post.port or not request.post.user or not request.post.password or request.post.password:len() == 0 then
+        return template:error( 'Please complete all fields' )
+    end
+
+    --get actions for config
+    local actions, err = self.configuration.commands.add.actions( request.post )
+    if not actions then return template:error( err ) end
+
+    --build request
+    local req = {
+        host = self.host,
+        port = request.post.port,
+        user = request.post.user,
+        commands = actions
+    }
+
+    --make request
+    local key, err = ssh:request( req, request.post.password )
+    if not key then
+        return header:redirect( '/device/' .. self.id .. '/edit', 'error', err )
+    end
+
+    --capture request
+    local status, err = ssh:capture( key )
+    if not status then
+        return header:redirect( '/device/' .. self.id .. '/edit', 'error', err )
+    end
+
+    local data = json.decode( status[#status] )
+    if not data or not data.event then
+        return header:redirect( '/device/' .. self.id .. '/edit', 'error', 'Node misconfig, please check status' )
+    end
+    --make sure we completed the request
+    if data.event ~= 'request_end' or data.data ~= 'COMPLETE' then
+        return header:redirect( '/device/' .. self.id .. '/edit', 'error', luawa.utils.tableString( data.data ) )
+    end
+
+    return header:redirect( '/device/' .. self.id .. '/edit', 'success', 'Device SSH details updated' )
 end
 
 --POST to edit snmp details

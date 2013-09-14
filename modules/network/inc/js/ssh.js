@@ -43,7 +43,7 @@ $( document ).ready( function() {
 
         //fail to connect?
         ssh.socket.on( 'error', function( err ) {
-            server.showError( 'Could not connect to Node SSH-proxy' );
+            device.showError( 'Could not connect to Node SSH-proxy' );
         });
 
         //connected
@@ -115,8 +115,8 @@ $( document ).ready( function() {
             });
 
             //service?
-            if( server )
-                server.start();
+            if( device )
+                device.start();
         });
     }
 });

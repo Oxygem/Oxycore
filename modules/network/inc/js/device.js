@@ -1,6 +1,13 @@
-//define server
-var server = {
-    commands: {},
+//define device
+var device = {
+    commands: {
+        //console open (every device)
+        console: function() {
+            var left = screen.width / 2 - 495;
+            var top = screen.height / 2 - 330;
+            window.open( window.location.href + '/console', '_blank', 'height=660,width=990,toolbar=no,status=no,resizable=no,menubar=no,left=' + left + ',top=' + top );
+        }
+    },
 
     //set our type
     addCommands: function( type ) {
@@ -8,7 +15,7 @@ var server = {
             return false;
 
         $.each( type, function( key, value ) {
-            server.commands[key] = value;
+            device.commands[key] = value;
         });
     },
 
@@ -40,7 +47,7 @@ var server = {
 
     //show a command
     showCommand: function( message ) {
-        $( '.feedback' ).html( '<div class="message info"><img src="/inc/core/img/loader.gif" alt="loading..." /> <span>' + message + '</span> <a class="right button" onclick="server.toggleConsole( this ); return false;">console</a></div>' );
+        $( '.feedback' ).html( '<div class="message info"><img src="/inc/core/img/loader.gif" alt="loading..." /> <span>' + message + '</span> <a class="right button" onclick="device.toggleConsole( this ); return false;">console</a></div>' );
 
         if( sessionStorage.getItem( 'service_console' ) == 'true' )
             this.showConsole();
@@ -83,12 +90,13 @@ var server = {
         if( this.disabled )
             return;
 
-        $( '.feedback' ).html( '<div class="message info"><form class="inline">' + el.attr( 'data-name' ) + ': <input value="" type="text" name="data_' + el.attr( 'data-needed' ) + '" /> <input type="submit" value="Go &#187;" /></form></div>');
-        $( '.feedback form' ).bind( 'submit', function( ev ) {
+        $( '#device_data_input' ).html( '<div class="message info"><form class="inline">' + el.attr( 'data-name' ) + ': <input value="" type="text" name="data_' + el.attr( 'data-needed' ) + '" /> <input type="submit" value="Go &#187;" /></form></div>').slideDown( 150 );
+        $( '#device_data_input form' ).bind( 'submit', function( ev ) {
             ev.preventDefault();
             var data = {}
-            data[el.attr( 'data-needed' )] = $( '.feedback form input[name=data_' + el.attr( 'data-needed' ) + ']' ).val();
-            server.commandRequest( el.attr( 'data-command' ), data );
+            data[el.attr( 'data-needed' )] = $( '#device_data_input form input[name=data_' + el.attr( 'data-needed' ) + ']' ).val();
+            device.commandRequest( el.attr( 'data-command' ), data );
+            $( '#device_data_input' ).slideUp( 150 );
         });
     },
 
@@ -97,10 +105,11 @@ var server = {
         if( this.disabled )
             return;
 
-        $( '.feedback' ).html( '<div class="message warning">' + el.attr( 'data-confirm' ) + ' <button class="">Continue</button></div>');
-        $( '.feedback button' ).bind( 'click', function( ev ) {
+        $( '#device_data_input' ).html( '<div class="message warning">' + el.attr( 'data-confirm' ) + ' <button class="">Continue</button></div>').slideDown( 150 );
+        $( '#device_data_input button' ).bind( 'click', function( ev ) {
             ev.preventDefault();
-            service.commandRequest( el.attr( 'data-command' ) );
+            device.commandRequest( el.attr( 'data-command' ) );
+            $( '#device_data_input' ).slideUp( 150 );
         });
     },
 
@@ -117,14 +126,14 @@ var server = {
         $( 'li.service_tab[data-tab=' + tab + ']' ).addClass( 'active' );
     },
 
-    //disable server functionality
+    //disable device functionality
     disable: function() {
         this.disabled = true;
         $( 'li.service_tab' ).addClass( 'disabled' );
         $( 'button.service_button' ).addClass( 'disabled' );
     },
 
-    //enable server functionality
+    //enable device functionality
     enable: function() {
         this.disabled = false;
         $( 'li.service_tab.disabled' ).removeClass( 'disabled' );
@@ -146,35 +155,35 @@ var server = {
             type: 'POST',
             data: data,
             error: function( req, status, error ) {
-                server.showError( status + ': ' + error );
+                device.showError( status + ': ' + error );
             },
             success: function( data, status ) {
                 if( data.token )
                     oxypanel.luawa_token = data.token;
 
                 if( !data.request_key )
-                    return server.showError( data.error );
+                    return device.showError( data.error );
 
-                //disable server
-                server.disable();
+                //disable device
+                device.disable();
 
                 //valid callback command?
-                if( server.commands[command] ) {
-                    server.commands[command]( data.request_key );
+                if( device.commands[command] ) {
+                    device.commands[command]( data.request_key );
                 //default
                 } else {
-                    server.showConsole();
-                    server.disable();
-                    server.showCommand( 'Running command...' );
+                    device.showConsole();
+                    device.disable();
+                    device.showCommand( 'Running command...' );
 
                     ssh.new( data.request_key, function( data ) {
                         console.log( data );
                     }, function( err ) {
-                        server.showError( 'Error: ' + err );
-                        server.enable();
+                        device.showError( 'Error: ' + err );
+                        device.enable();
                     }, function() {
-                        server.completeCommand( 'success', 'Complete' );
-                        server.enable();
+                        device.completeCommand( 'success', 'Complete' );
+                        device.enable();
                     });
                 }
             }
@@ -197,12 +206,12 @@ var server = {
             type: 'POST',
             data: data,
             error: function( req, status, error ) {
-                server.showError( status + ': ' + error );
+                device.showError( status + ': ' + error );
             },
             success: function( data, status ) {
                 oxypanel.luawa_token = data.token;
-                if( data.error ) return server.showError( 'Error : ' + data.error );
-                server.completeCommand( 'success', 'Complete' );
+                if( data.error ) return device.showError( 'Error : ' + data.error );
+                device.completeCommand( 'success', 'Complete' );
             }
         });
     },
@@ -224,17 +233,25 @@ $( document ).ready( function() {
     //bind tab links
     $( 'li.service_tab a' ).bind( 'click', function( ev ) {
         ev.preventDefault();
-        server.switchTab( $( ev.target ).parent().attr( 'data-tab' ) );
+        device.switchTab( $( ev.target ).parent().attr( 'data-tab' ) );
     });
 
     //bind command links
     $( 'button.service_button' ).bind( 'click', function( ev ) {
         ev.preventDefault();
-        if( $( ev.target ).attr( 'data-needed' ) && $( ev.target ).attr( 'data-name' ) )
-            server.showDataInput( $( ev.target ) );
-        else if( $( ev.target ).attr( 'data-confirm' ) )
-            server.showConfirm( $( ev.target ) );
-        else
-            server.commandRequest( $( ev.target ).attr( 'data-command' ) );
+
+        //direct command
+        if( $( ev.target ).attr( 'data-command' ) ) {
+            if( $( ev.target ).attr( 'data-needed' ) && $( ev.target ).attr( 'data-name' ) )
+                device.showDataInput( $( ev.target ) );
+            else if( $( ev.target ).attr( 'data-confirm' ) )
+                device.showConfirm( $( ev.target ) );
+            else
+                device.commandRequest( $( ev.target ).attr( 'data-command' ) );
+
+        //js function (popup etc)
+        } else if( $( ev.target ).attr( 'data-js' ) ) {
+            device.commands[$( ev.target ).attr( 'data-js' )]();
+        }
     });
 });

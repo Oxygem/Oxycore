@@ -2,18 +2,24 @@ var linux = {};
 
 //service start
 linux.start = function() {
+    //status cached in last 10 mins?
+    var cache_check = localStorage.getItem( 'status_time_' + window.location.pathname );
+    if( cache_check && cache_check > ( new Date().getTime() - 600000 ) ) {
+        return $( 'div[data-tab=overview] .content' ).html( localStorage.getItem( 'status_' + window.location.pathname ) );
+    }
+
 	//capture status request
 	if( oxypanel.device.status_request_key ) {
-        server.disable();
+        device.disable();
 		this.status( oxypanel.device.status_request_key );
-	} else {
-        server.showError( oxypanel.device.status_request_error );
+	} else if( oxypanel.device.status_request_error ) {
+        device.showError( oxypanel.device.status_request_error );
     }
 }
 
-//server status
+//device status
 linux.status = function( key ) {
-    server.showCommand( 'Updating status...' );
+    device.showCommand( 'Updating status...' );
 
     //setup tab
     var tab = $( 'div[data-tab=overview] .content' );
@@ -46,9 +52,9 @@ linux.status = function( key ) {
         	case 'disk':
         		var partitions = data.split( '\n' );
         		for( i = 1; i < partitions.length; i++ ) {
-                    part = server.tabsToArray( partitions[i] );
+                    part = device.tabsToArray( partitions[i] );
         			if( part.length == 6 && part[0].substring( 0, 1 ) == '/' ) {
-        				$( '#disk_bars' ).append( server.buildBar( part[5], part[2], part[1] ) );
+        				$( '#disk_bars' ).append( device.buildBar( part[5], part[2], part[1] ) );
         			}
         		}
 
@@ -59,15 +65,15 @@ linux.status = function( key ) {
         		var partitions = data.split( '\n' );
         		var total = 0;
         		for( i = 1; i < partitions.length; i++ ) {
-        			part = server.tabsToArray( partitions[i] );
+        			part = device.tabsToArray( partitions[i] );
         			if( part.length == 7 ) {
         				total = part[1];
         			}
         			if( part.length == 4 ) {
         				if( part[0] == 'Swap:' )
-        					$( '#memory_bars' ).append( server.buildBar( 'Swap', part[2], part[1] ) );
+        					$( '#memory_bars' ).append( device.buildBar( 'Swap', part[2], part[1] ) );
         				else
-        					$( '#memory_bars' ).append( server.buildBar( 'Real', part[2], total ) );
+        					$( '#memory_bars' ).append( device.buildBar( 'Real', part[2], total ) );
         			}
         		}
 
@@ -79,16 +85,21 @@ linux.status = function( key ) {
         }
    	//error function
     }, function( err ) {
-        server.showError( err );
-        server.enable();
+        device.showError( err );
+        device.enable();
     //complete function
     }, function() {
-        server.completeCommand( 'success', 'Status complete' );
-        server.enable();
+        device.completeCommand( 'success', 'Status complete' );
+
+        //cache status
+        localStorage.setItem( 'status_time_' + window.location.pathname, new Date().getTime() );
+        localStorage.setItem( 'status_' + window.location.pathname, $( 'div[data-tab=overview] .content' ).html() );
+
+        device.enable();
     });
 }
 
 //add our commands to server
 $( document ).ready( function() {
-    server.addCommands( linux );
+    device.addCommands( linux );
 });

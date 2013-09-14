@@ -5,16 +5,19 @@
 local config = {
     --nice name
     name = 'Network',
+    order = 1,
     --objects we can get & post (/get/<object>, /post/<object>, /templates/objects/<object>)
     objects = {
         device = {
             name = 'Device',
             names = 'Devices',
             title_meta = 'status',
+            fields = 'id, user_id, group_id, name, status, config, type, device_group_id',
             filters = { 'type', 'config', 'status', 'device_group_id' },
+            actions = { console = { permission = 'console', wrap = false } }, --action = { permission / wrap template }
             searches = { 'name' },
             permission = 'Device',
-            permissions = {} --for non view/edit/delete permissions (ie edit does most, but not suspend / data commands (for admins/certain groups/etc))
+            permissions = { 'Console' } --for non view/edit/delete permissions
         },
         group = {
             name = 'Group',
@@ -27,7 +30,7 @@ local config = {
             names = 'IP Blocks',
             title_meta = 'subnet',
             permission = 'IPBlock',
-            filters = { 'type', 'server_id', 'server_group_id' },
+            filters = { 'type' },
             --search_fields = { 'name' }
         }
     },
@@ -38,6 +41,9 @@ local config = {
             publictest = { file = 'get/publictest', public = true }
         },
         post = {
+            devices = { file = 'post/devices' },
+            ipblocks = { file = 'post/ipblocks' },
+            groups ={ file = 'post/groups' }
         }
     },
     --auto config

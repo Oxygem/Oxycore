@@ -7,7 +7,7 @@ local template, database, request, user = oxy.template, luawa.database, luawa.re
 
 --add group?
 if request.get.action == 'add' then
-	if not user:cookiePermission( 'AddUserGroup' ) then return template:error( 'You don\'t have permission to do that' ) end
+	if not user:checkPermission( 'AddUserGroup' ) then return template:error( 'You don\'t have permission to do that' ) end
 	return template:wrap( template:loadModule( 'admin', 'groups/add', true ) )
 
 --edit
@@ -31,10 +31,19 @@ if not user:checkPermission( 'ViewUserGroup' ) then
 	return template:error( 'You don\'t have permission to do that' )
 end
 
-local groups = database:select( 'user_groups', '*' )
+--filters
+local wheres = {}
+
+if request.get.id then
+	wheres.id = request.get.id
+end
+
+local groups = database:select( 'user_groups', '*', wheres )
 
 template:set( 'page_title', 'User Groups' )
 template:set( 'groups', groups )
-template:add( 'page_title_buttons', { { text = 'Add Group', link = '/admin/groups/add', class = 'admin' } } )
+if user:checkPermission( 'AddUserGroup' ) then
+	template:add( 'page_title_buttons', { { text = 'Add Group', link = '/admin/groups/add', class = 'admin' } } )
+end
 --header+footer+template
 template:wrap( template:loadModule( 'admin', 'groups/list', true ) )

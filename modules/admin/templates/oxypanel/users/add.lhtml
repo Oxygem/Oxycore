@@ -11,7 +11,7 @@
 		<label for="name">Password:</label>
 		<input type="password" name="password" />
 
-		<button type="submit" class="submit green">Add User &#187;</button>
+		<button type="submit" class="submit lightgreen">Add User &#187;</button>
 		&nbsp;&nbsp;<a href="/admin/users">back to users</a>
 
 		<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />

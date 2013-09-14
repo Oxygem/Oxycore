@@ -24,7 +24,7 @@ if status then
 end
 
 --login failed
-err = err or 'Invalid username or password'
+err = err or 'Invalid email or password'
 template:set( 'error', err )
 
 --load login page

@@ -16,6 +16,7 @@ function object:new( type )
 
     --create new object, set type
     local object = { type = type, module = oxy.config.objects[type].module, cache = {} }
+    --if custom fields for lists, load default (id, owners, name)
     object.fields = oxy.config.objects[type].fields or '*'
 
     --make object use self as index
@@ -31,9 +32,9 @@ end
 function object:fetch( id, prepare )
     if self.cache[id] then return self.cache[id] end --cache so we can 'accidentally' load the same object multiple times w/o extra mysql
 
-    --get object from mysql
+    --get object from mysql (get all fields - assume need all on fetch)
     local object, err = database:select(
-        self.module .. '_' .. self.type, self.fields,
+        self.module .. '_' .. self.type, '*',
         { id = id },
         order, limit, offset
     )
@@ -124,20 +125,20 @@ function object:getList( wheres, order, limit, offset, all )
     if all then
         --do we have permission to ViewAny<Object>
         if not user:checkPermission( 'ViewAny' .. type ) then return false, 'You do not have permission view all ' .. type .. 's' end
-        if user:cookiePermission( 'EditAny' .. type ) then edit = true end
-        if user:cookiePermission( 'EditOwn' .. type ) then ownedit = true end
-        if user:cookiePermission( 'DeleteAny' .. type ) then delete = true end
-        if user:cookiePermission( 'DeleteOwn' .. type ) then owndelete = true end
+        if user:checkPermission( 'EditAny' .. type ) then edit = true end
+        if user:checkPermission( 'EditOwn' .. type ) then ownedit = true end
+        if user:checkPermission( 'DeleteAny' .. type ) then delete = true end
+        if user:checkPermission( 'DeleteOwn' .. type ) then owndelete = true end
     else
         --do we have permission to ViewOwn<Object>
         if not user:checkPermission( 'ViewOwn' .. type ) then return false, 'You do not have permission view owned ' .. type .. 's' end
-        if user:cookiePermission( 'EditOwn' .. type ) then edit = true end
-        if user:cookiePermission( 'DeleteOwn' .. type ) then delete = true end
+        if user:checkPermission( 'EditOwn' .. type ) then edit = true end
+        if user:checkPermission( 'DeleteOwn' .. type ) then delete = true end
         --make sure we match user or group id
         table.insert( wheres, { user_id = user:getData().id, group_id = user:getData().group } )
     end
 
-    --get objects from mysql
+    --get objects from mysql (only get fields needed for lists)
     local objects = database:select(
         self.module .. '_' .. self.type, self.fields,
         wheres,
