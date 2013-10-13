@@ -25,7 +25,4 @@ end
 
 --login failed
 err = err or 'Invalid email or password'
-template:set( 'error', err )
-
---load login page
-luawa:processFile( 'app/get/login' )
+header:redirect( '/', 'error', err )
