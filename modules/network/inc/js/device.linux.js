@@ -15,7 +15,7 @@ linux.start = function() {
 	} else if( oxypanel.device.status_request_error ) {
         device.showError( oxypanel.device.status_request_error );
     }
-}
+};
 
 //device status
 linux.status = function( key ) {
@@ -97,7 +97,7 @@ linux.status = function( key ) {
 
         device.enable();
     });
-}
+};
 
 //add our commands to server
 $( document ).ready( function() {

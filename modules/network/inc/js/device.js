@@ -93,7 +93,7 @@ var device = {
         $( '#device_data_input' ).html( '<div class="message info"><form class="inline">' + el.attr( 'data-name' ) + ': <input value="" type="text" name="data_' + el.attr( 'data-needed' ) + '" /> <input type="submit" value="Go &#187;" /></form></div>').slideDown( 150 );
         $( '#device_data_input form' ).bind( 'submit', function( ev ) {
             ev.preventDefault();
-            var data = {}
+            var data = {};
             data[el.attr( 'data-needed' )] = $( '#device_data_input form input[name=data_' + el.attr( 'data-needed' ) + ']' ).val();
             device.commandRequest( el.attr( 'data-command' ), data );
             $( '#device_data_input' ).slideUp( 150 );
@@ -225,7 +225,7 @@ var device = {
                 return false;
         });
     }
-}
+};
 
 
 //ev bindings

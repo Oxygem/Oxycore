@@ -1,7 +1,6 @@
 <?
 	local request, user, network = luawa.request, luawa.user, oxy.network
 ?>
-<? if self:get( 'devices' ) then ?>
 
 <form action="" method="get" class="inline search">
 	<input type="text" name="q" value="Type to search..." onfocus="if( this.value == 'Type to search...' ) { this.value = ''; }" onblur="if( this.value == '' ) { this.value = 'Type to search...'; }" />
@@ -20,7 +19,7 @@
 	<select name="config">
 		<option value="">Filter by config</option>
 		<? for k, v in pairs( network:getDeviceList() ) do ?>
-				<? for c, d in pairs( v ) do ?>
+				<? for c, d in pairs(v) do ?>
 					<option value="<?=c ?>"<? if request.get.config == c then ?> selected<? end ?>><?=d ?></option>
 				<? end ?>
 		<? end ?>
@@ -38,13 +37,13 @@
 
 	<span class="right admin">
 
-			<? if request.get.action ~= 'all' then ?>
-				<a href="/network/devices/all" class="button admin">All devices</a>
-			<? else ?>
-				<a href="/network/devices" class="button">My devices</a>
+			<? if user:checkPermission( 'ViewAnyDevice' ) and request.get.action ~= 'all' then ?>
+				<a href="/network/devices/all" class="button admin">All Devices</a>
+			<? elseif request.get.action == 'all' then ?>
+				<a href="/network/devices" class="button">My Devices</a>
 			<? end ?>
 
-		<? if user:checkPermission( 'Adddevice' ) then ?><a href="/network/devices/add" class="button admin">Add device</a><? end ?>
+		<? if user:checkPermission( 'AddDevice' ) then ?><a href="/network/devices/add" class="button admin">Add Device</a><? end ?>
 	</span>
 </form>
 
@@ -61,7 +60,8 @@
 	</tr></thead>
 
 	<tbody>
-	<? for k, service in pairs( self:get( 'devices' ) ) do
+	<? if self:get( 'devices' ) then
+		for k, service in pairs( self:get( 'devices' ) ) do
 		local config = network.config.devices[service.config].names or network.config.devices[service.config].name ?>
 	<tr>
 		<td><?=service.id ?></td>
@@ -88,11 +88,10 @@
 			<? if service.permissions.delete then ?><form class="inline"><button config="submit" class="admin red">Delete</button></form><? end ?>
 		</td>
 	</tr>
-	<? end if #self:get( 'devices' ) == 0 then ?>
+	<? end else ?>
 		<tr>
 			<td colspan="6">No devices found</td>
 		</tr>
 	<? end ?>
 	</tbody>
 </table>
-<? end ?>

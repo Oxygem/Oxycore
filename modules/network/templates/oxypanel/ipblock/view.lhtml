@@ -1,69 +1,73 @@
-<div class="wide">
-	<h2>IP's</h2>
-	<table cellborder="0" cellspacing="0">
-		<thead><tr>
-			<th>IP</th>
-			<th>Status</th>
-			<th>Linked</th>
-			<th width="150px">Actions</th>
-		</tr></thead>
-		<tbody>
-			<? for k, v in pairs( self:get( 'ipblock' ).ips ) do ?>
-			<tr>
-				<td><?=v.address ?></td>
-				<td><?=v.status ?></td>
-				<td></td>
-				<td>
-					<a href="#" class="button blue">Unreserve</a>
-					<a href="#" class="button red">Delete</a>
-				</td>
-			</tr>
-			<? end if #self:get( 'ipblock' ).ips <= 0 then ?>
-			<tr>
-				<td colspan="4">No IP's found</td>
-			</tr>
-			<? end ?>
-		</tbody>
-	</table>
+<div class="block">
+	<div class="third">
+		<h3>Add IP's</h3>
 
-	<br />
-	<h3>Add IP's</h3>
+		<? if self:get( 'ipblock' ).type == 'IPv4' then ?>
+			<form class="half" method="post" action="/ipblock/<?=self:get( 'ipblock' ).id ?>/addIP">
+				<label for="ip">list/range: 1.2.3.0 - 1.2.3.254, 1.2.3.0, 1.2.3.1</label>
+				<input type="text" name="ip" id="ip" />
 
-	<? if self:get( 'ipblock' ).type == 'IPv4' then ?>
-		<form class="half" method="post" action="/ipblock/<?=self:get( 'ipblock' ).id ?>/addIP">
-			<label for="ip">list/range: 1.2.3.0 - 1.2.3.254, 1.2.3.0, 1.2.3.1</label>
-			<input type="text" name="ip" id="ip" />
+				<button type="submit" class="green">Add IP's &#187;</button>
+				<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+			</form>
 
-			<button type="submit" class="green">Add IP's &#187;</button>
-			<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
-		</form>
+			<form class="half last" method="post" action="/ipblock/<?=self:get( 'ipblock' ).id ?>/autoIP">
+				<label></label><br />
+				<button class="green">Auto Add Subnet IP's &#187;</button><br />
+				<small>This will add all IP's in the IP Block's subnet.</small>
 
-		<form class="half last" method="post" action="/ipblock/<?=self:get( 'ipblock' ).id ?>/autoIP">
-			<label></label><br />
-			<button class="green">Auto Add Subnet IP's &#187;</button><br />
-			<small>This will add all IP's in the IP Block's subnet.</small>
+				<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+			</form>
+		<? else ?>
+			<form class="inline" method="post" action="/ipblock/<?=self:get( 'ipblock' ).id ?>/generateIP">
+				<label></label><br />
 
-			<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
-		</form>
-	<? else ?>
-		<div class="half"><form class="inline" method="post" action="/ipblock/<?=self:get( 'ipblock' ).id ?>/generateIP">
-			<label></label><br />
+				<label for="count">IP Count:</label>
+				<input type="text" value="" id="count" name="count" />
 
-			<label for="count">IP Count:</label>
-			<input type="text" value="" id="count" name="count" />
+				<label for="bits">Bits:</label>
+				<select id="bits" name="bits">
+					<? for i = 1, ( 128 - self:get( 'ipblock' ).mask ) / 4 do
+						local v = i * 4 ?>
+						<option value="<?=v ?>"><?=v ?></option>
+					<? end ?>
+				</select>
 
-			<label for="bits">Bits:</label>
-			<select id="bits" name="bits">
-				<? for i = 1, ( 128 - self:get( 'ipblock' ).mask ) / 4 do
-					local v = i * 4 ?>
-					<option value="<?=v ?>"><?=v ?></option>
+				<button class="green">Auto Generate IP's &#187;</button><br />
+				<small>Automatically generate and add IP's to this block.</small>
+
+				<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+			</form>
+		<? end ?>
+	</div>
+
+
+	<div class="twothird">
+		<h3>IP's</h3>
+		<table cellborder="0" cellspacing="0">
+			<thead><tr>
+				<th>IP</th>
+				<th>Status</th>
+				<th>Linked</th>
+				<th width="150px">Actions</th>
+			</tr></thead>
+			<tbody>
+				<? for k, v in pairs( self:get( 'ipblock' ).ips ) do ?>
+				<tr>
+					<td><?=v.address ?></td>
+					<td><?=v.status ?></td>
+					<td></td>
+					<td>
+						<a href="#" class="button blue">Unreserve</a>
+						<a href="#" class="button red">Delete</a>
+					</td>
+				</tr>
+				<? end if #self:get( 'ipblock' ).ips <= 0 then ?>
+				<tr>
+					<td colspan="4">No IP's found</td>
+				</tr>
 				<? end ?>
-			</select>
-
-			<button class="green">Auto Generate IP's &#187;</button><br />
-			<small>Automatically generate and add IP's to this block.</small>
-
-			<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
-		</form></div>
-	<? end ?>
+			</tbody>
+		</table>
+	</div>
 </div><!--end three q left-->

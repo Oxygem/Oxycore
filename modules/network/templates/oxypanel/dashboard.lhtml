@@ -3,8 +3,8 @@
 ?>
 
 <div id="dashboard">
-	<div class="item wide">
-		<table width="100%">
+	<div class="block bottom_margin">
+		<table width="100%" class="wide">
 			<tr>
 				<th width="25px">ID</th>
 				<th>Name</th>
@@ -28,50 +28,51 @@
 		</table>
 	</div>
 
-<? if user:checkPermission( 'ViewOwnIPBlock' ) then ?>
-	<div class="item half one">
-		<h3>Your IP Blocks <span class="right"><a href="/network/ipblocks">View Owned</a><? if user:checkPermission( 'ViewAnyIpblock' ) then ?> &bull; <a class="red" href="/network/ipblocks/all">View All</a><? end ?></span></h3>
-		<table cellborder="0" cellspacing="0" cellpadding="0" width="100%">
-			<tr>
-				<th width="25px">ID</th>
-				<th>Name</th>
-				<th>Type</th>
-				<th width="30px"></th>
-			</tr>
-			<? if self:get( 'ipblocks' ) and #self:get( 'ipblocks' ) > 0 then for k, ipblock in pairs( self:get( 'ipblocks' ) ) do ?>
-			<tr>
-				<td><?=ipblock.id ?></td>
-				<td><?=ipblock.name ?></td>
-				<td><?=ipblock.type ?></td>
-				<td><a class="button green" href="/ipblock/<?=ipblock.id ?>">View</a></td>
-			</tr>
-			<? end else ?>
-				<tr><td colspan="4">You have no IP block's</td></tr>
-			<? end ?>
-		</table>
-	</div>
-<? end ?>
+	<div class="block top_margin">
+		<? if user:checkPermission( 'ViewOwnIPBlock' ) then ?>
+			<div class="half">
+				<h3>Your IP Blocks <span class="right"><a href="/network/ipblocks">View Owned</a><? if user:checkPermission( 'ViewAnyIpblock' ) then ?> &bull; <a class="red" href="/network/ipblocks/all">View All</a><? end ?></span></h3>
+				<table cellborder="0" cellspacing="0" cellpadding="0" width="100%">
+					<tr>
+						<th width="25px">ID</th>
+						<th>Name</th>
+						<th>Type</th>
+						<th width="30px"></th>
+					</tr>
+					<? if self:get( 'ipblocks' ) and #self:get( 'ipblocks' ) > 0 then for k, ipblock in pairs( self:get( 'ipblocks' ) ) do ?>
+					<tr>
+						<td><?=ipblock.id ?></td>
+						<td><?=ipblock.name ?></td>
+						<td><?=ipblock.type ?></td>
+						<td><a class="button green" href="/ipblock/<?=ipblock.id ?>">View</a></td>
+					</tr>
+					<? end else ?>
+						<tr><td colspan="4">You have no IP block's</td></tr>
+					<? end ?>
+				</table>
+			</div>
+		<? end ?>
 
-<? if user:checkPermission( 'ViewOwnGroup' ) then ?>
-	<div class="item half two">
-		<h3>Your Groups <span class="right"><a href="/network/groups">View Owned</a><? if user:checkPermission( 'ViewAnyGroup' ) then ?> &bull; <a class="red" href="/network/groups/all">View All</a><? end ?></span></h3>
-		<table cellborder="0" cellspacing="0" cellpadding="0" width="100%">
-			<tr>
-				<th width="25px">ID</th>
-				<th>Name</th>
-				<th width="30px"></th>
-			</tr>
-			<? if self:get( 'groups' ) and #self:get( 'groups' ) > 0 then for k, service in pairs( self:get( 'groups' ) ) do ?>
-			<tr>
-				<td><?=service.id ?></td>
-				<td><?=service.name ?></td>
-				<td><a class="button green" href="/group/<?=service.id ?>">View</a></td>
-			</tr>
-			<? end else ?>
-				<tr><td colspan="4">You have no groups</td></tr>
-			<? end ?>
-		</table>
+		<? if user:checkPermission( 'ViewOwnGroup' ) then ?>
+			<div class="half last">
+				<h3>Your Groups <span class="right"><a href="/network/groups">View Owned</a><? if user:checkPermission( 'ViewAnyGroup' ) then ?> &bull; <a class="red" href="/network/groups/all">View All</a><? end ?></span></h3>
+				<table cellborder="0" cellspacing="0" cellpadding="0" width="100%">
+					<tr>
+						<th width="25px">ID</th>
+						<th>Name</th>
+						<th width="30px"></th>
+					</tr>
+					<? if self:get( 'groups' ) and #self:get( 'groups' ) > 0 then for k, service in pairs( self:get( 'groups' ) ) do ?>
+					<tr>
+						<td><?=service.id ?></td>
+						<td><?=service.name ?></td>
+						<td><a class="button green" href="/group/<?=service.id ?>">View</a></td>
+					</tr>
+					<? end else ?>
+						<tr><td colspan="4">You have no groups</td></tr>
+					<? end ?>
+				</table>
+			</div>
+		<? end ?>
 	</div>
-<? end ?>
-
 </div><!--end dashboard-->

@@ -32,7 +32,7 @@ var ssh = {
         this.error = false;
         this.complete = false;
     }
-}
+};
 
 //connect to node & build ssh socket
 $( document ).ready( function() {

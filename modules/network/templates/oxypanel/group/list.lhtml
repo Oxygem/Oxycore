@@ -2,8 +2,6 @@
 	local request, user = luawa.request, luawa.user
 ?>
 
-<? if self:get( 'groups' ) then ?>
-
 <form action="" method="get" class="inline search">
 	<input type="text" name="q" value="type to search..." onfocus="if( this.value == 'type to search...' ) { this.value = ''; }" onblur="if( this.value == '' ) { this.value = 'type to search...'; }" />
 	<button type="submit">&#187;</button>
@@ -54,4 +52,3 @@
 	<? end ?>
 	</tbody>
 </table>
-<? end ?>
