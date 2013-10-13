@@ -1,4 +1,4 @@
-<? local request = luawa.request ?>
+<? local request, session = luawa.request, luawa.session ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -34,9 +34,9 @@
 			<div id="main">
 				<h2>Login to <?=oxy.brand.name ?></h2>
 
-				<? if self:get( 'error' ) then ?><div class="message error">
-					<?=self:get( 'error' ) ?>
-				</div><? end ?>
+				<? for k, message in pairs( session:getMessages() ) do ?>
+					<div class="message <?=message.type ?>"><?=message.text ?><? if message.type == 'error' and luawa.header:getHeader( 'referer' ) then ?> <a href="<?=luawa.header:getHeader( 'referer' ) ?>" class="right">Go back</a><? end ?></div>
+				<? end ?>
 
 				<form class="wide" action="/login" method="post">
 					<div><label for="email">Email:</label>

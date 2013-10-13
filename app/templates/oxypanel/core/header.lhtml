@@ -168,5 +168,5 @@
 			</h2>
 
 			<? for k, message in pairs( session:getMessages() ) do ?>
-				<div class="message <?=message.type ?>"><?=message.text ?></div>
+				<div class="message <?=message.type ?>"><?=message.text ?><? if message.type == 'error' and luawa.header:getHeader( 'referer' ) then ?> <a href="<?=luawa.header:getHeader( 'referer' ) ?>" class="right">Go back</a><? end ?></div>
 			<? end ?>
