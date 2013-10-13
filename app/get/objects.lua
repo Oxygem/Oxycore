@@ -54,7 +54,7 @@ else
 	end
 	--error (permissions error normally/hopefully)
 	if err then
-		session:addMessage( 'error', err )
+		return template:error( err )
 	else
 		template:set( object_type .. 's', objects, true )
 	end
