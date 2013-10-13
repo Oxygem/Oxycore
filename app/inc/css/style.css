@@ -5,6 +5,7 @@
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 	outline: none;
+	position: relative;
 }
 
 body {
@@ -41,7 +42,7 @@ h1, h2, h3 {
 }
 h3 {
 	font-family: PTSansRegular;
-	margin: 20px 0 0 0;
+	font-size: 18px;
 }
 	h2 span {
 		font-family: PTSansRegular;
@@ -174,6 +175,16 @@ table {
 	color: rgb( 56, 117, 215 );
 }
 
+.hidden {
+	display: none;
+}
+
+small.light {
+	color: #999;
+}
+
+
+/* positioning */
 .left {
 	float: left;
 }
@@ -190,53 +201,75 @@ table {
 .right_margin {
 	margin-right: 1%;
 }
+.top_margin {
+	margin-top: 1%;
+}
+.bottom_margin {
+	margin-bottom: 1%;
+}
 
 .right_align {
 	text-align: right;
 }
 
+.block {
+	float: left;
+	width: 100%;
+	font-size: 0;
+}
+.block .wide {
+	font-size: 14px;
+}
+.block .half, .block .third, .block .twothird, .block .quarter, .block .threequarter {
+	font-size: 14px;
+	display: inline-block;
+	vertical-align: top;
+}
 .wide {
 	width: 100%;
 }
 .half {
 	width: 49%;
-	display: inline-block;
-	vertical-align: top;
 	margin-right: 1%;
 }
-.half.last {
+.half:last-child {
 	margin-right: 0;
+	margin-left: 1%;
+}
+.half:first-child:last-child {
+	margin: 0;
 }
 .third {
 	width: 32%;
-	display: inline-block;
-	vertical-align: top;
-	margin-right: 1.5%;
+	margin-right: 2%;
 }
-.third.last {
+.third:last-child {
 	margin-right: 0;
 }
 .twothird {
-	width: 65%;
+	width: 66%;
+	margin-right: 2%;
+}
+.twothird:last-child {
+	margin-right: 0;
 }
 .quarter {
 	width: 24%;
+	margin-right: 1.33333333%;
 }
-.quarter.inner {
-	margin-left: 1%;
+.quarter:last-child {
+	margin-right: 0;
 }
 .threequarter {
 	width: 74%;
+	margin-right: 1.99999999%;
+}
+.threequarter:last-child {
+	margin-right: 0;
+	margin-left: 0.66666666%;
 }
 
-.hidden {
-	display: none;
-}
-
-small.light {
-	color: #999;
-}
-
+/* buttons */
 button.lightgreen, .button.lightgreen {
 	color: #fff;
 	background: rgb( 82, 177, 51 );
@@ -314,9 +347,16 @@ button.disabled {
 	opacity: 0.5;
 	cursor: progress;
 }
-button.big {
+button.big, .button.big {
 	width: 120px;
 	height: 40px;
+}
+button.small, .button.small {
+	padding: 2px;
+	font-size: 12px;
+	border: none;
+	font-weight: normal;
+	text-shadow: none;
 }
 
 	h2 span.meta {
@@ -324,6 +364,21 @@ button.big {
 		font-weight: normal;
 	}
 
+/* lists */
+ul.stats {
+    clear: both;
+    padding: 0;
+}
+    ul.stats li {
+        list-style: none;
+        float: left;
+        width: 50%;
+        padding: 5px 2%;
+        margin-left: 0px;
+        background: #F7F7F7;
+    }
+
+/* forms */
 form.inline {
 	display: inline;
 }
@@ -361,6 +416,7 @@ form.wide {
 		padding: 10px;
 	}
 
+/* messages */
 div.message {
 	background: #F7F7F7;
 	padding: 10px;
@@ -495,6 +551,7 @@ ul#subnav {
 	padding: 0;
 	font-family: PTSansRegular;
 	text-shadow: 1px 1px 0px #FFF;
+	font-size: 15px;
 }
 	ul#subnav li {
 		list-style: none;
@@ -528,6 +585,7 @@ ul#subnav {
 			display: none;
 			width: 500px;
 			z-index: 99;
+			font-size: 14px;
 		}
 		ul#subnav li:hover ul.dropdown {
 			display: block;
@@ -685,61 +743,15 @@ div#footer {
 	dashboard */
 div#dashboard {
 }
-	div#dashboard div.item {
-		float: left;
-		border: 1px solid #D7D7D7;
-		border-radius: 3px;
-		margin-bottom: 1.7%;
-	}
-	div#dashboard div.wide {
-		float: none;
-	}
-	div#dashboard div.third {
-		float: left;
-		width: 32%;
-	}
-	div#dashboard div.third.two {
-		margin-left: 1.9%;
-	}
-	div#dashboard div.third.three {
-		float: right;
-	}
-	div#dashboard div.half {
-		float: left;
-		width: 49%;
-	}
-	div#dashboard div.half.two {
-		float: right;
-		margin-right: 0px;
-	}
-	div#dashboard div.right {
-		float: right;
-		margin-right: 0px;
-	}
 	div#dashboard h3 {
 		font-weight: normal;
-		background: #F7F7F7;
-		padding: 8px 10px;
+		padding: 8px 5px;
 		margin: 0;
-		border-bottom: 1px solid #D7D7D7;
 	}
 		div#dashboard h3 span.right a {
 			font-size: 14px;
 			border: none;
 		}
-	div#dashboard p {
-		padding: 5px 10px;
-		margin: 0;
-	}
-			div#dashboard table tr th:first-child, div#dashboard table tr td:first-child {
-				padding-left: 10px;
-			}
-			div#dashboard table tr th:last-child, div#dashboard table tr td:last-child {
-				padding-right: 10px;
-			}
-			div#dashboard table td img.status {
-				float: left;
-			}
 
 
 /*
