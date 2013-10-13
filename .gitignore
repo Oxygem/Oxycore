@@ -1,2 +1,11 @@
+# Standard
 .DS_Store
 *.log
+inc/*
+
+# Auto-built files
+oxy*
+config.nginx
+
+# Security risk
+config.lua
