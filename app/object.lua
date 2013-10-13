@@ -29,12 +29,13 @@ end
 
 
 --fetch an object as lua object (NO permission checks - ie internal)
-function object:fetch( id, prepare )
+function object:fetch( id, prepare, fields )
     if self.cache[id] then return self.cache[id] end --cache so we can 'accidentally' load the same object multiple times w/o extra mysql
 
+    fields = fields or 'id, name'
     --get object from mysql (get all fields - assume need all on fetch)
     local object, err = database:select(
-        self.module .. '_' .. self.type, '*',
+        self.module .. '_' .. self.type, fields,
         { id = id },
         order, limit, offset
     )
@@ -72,7 +73,7 @@ function object:get( id, permission )
     if not self:permission( id, permission ) then return false, 'You do not have permission to ' .. permission .. ' this ' .. self.type end
 
     --fetch!
-    return self:fetch( id, true )
+    return self:fetch( id, true, '*' )
 end
 
 --check current user permissions on object (Admin, View, Edit)
