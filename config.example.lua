@@ -46,16 +46,18 @@ local config = {
     ------- Modules
     ---
 
-    --debug
-    debug = {
-        enabled = true
+    --oxynode (this file is used when building oxynode.js)
+    oxynode = {
+        client_port = 9001,
+        server_port = 9003,
+        share_key = 'M9LkaVeNMAIIUhvN5xDKa1NORmU8TkO3p7IBNA27ArAso7wVySm1wUwxnQHILD8dPvR91akZNqU6UYjCdwbqvrmqN'
     },
 
-    --template
-    template = {
-        dir = '',
-        api = true,
-        minimize = false
+    --oxyngx (for config.nginx and oxynode.lua)
+    oxyngx = {
+        port = 8084,
+        template = 'oxypanel',
+        ssh_key = '/path/id.rsa' --needs valid private key where all the servers you add have it's public key
     },
 
     --database
@@ -66,6 +68,13 @@ local config = {
         name = 'oxypanel',
         user = 'root',
         pass = 'root'
+    },
+
+    --template
+    template = {
+        dir = '',
+        api = true,
+        minimize = false
     },
 
     --user
@@ -83,20 +92,6 @@ local config = {
         user = '',
         pass = '',
         from = ''
-    },
-
-    --oxynode (this file is used when building oxynode.js)
-    oxynode = {
-        client_port = 9001,
-        server_port = 9003,
-        share_key = 'M9LkaVeNMAIIUhvN5xDKa1NORmU8TkO3p7IBNA27ArAso7wVySm1wUwxnQHILD8dPvR91akZNqU6UYjCdwbqvrmqN'
-    },
-
-    --oxyngx (for config.nginx and oxynode.lua)
-    oxyngx = {
-        port = 8084,
-        template = 'oxypanel',
-        ssh_key = '/path/id.rsa' --needs valid private key where all the servers you add have it's public key
     }
 }
 
