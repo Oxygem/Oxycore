@@ -70,7 +70,8 @@ local config = {
 
     --user
     user = {
-        strength = 3,
+        keys = 3,
+        stretching = 32,
         secret = 'FnJPZQ3hwlIM5pzJwUc8my1uS8xjsC84bFaPU4SoscymEvlbZprZx1oLcveNNV1ROlXCgRqsgSV4BIjTlezQ73WSh',
         dbprefix = 'admin_'
     },
