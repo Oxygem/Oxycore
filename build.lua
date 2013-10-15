@@ -29,7 +29,7 @@ server {
     server_name ]] .. config.urls .. [[;
 
     #dev mode
-    lua_code_cache ]] .. luawaconf.cache .. [[;
+    lua_code_cache ]] .. ( luawaconf.cache and 'on' or 'off' ) .. [[;
 
     #logging
     error_log ]] .. config.root .. [[logs/error.log;
