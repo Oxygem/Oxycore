@@ -9,3 +9,8 @@ config.nginx
 
 # Security risk
 config.lua
+
+# Ignore exta modules
+modules/billing/
+modules/support/
+modules/services/
