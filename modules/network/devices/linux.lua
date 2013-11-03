@@ -36,11 +36,6 @@ local config = {
                 { name = 'Allow IP', command = 'allow_firewall', color = 'green', data = { name = 'IP or subnet', id = 'ip' } },
                 { name = 'Block IP', command = 'block_firewall', color = 'blue', data = { name = 'IP or subnet', id = 'ip' } },
                 { name = 'Flush Rules', command = 'flush_firewall', color = 'red', confirm = 'This will delete all non-saved firewall rules' }
-        } },
-
-        { name = 'Monitors', js = 'monitor', permission = 'view', order = 99, buttons = {
-            { name = 'Setup SNMP', command = 'status', color = 'green' },
-            { name = 'Add Monitor', command = 'status', color = 'lightgreen' }
         } }
     },
 

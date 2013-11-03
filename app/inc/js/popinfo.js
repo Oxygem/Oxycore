@@ -1,28 +1,26 @@
 var popinfos = {};
 
-$.each( $( 'a.pop' ), function( key, pop ) {
-	var link = $( pop ),
-		type = link.attr( 'data-object-type' ),
-		id = link.attr( 'data-object-id' );
+util.each( document.querySelectorAll( 'a.pop' ), function( key, link ) {
+	var type = link.getAttribute( 'data-object-type' ),
+		id = link.getAttribute( 'data-object-id' );
 
-	link.bind( 'mouseover', function( ev ) {
-		var link = $( ev.delegateTarget ),
-			type = link.attr( 'data-object-type' ),
-			id = link.attr( 'data-object-id' );
+	link.addEventListener( 'mouseover', function( ev ) {
+		var self = this,
+			type = this.getAttribute( 'data-object-type' ),
+			id = this.getAttribute( 'data-object-id' );
 
 		//cached popinfo?
 		if( popinfos[type + id] != undefined ) {
-			return $( 'strong', link ).html( popinfos[type + id] );
+			return this.querySelector( 'strong' ).innerHTML = popinfos[type + id];
 		}
 
 		//make request
-		$.ajax( window.location.origin + '/' + type + '/' + id + '?_api', {
-			type: 'GET',
-			error: function( req, status, error ) {
+		util.ajax( 'GET', window.location.origin + '/' + type + '/' + id + '?_api', {
+			error: function( status, error ) {
 				console.error( error );
 			},
-			success: function( data, status ) {
-				$( 'strong', link ).html( data[type].name );
+			success: function( status, data ) {
+				self.querySelector( 'strong' ).innerHTML = data[type].name;
 
 				//cache
 				popinfos[type + id] = data[type].name;
@@ -31,5 +29,5 @@ $.each( $( 'a.pop' ), function( key, pop ) {
 	});
 
 	//add html
-	link.prepend( '<span class="container"><strong><img src="/inc/core/img/loader.gif" /></strong><span class="meta">' + type.charAt(0).toUpperCase() + type.slice(1) + '</span><span class="arrow"></span></span>' );
+	link.innerHTML ='<span class="container"><strong><img src="/inc/core/img/loader.gif" /></strong><span class="meta">' + type.charAt(0).toUpperCase() + type.slice(1) + '</span><span class="arrow"></span></span>' + link.innerHTML;
 });

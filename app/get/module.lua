@@ -7,7 +7,7 @@ local oxy, luawa, header, request, user, template = oxy, luawa, luawa.header, lu
 
 --try to load the module in question
 local module = oxy:loadModule( request.get.module )
---fail? cya!
+--module exists & we have permission
 if not module or not user:checkPermission( 'Module' .. request.get.module ) then
     return template:error( 'You don\'t have permission to do that' )
 end
@@ -23,10 +23,5 @@ end
 
 local file, public, args = req.file, req.public, req.args or {}
 request.args = args
-
---are we logged in or public?
-if not user:checkLogin() and not public then
-    header:redirect( '/login' )
-end
 
 return luawa:processFile( 'modules/' .. request.get.module .. '/' .. file )

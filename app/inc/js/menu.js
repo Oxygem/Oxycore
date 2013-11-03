@@ -1,16 +1,16 @@
-$.each( $( 'ul#subnav li ul.dropdown' ), function( key, submenu ) {
-	var menu = $( submenu ),
+util.each( document.querySelectorAll( 'ul#subnav li ul.dropdown' ), function( key, submenu ) {
+	var menu = submenu,
 		width = 0;
 
 	//show menu (for widths)
-	menu.show();
+	menu.style.setProperty( 'display', 'inline' );
 	//loop sub menus, get width
-	$.each( $( 'li ul', submenu ), function( c, d ) {
-		width += $( d ).outerWidth() + 12;
+	util.each( submenu.querySelectorAll( 'li ul' ), function( c, d ) {
+		width += d.clientWidth + 12;
 	});
 	//apply width
-	menu.css( { width: width + 20 } );
+	menu.style.setProperty( 'width', ( width + 10 ) + 'px' );
 	
-	//remove inline display style
-	menu.css( { display: '' } );
+	//remove display style
+	menu.style.setProperty( 'display', '' );
 });

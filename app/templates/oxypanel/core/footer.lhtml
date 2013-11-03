@@ -12,6 +12,8 @@
 
 	<script type="text/javascript" src="/inc/core/js/lib/jquery.min.js"></script>
 	<script type="text/javascript" src="/inc/core/js/lib/tablesorter.min.js"></script>
+	
+	<script type="text/javascript" src="/inc/core/js/lib/util.js"></script>
 	<script type="text/javascript" src="/inc/core/js/search.js"></script>
 	<script type="text/javascript" src="/inc/core/js/menu.js"></script>
 	<script type="text/javascript" src="/inc/core/js/popinfo.js"></script>

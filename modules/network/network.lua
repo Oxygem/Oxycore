@@ -84,7 +84,7 @@ function network:subnav()
     end
 
     --automation
-    table.insert( nav, { title = 'Automation', link = '/automation' } )
+    --table.insert( nav, { title = 'Automation', link = '/automation' } )
 
     return nav
 end

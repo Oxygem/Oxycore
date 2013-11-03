@@ -22,7 +22,7 @@
 	</div><!--end left-->
 
 	<div class="third">
-		<h2>Address</h2>
+		<h3>Address</h3>
 
 		<form action="/profile" method="post" class="wide">
 			<label for="real_name">Company or Individual Name:</label>

@@ -7,7 +7,9 @@
 local database, user = luawa.database, luawa.user
 
 --oxy.object
-local object = {}
+local object = {
+    cache = {}
+}
 
 
 --new object 'factory'
@@ -30,7 +32,7 @@ end
 
 --fetch an object as lua object (NO permission checks - ie internal)
 function object:fetch( id, prepare, fields )
-    if self.cache[id] then return self.cache[id] end --cache so we can 'accidentally' load the same object multiple times w/o extra mysql
+    if self.cache[id] then return self.cache[id] end --cache cleared at end of every request?
 
     fields = fields or 'id, name'
     --get object from mysql (get all fields - assume need all on fetch)

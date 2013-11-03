@@ -7,22 +7,15 @@ local device = {}
 --prepare function
 function device:prepare()
     --get the device config
-    self.configuration = network:getDeviceConfig( self.config )
+    self.config = network:getDeviceConfig( self.config )
 end
 
 --when getting device (ie GET /device/id)
 function device:prepareView()
-    --get device IP's
-    local service_ips = database:select(
-        'network_ipblock_ip', '`address`',
-        { device_id = self.id }
-    )
-    self.ips = service_ips or {}
-
     --add any js
-    if self.configuration.js and request.get.type == 'device' then
+    if self.config.js and request.get.type == 'device' then
         local js = {}
-        for k, v in pairs( self.configuration.js ) do
+        for k, v in pairs( self.config.js ) do
             js[k] = 'network/js/' .. v
         end
         template:add( 'module_js', js )
@@ -55,10 +48,10 @@ function device:command( command, args )
 	args = args or {}
 
 	--get our commands list, check command
-	if not self.configuration.commands[command] then
+	if not self.config.commands[command] then
 		return false, 'Invalid command'
 	end
-    local command = self.configuration.commands[command]
+    local command = self.config.commands[command]
 
 	--check we can do this command to this object
 	if not network.device:permission( self.id, command.permission ) then
@@ -165,12 +158,12 @@ end
 
 --POST to edit ssh details
 function device:ssh()
-    if not request.post.port or not request.post.user or not request.post.password or request.post.password:len() == 0 then
+    if not request.post.port or not request.post.user or not request.post.password then
         return template:error( 'Please complete all fields' )
     end
 
     --get actions for config
-    local actions, err = self.configuration.commands.add.actions( request.post )
+    local actions, err = self.config.commands.add.actions( request.post )
     if not actions then return template:error( err ) end
 
     --build request
@@ -180,6 +173,8 @@ function device:ssh()
         user = request.post.user,
         commands = actions
     }
+
+    request.post.password = request.post.password:len() > 0 and request.post.password or false
 
     --make request
     local key, err = ssh:request( req, request.post.password )
@@ -202,7 +197,23 @@ function device:ssh()
         return header:redirect( '/device/' .. self.id .. '/edit', 'error', luawa.utils.tableString( data.data ) )
     end
 
-    return header:redirect( '/device/' .. self.id .. '/edit', 'success', 'Device SSH details updated' )
+    --set
+    self.ssh_port = request.post.port
+    self.ssh_user = request.post.user
+
+    --update service
+    local update, err = database:update(
+        'network_device',
+        {
+            ssh_port = request.post.port,
+            ssh_user = request.post.user
+        }, { id = self.id }
+    )
+    if not update then
+        return header:redirect( '/device/' .. self.id .. '/edit', 'error', err )
+    else
+        return header:redirect( '/device/' .. self.id .. '/edit', 'success', 'Device SSH details updated' )
+    end
 end
 
 --POST to edit snmp details

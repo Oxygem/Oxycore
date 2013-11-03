@@ -1,12 +1,18 @@
 var search = {
+	element: document.querySelector( '#search' ),
+
     toggle: function() {
-        $( '#search' ).slideToggle( 100 );
+        if( this.element.style.getPropertyValue( 'display' ) == 'block' ) {
+        	this.element.css( { display: 'none' } );
+        } else {
+        	this.element.css( { display: 'block' } );
+        }
     }
 };
 
 
 //bind
-$( '#header form.search' ).bind( 'submit', function( ev ) {
+document.querySelector( '#header form.search' ).addEventListener( 'submit', function( ev ) {
     ev.preventDefault();
     search.toggle();
 });

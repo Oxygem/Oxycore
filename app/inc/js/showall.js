@@ -7,23 +7,8 @@ $.each( $( 'a.show' ), function( key, show ) {
 		current = $( show ).attr( 'data-current-id' ),
 		current_in_owned = false;
 
-	//work out if current is in existing list
-	if( current > 0 ) {
-		$.each( $( 'option', select ), function( key, opt ) {
-			if( $( opt ).attr( 'value' ) == current ) {
-				current_in_owned = true;
-			}
-		});
-		//not in owned list?
-		if( !current_in_owned ) {
-			select.after( '<div class="message warning">This object is currently assigned to <a href="/' + type + '/' + current + '">a ' + type + '</a> you don\'t own. Updating will remove the ' + type + ', if you have permission you can retrieve the ' + type + ' with the show all function above.</div>' );
-		}
-	}
-
-	//bind clicks
-	show.bind( 'click', function( ev ) {
-		ev.preventDefault();
-
+	//show hide function
+	this.showHide = function() {
 		if( show.html() == 'Show All' ) {
 			$.ajax( window.location.origin + '/' + module + '/' + type + 's/all?_api', {
 				type: 'GET',
@@ -48,7 +33,27 @@ $.each( $( 'a.show' ), function( key, show ) {
 				}
 			});
 		}
+	}
+
+	//bind clicks
+	show.bind( 'click', function( ev ) {
+		ev.preventDefault();
+
+		this.showHide();
 	});
+
+	//work out if current is in existing list
+	if( current > 0 ) {
+		$.each( $( 'option', select ), function( key, opt ) {
+			if( $( opt ).attr( 'value' ) == current ) {
+				current_in_owned = true;
+			}
+		});
+		//not in owned list?
+		if( !current_in_owned ) {
+			this.showHide();
+		}
+	}
 });
 
 var showall = {

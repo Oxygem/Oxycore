@@ -102,6 +102,7 @@ div#main div.overview div.bar {
 		color: #FFF;
 		text-shadow: 1px 1px 1px #000;
 		margin: 5px 10px;
+		z-index: 2;
 	}
 	div#main div.overview div.bar div {
 		background: black;

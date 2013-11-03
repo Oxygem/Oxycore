@@ -37,8 +37,7 @@ local config = {
     --requests to capture
     requests = {
         get = {
-            default = { file = 'get/dashboard' },
-            publictest = { file = 'get/publictest', public = true }
+            default = { file = 'get/dashboard' }
         },
         post = {
             devices = { file = 'post/devices' },

@@ -144,6 +144,12 @@ table {
 		padding: 5px;
 		text-align: left;
 	}
+		table tr th:first-child {
+			border-radius: 2px 0 0 0;
+		}
+		table tr th:last-child {
+			border-radius: 0 2px 0 0;
+		}
 	table td {
 		padding: 5px;
 	}
@@ -735,7 +741,7 @@ div#footer {
 	margin-bottom: 30px;
 	font-size: 12px;
 	padding-top: 20px;
-	border-top: 1px solid #D7D7D7;
+	border-top: 1px solid #F7F7F7;
 }
 
 
