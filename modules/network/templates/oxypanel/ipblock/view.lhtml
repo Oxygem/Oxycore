@@ -3,7 +3,7 @@
 		<h3>Add IP's</h3>
 
 		<? if self:get( 'ipblock' ).type == 'IPv4' then ?>
-			<form class="half" method="post" action="/ipblock/<?=self:get( 'ipblock' ).id ?>/addIP">
+			<form method="post" action="/ipblock/<?=self:get( 'ipblock' ).id ?>/addIP">
 				<label for="ip">list/range: 1.2.3.0 - 1.2.3.254, 1.2.3.0, 1.2.3.1</label>
 				<input type="text" name="ip" id="ip" />
 
@@ -11,7 +11,7 @@
 				<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
 			</form>
 
-			<form class="half last" method="post" action="/ipblock/<?=self:get( 'ipblock' ).id ?>/autoIP">
+			<form method="post" action="/ipblock/<?=self:get( 'ipblock' ).id ?>/autoIP">
 				<label></label><br />
 				<button class="green">Auto Add Subnet IP's &#187;</button><br />
 				<small>This will add all IP's in the IP Block's subnet.</small>
@@ -43,7 +43,7 @@
 
 
 	<div class="twothird">
-		<h3>IP's</h3>
+		<h3><?=#self:get( 'ipblock' ).ips ?> IP's</h3>
 		<table cellborder="0" cellspacing="0">
 			<thead><tr>
 				<th>IP</th>

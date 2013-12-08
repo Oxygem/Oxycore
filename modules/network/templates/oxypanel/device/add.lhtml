@@ -2,7 +2,7 @@
 	local network = oxy.network
 ?>
 
-<form action="/network/devices/add" method="post" class="wide">
+<form action="/network/devices/add" method="post" class="wide block">
 	<div class="third">
 		<label for="name">Name</label>
 		<input type="text" name="name" id="name" />
@@ -36,10 +36,9 @@
 		</div>
 	</div>
 
-	<div class="third last">
-		<br />
-		<div class="message info">The SSH password is needed once (not stored) to login &amp; add this servers key. <a class="button lightblue" href="http://doc.oxypanel.com/Network/Devices/Add">Read more &#187;</a><br /><br />The device can be added to a device group after it's creation.</div>
-	</div>
+	<div class="third">
+        <div class="message info">The SSH password is needed once (not stored) to login &amp; add this servers key. <a class="button lightblue" href="http://doc.oxypanel.com/Network/Devices/Add">Read more &#187;</a><br /><br />The device can be added to a device group after it's creation.</div>
 
-	<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+        <input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+    </div>
 </form>

@@ -1,42 +1,44 @@
 <? local network = oxy.network ?>
-<div class="third">
-	<form class="wide" action="/network/ipblocks/add" method="post">
-		<label for="name">Name:</label>
-		<input type="text" name="name" id="name" />
+<div class="block">
+	<div class="third">
+		<form class="wide" action="/network/ipblocks/add" method="post">
+			<label for="name">Name:</label>
+			<input type="text" name="name" id="name" />
 
-		<label for="type">Type:</label>
-		<select name="type" id="type">
-			<option value="ipv4">IPv4</option>
-			<option value="ipv6">IPv6</option>
-		</select>
+			<label for="type">Type:</label>
+			<select name="type" id="type">
+				<option value="ipv4">IPv4</option>
+				<option value="ipv6">IPv6</option>
+			</select>
 
-		<label for="prefix">Prefix IP: 3.34.1.2 / 20af:3011::a340</label>
-		<input type="text" name="prefix" id="prefix" />
+			<label for="prefix">Prefix IP: 3.34.1.2 / 20af:3011::a340</label>
+			<input type="text" name="prefix" id="prefix" />
 
-		<label for="mask">Mask/Size:</label>
-		<select name="mask" id="mask">
-			<optgroup label="IPv4">
-				<? for k, v in pairs( network.ipv4.masks ) do if k > 7 then 
-					v[1], v[2], v[3], v[4] = 255 - v[1], 255 - v[2], 255 - v[3], 255 - v[4] ?>
-					<option value="<?=k ?>">/<?=k ?> (<?=v[1] ?>.<?=v[2] ?>.<?=v[3] ?>.<?=v[4] ?>)</option>
-				<? end end ?>
-			</optgroup>
-			<optgroup label="IPv6">
-				<? for i = 4, 32 do
-					local v = i * 4 ?>
-					<option value="<?=v ?>">/<?=v ?></option>
-				<? end ?>
-			</optgroup>
-		</select>
+			<label for="mask">Mask/Size:</label>
+			<select name="mask" id="mask">
+				<optgroup label="IPv4">
+					<? for k, v in pairs( network.ipv4.masks ) do if k > 7 then
+						v[1], v[2], v[3], v[4] = 255 - v[1], 255 - v[2], 255 - v[3], 255 - v[4] ?>
+						<option value="<?=k ?>">/<?=k ?> (<?=v[1] ?>.<?=v[2] ?>.<?=v[3] ?>.<?=v[4] ?>)</option>
+					<? end end ?>
+				</optgroup>
+				<optgroup label="IPv6">
+					<? for i = 4, 32 do
+						local v = i * 4 ?>
+						<option value="<?=v ?>">/<?=v ?></option>
+					<? end ?>
+				</optgroup>
+			</select>
 
-		<button type="submit" class="submit lightgreen">Add IP Block &#187;</button>
-		&nbsp;&nbsp;<a href="/network/ipblocks">back to ip blocks</a>
+			<button type="submit" class="submit lightgreen">Add IP Block &#187;</button>
+			&nbsp;&nbsp;<a href="/network/ipblocks">back to ip blocks</a>
 
-		<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
-	</form>
-</div>
+			<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+		</form>
+	</div>
 
 
-<div class="third">
-	<div class="message info">All IP blocks must be associated with a subnet (down to /32 or /128 = 1 IP subnets). This will be used to generate individual IP's and/or create sub-IP blocks/subnets.<br /><br />The block can be assigned to a device and device group after it's creation.</div>
+	<div class="third">
+		<div class="message info">All IP blocks must be associated with a subnet (down to /32 or /128 = 1 IP subnets). This will be used to generate individual IP's and/or create sub-IP blocks/subnets.<br /><br />The block can be assigned to a device and device group after it's creation.</div>
+	</div>
 </div>
