@@ -42,13 +42,14 @@ function network:subnav()
         if #admin > 0 then servernav.submenus['Admin'] = admin end
 
         local devices = self:getDeviceList()
+        local links = {}
         for k, v in pairs( devices ) do
-            local links = {}
             for c, d in pairs( v ) do
-                table.insert( links, { title = d, link = '/devices?type=' .. c } )
+                table.insert( links, { title = d, link = '/devices?config=' .. c } )
             end
-            servernav.submenus['Config'] = links
         end
+        servernav.submenus['Config'] = links
+
         servernav.submenus['Type'] = {
             { title = 'Server', link = '/devices?type=server' },
             { title = 'Storage', link = '/devices?type=storage' }
