@@ -1,6 +1,6 @@
 var popinfos = {};
 
-util.each( document.querySelectorAll( 'a.pop' ), function( key, link ) {
+document.querySelectorAll( 'a.pop' ).each( function( key, link ) {
 	var type = link.getAttribute( 'data-object-type' ),
 		id = link.getAttribute( 'data-object-id' );
 

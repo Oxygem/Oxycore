@@ -1,72 +1,69 @@
-$.each( $( 'a.show' ), function( key, show ) {
+var showall = {
+	createSelect: function( select, type, current, data ) {
+		select.innerHTML = '<option value="0">Select ' + type.charAt( 0 ).toUpperCase() + type.slice( 1 ) + '</option>';
+		data[type + 's'].each( function( key, item ) {
+			if( item.id == current )
+				select.innerHTML += '<option value="' + item.id + '" selected>' + item.name + '</option>';
+			else
+				select.innerHTML += '<option value="' + item.id + '">' + item.name + '</option>';
+		});
+		select.innerHTML += '<option value="0">None</option>';
+	}
+}
+
+document.querySelectorAll( 'a.show' ).each( function( key, show ) {
 	//get bits
-	var show = $( show ),
-		select = $( '#' + $( show.parent() ).attr( 'for' ) ),
-		type = $( show ).attr( 'data-object-type' ),
-		module = $( show ).attr( 'data-object-module' ),
-		current = $( show ).attr( 'data-current-id' ),
+	var select = document.querySelector( '#' + show.parentNode.getAttribute( 'for' ) ),
+		type = show.getAttribute( 'data-object-type' ),
+		module = show.getAttribute( 'data-object-module' ),
+		current = show.getAttribute( 'data-current-id' ),
 		current_in_owned = false;
 
 	//show hide function
-	this.showHide = function() {
-		if( show.html() == 'Show All' ) {
-			$.ajax( window.location.origin + '/' + module + '/' + type + 's/all?_api', {
-				type: 'GET',
-				error: function( req, status, error ) {
+	show.showHide = function() {
+		if( show.innerHTML == 'Show All' ) {
+			util.ajax( 'GET', window.location.origin + '/' + module + '/' + type + 's/all?_api', {
+				error: function( status, error ) {
 					console.error( error );
 				},
-				success: function( data, status ) {
-					showall.createSelect( select, type, current, data );
-					show.removeClass( 'red' ).html( 'Show Owned' );
+				success: function( status, data ) {
+					if( !data[type + 's'] ) {
+						console.log( 'This will only happen if you allow EditAny but not ViewAny on this object - which you should never want to do!' );
+					} else {
+						showall.createSelect( select, type, current, data );
+						show.classList.remove( 'red' );
+						show.innerHTML = 'Show Owned';
+					}
 				}
 			});
 		} else {
-			$.ajax( window.location.origin + '/' + module + '/' + type + 's?_api', {
-				type: 'GET',
-				error: function( req, status, error ) {
+			util.ajax( 'GET', window.location.origin + '/' + module + '/' + type + 's?_api', {
+				error: function( status, error ) {
 					console.error( error );
 				},
-				success: function( data, status ) {
+				success: function( status, data ) {
 					showall.createSelect( select, type, current, data );
-					show.addClass( 'red' ).html( 'Show All' );
-
+					show.classList.add( 'red' );
+					show.innerHTML = 'Show All';
 				}
 			});
 		}
 	}
 
 	//bind clicks
-	show.bind( 'click', function( ev ) {
+	show.addEventListener( 'click', function( ev ) {
 		ev.preventDefault();
-
 		this.showHide();
 	});
 
 	//work out if current is in existing list
 	if( current > 0 ) {
-		$.each( $( 'option', select ), function( key, opt ) {
-			if( $( opt ).attr( 'value' ) == current ) {
+		select.querySelectorAll( 'option' ).each( function( key, opt ) {
+			if( opt.getAttribute( 'value' ) == current )
 				current_in_owned = true;
-			}
 		});
 		//not in owned list?
-		if( !current_in_owned ) {
-			this.showHide();
-		}
+		if( !current_in_owned )
+			show.showHide();
 	}
 });
-
-var showall = {
-	createSelect: function( select, type, current, data ) {
-		select.html( '<option value="0">Select ' + type.charAt( 0 ).toUpperCase() + type.slice( 1 ) + '</option>' );
-		for( key in data[type + 's'] ) {
-			var item = data[type + 's'][key];
-			if( item.id == current ) {
-				select.append( '<option value="' + item.id + '" selected>' + item.name + '</option>' );
-			} else {
-				select.append( '<option value="' + item.id + '">' + item.name + '</option>' );
-			}
-		}
-		select.append( '<option value="0">None</option>' );
-	}
-}
