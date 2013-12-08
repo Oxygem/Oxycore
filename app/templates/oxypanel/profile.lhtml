@@ -13,8 +13,8 @@
 			<label for="phone">Phone Number:</label>
 			<input type="text" name="phone" id="phone" value="<?=self:get( 'user' ).phone ?>" />
 
-			<label for="twofactor">Enable Two-Factor Auth (requires phone number)</label>
-			<input type="checkbox" class="checkbox" name="twofactor" id="twofactor" /><div></div>
+			<label for="two_factor">Enable Two-Factor Auth (requires phone number)</label>
+			<input type="checkbox" class="checkbox" name="two_factor" id="two_factor" <? if self:get( 'user' ).two_factor == 1 then ?>checked<? end ?>/><div></div>
 
 			<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
 			<button type="submit" class="submit lightgreen" name="update" value="profile">Update Profile &#187;</button>
