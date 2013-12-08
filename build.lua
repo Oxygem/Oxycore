@@ -159,11 +159,7 @@ function minifyJS( js )
     return js
 end
 
---overwrite print
-local oldprint = print
-local print = function( text )
-    oldprint( '[Oxypanel]: ' .. tostring( text ) )
-end
+
 
 --turn a lua table into lua code
 local function tableToLua( table, indent )
