@@ -20,9 +20,9 @@ end
 local file, public = false, false
 
 --we have a request & it matches up
-if request.get.mreq and module.config.requests.post[request.get.mreq] then
-    file = module.config.requests.post[request.get.mreq].file
-    public = module.config.requests.post[request.get.mreq].public
+if request.get.module_request and module.config.requests.post[request.get.module_request] then
+    file = module.config.requests.post[request.get.module_request].file
+    public = module.config.requests.post[request.get.module_request].public
 end
 
 --are we logged in or public?
