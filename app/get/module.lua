@@ -14,8 +14,8 @@ end
 
 local req
 --we have a request & it matches up
-if request.get.mreq and module.config.requests.get[request.get.mreq] then
-    req = module.config.requests.get[request.get.mreq]
+if request.get.module_request and module.config.requests.get[request.get.module_request] then
+    req = module.config.requests.get[request.get.module_request]
 --default
 else
     req = module.config.requests.get.default

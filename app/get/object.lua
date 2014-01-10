@@ -60,7 +60,8 @@ else
 	--set page title
 	template:set( 'page_title', object.name )
 	if oxy.config.objects[request.get.type].title_meta then
-		template:set( 'page_title_meta', object[oxy.config.objects[request.get.type].title_meta] )
+		local title_meta = oxy.config.objects[request.get.type].title_meta:gsub( '{([aA-zZ0-9]+)}', function( key ) return object[key] end )
+		template:set( 'page_title_meta', title_meta )
 	end
 
 	--view/edit buttons
@@ -77,9 +78,9 @@ end
 
 --templates
 if wrap then
-	template:load( 'core/header' )
+	template:load( 'header' )
 	template:loadModule( type.module, request.get.type .. '/' .. action )
-	template:load( 'core/footer' )
+	template:load( 'footer' )
 else
 	template:loadModule( type.module, request.get.type .. '/' .. action )
 end

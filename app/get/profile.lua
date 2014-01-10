@@ -19,6 +19,6 @@ template:set( 'countries', countries )
 template:set( 'user', user:getData() )
 
 --load templates
-template:load( 'core/header' )
+template:load( 'header' )
 template:load( 'profile' )
-template:load( 'core/footer' )
+template:load( 'footer' )

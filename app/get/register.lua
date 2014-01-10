@@ -4,6 +4,6 @@ local template = oxy.template
 template:set( 'page_title', 'Register' )
 
 --load templates
-template:load( 'core/header' )
+template:load( 'header' )
 template:load( 'register' )
-template:load( 'core/footer' )
+template:load( 'footer' )

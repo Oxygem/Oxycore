@@ -25,6 +25,6 @@ template:set( 'dashboard', dashboard )
 template:set( 'page_title', 'Dashboard' )
 
 --load header
-template:load( 'core/header' )
+template:load( 'header' )
 template:load( 'dashboard' )
-template:load( 'core/footer' )
+template:load( 'footer' )
