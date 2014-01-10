@@ -6,31 +6,22 @@
 	<title>Login / <?=oxy.brand.name ?></title>
 	<meta charset="UTF-8" />
 
+	<!--favicon-->
+	<link rel="shortcut icon" href="/inc/core/img/favicon.png" />
+
 	<!--style-->
 	<link rel="stylesheet" href="/inc/core/font/ptsans/font.css" media="all" />
 	<link rel="stylesheet" href="/inc/core/css/style.css" media="all" />
 
 	<!--scripts-->
 </head>
-<body>
+<body id="login">
 
-	<div id="wrap">
-
-		<div id="header">
-			<ul id="nav">
-				<!--logo-->
-				<li id="logo"><a href="/login"><img src="/inc/core/<?=oxy.brand.logo ?>" alt="<?=oxy.brand.name ?>" /></a></li>
-
-
-				<li class="profile active right"><a href="/login">Login</a></li>
-			</ul>
-
-			</ul>
+		<div id="login-header">
+			<div id="logo"><a href="/login"><img src="/inc/core/<?=oxy.brand.logo ?>" alt="<?=oxy.brand.name ?>" /></a></div>
 		</div><!--end header-->
 
-
-
-		<div id="login">
+		<div id="login-main">
 			<div id="main">
 				<h2>Login to <?=oxy.brand.name ?></h2>
 
