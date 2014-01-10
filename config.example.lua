@@ -6,8 +6,69 @@ local config = {
 
     --basics
     hostname = 'oxypanel.dev', --only when host header not set
-    cache = false, --cache template + app files (speeeeeed)
+    cache = true, --cache template + app files (speeeeeed)
     shm_prefix = 'oxypanel_', --shared memory prefix for nginx
+    limit_post = 1000, --limit number of POST arguments to process (prevent DOS, 0 = unlimited)
+
+    ------- Modules
+    ---
+
+    --database config
+    database = {
+        driver = 'mysql',
+        host = '127.0.0.1',
+        port = 3306,
+        name = 'oxypanel',
+        user = 'root',
+        pass = 'root'
+    },
+
+    --user
+    user = {
+        keys = 3,
+        stretching = 3,
+        secret = 'SECRET_KEY',
+        dbprefix = ''
+    },
+
+    --email SMTP config
+    email = {
+        server = '',
+        port = 25,
+        user = '',
+        pass = '',
+        from = ''
+    },
+
+    --oxynode (for oxynode.js and inc/js/oxypanel.js)
+    oxynode = {
+        client_port = 9001, --port the node listens on for SSH requests
+        server_port = 9003, --server port, should be a socket
+        share_key = 'ANOTHER_SECRET_KEY'
+    },
+
+    --oxyngx (for config.nginx and oxynode.lua)
+    oxyngx = {
+        port = 8084,
+        template = 'oxypanel',
+        ssh_key = '/root/.ssh/id_rsa'
+    },
+
+    --debug
+    debug = {
+        enabled = false
+    },
+
+    --template
+    template = {
+        dir = '',
+        api = true,
+        minimize = false
+    },
+
+
+    ------- Oxypanel Request Maps
+    ---
 
     --get requests
     gets = {
@@ -39,59 +100,6 @@ local config = {
 
         --object requests
         object = { file = 'app/post/object' }
-    },
-
-
-
-    ------- Modules
-    ---
-
-    --oxynode (this file is used when building oxynode.js)
-    oxynode = {
-        client_port = 9001,
-        server_port = 9003,
-        share_key = 'M9LkaVeNMAIIUhvN5xDKa1NORmU8TkO3p7IBNA27ArAso7wVySm1wUwxnQHILD8dPvR91akZNqU6UYjCdwbqvrmqN'
-    },
-
-    --oxyngx (for config.nginx and oxynode.lua)
-    oxyngx = {
-        port = 8084,
-        template = 'oxypanel',
-        ssh_key = '/path/id.rsa' --needs valid private key where all the servers you add have it's public key
-    },
-
-    --database
-    database = {
-        driver = 'mysql',
-        host = '127.0.0.1',
-        port = 3306,
-        name = 'oxypanel',
-        user = 'root',
-        pass = 'root'
-    },
-
-    --template
-    template = {
-        dir = '',
-        api = true,
-        minimize = false
-    },
-
-    --user
-    user = {
-        keys = 3,
-        stretching = 32,
-        secret = 'FnJPZQ3hwlIM5pzJwUc8my1uS8xjsC84bFaPU4SoscymEvlbZprZx1oLcveNNV1ROlXCgRqsgSV4BIjTlezQ73WSh',
-        dbprefix = 'admin_'
-    },
-
-    --email (not in use yet)
-    email = {
-        server = '',
-        port = 25,
-        user = '',
-        pass = '',
-        from = ''
     }
 }
 
