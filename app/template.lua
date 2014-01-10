@@ -29,18 +29,19 @@ function template:loadModule( module, template, inline )
     return luawa.template:load( dir, inline )
 end
 
---wrap template w/ header+footer
+--wrap template w/ header+footer (template inline)
+--don't use template as name because can either be loadModule or load
 function template:wrap( template )
-    self:load( 'core/header' )
+    self:load( 'header' )
     self:put( template )
-    self:load( 'core/footer' )
+    self:load( 'footer' )
 end
 
 --error only w/ api
 function template:error( message )
     luawa.session:addMessage( 'error', message )
-    self:load( 'core/header' )
-    self:load( 'core/footer' )
+    self:load( 'header' )
+    self:load( 'footer' )
 end
 
 return template
