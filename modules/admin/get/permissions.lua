@@ -64,6 +64,4 @@ template:set( 'set_permissions', set_permissions )
 template:set( 'groups', groups )
 
 --load template
-template:load( 'core/header' )
-template:loadModule( 'admin', 'permissions' )
-template:load( 'core/footer' )
+template:wrap( template:loadModule( 'admin', 'permissions', true ) )

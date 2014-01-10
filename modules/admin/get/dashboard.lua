@@ -5,6 +5,4 @@
 
 local template = oxy.template
 
-template:load( 'core/header' )
-template:loadModule( 'admin', 'dashboard' )
-template:load( 'core/footer' )
+template:wrap( template:loadModule( 'admin', 'dashboard', true ) )
