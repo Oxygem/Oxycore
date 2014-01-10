@@ -1,19 +1,19 @@
 var showall = {
-	createSelect: function( select, type, current, data ) {
-		select.innerHTML = '<option value="0">Select ' + type.charAt( 0 ).toUpperCase() + type.slice( 1 ) + '</option>';
+	createSelect: function( $select, type, current, data ) {
+		$select.innerHTML = '<option value="0">Select ' + type.charAt( 0 ).toUpperCase() + type.slice( 1 ) + '</option>';
 		data[type + 's'].each( function( key, item ) {
 			if( item.id == current )
-				select.innerHTML += '<option value="' + item.id + '" selected>' + item.name + '</option>';
+				$select.innerHTML += '<option value="' + item.id + '" selected>' + item.name + '</option>';
 			else
-				select.innerHTML += '<option value="' + item.id + '">' + item.name + '</option>';
+				$select.innerHTML += '<option value="' + item.id + '">' + item.name + '</option>';
 		});
-		select.innerHTML += '<option value="0">None</option>';
+		$select.innerHTML += '<option value="0">None</option>';
 	}
 }
 
-document.querySelectorAll( 'a.show' ).each( function( key, show ) {
+util.each( util.elements( 'a.show' ), function( key, show ) {
 	//get bits
-	var select = document.querySelector( '#' + show.parentNode.getAttribute( 'for' ) ),
+	var $select = document.querySelector( '#' + show.parentNode.getAttribute( 'for' ) ),
 		type = show.getAttribute( 'data-object-type' ),
 		module = show.getAttribute( 'data-object-module' ),
 		current = show.getAttribute( 'data-current-id' ),
@@ -30,7 +30,7 @@ document.querySelectorAll( 'a.show' ).each( function( key, show ) {
 					if( !data[type + 's'] ) {
 						console.log( 'This will only happen if you allow EditAny but not ViewAny on this object - which you should never want to do!' );
 					} else {
-						showall.createSelect( select, type, current, data );
+						showall.createSelect( $select, type, current, data );
 						show.classList.remove( 'red' );
 						show.innerHTML = 'Show Owned';
 					}
@@ -42,7 +42,7 @@ document.querySelectorAll( 'a.show' ).each( function( key, show ) {
 					console.error( error );
 				},
 				success: function( status, data ) {
-					showall.createSelect( select, type, current, data );
+					showall.createSelect( $select, type, current, data );
 					show.classList.add( 'red' );
 					show.innerHTML = 'Show All';
 				}
@@ -58,7 +58,7 @@ document.querySelectorAll( 'a.show' ).each( function( key, show ) {
 
 	//work out if current is in existing list
 	if( current > 0 ) {
-		select.querySelectorAll( 'option' ).each( function( key, opt ) {
+		$select.querySelectorAll( 'option' ).each( function( key, opt ) {
 			if( opt.getAttribute( 'value' ) == current )
 				current_in_owned = true;
 		});

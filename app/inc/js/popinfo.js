@@ -1,10 +1,10 @@
 var popinfos = {};
 
-document.querySelectorAll( 'a.pop' ).each( function( key, link ) {
-	var type = link.getAttribute( 'data-object-type' ),
-		id = link.getAttribute( 'data-object-id' );
+util.each( util.elements( 'a.pop' ), function( key, $link ) {
+	var type = $link.getAttribute( 'data-object-type' ),
+		id = $link.getAttribute( 'data-object-id' );
 
-	link.addEventListener( 'mouseover', function( ev ) {
+	$link.addEventListener( 'mouseover', function( ev ) {
 		var self = this,
 			type = this.getAttribute( 'data-object-type' ),
 			id = this.getAttribute( 'data-object-id' );
@@ -29,5 +29,5 @@ document.querySelectorAll( 'a.pop' ).each( function( key, link ) {
 	});
 
 	//add html
-	link.innerHTML ='<span class="container"><strong><img src="/inc/core/img/loader.gif" /></strong><span class="meta">' + type.charAt(0).toUpperCase() + type.slice(1) + '</span><span class="arrow"></span></span>' + link.innerHTML;
+	$link.innerHTML ='<span class="container"><strong><img src="/inc/core/img/loader.gif" /></strong><span class="meta">' + type.charAt(0).toUpperCase() + type.slice(1) + '</span><span class="arrow"></span></span>' + $link.innerHTML;
 });
