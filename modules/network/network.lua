@@ -1,7 +1,5 @@
---[[
-    file: <network module>/network.lua
-    desc: core network module file
-]]
+-- File: network.lua
+-- Desc: core network module definiton
 
 --get oxy & co
 local oxy, user = oxy, luawa.user
@@ -13,12 +11,15 @@ local network = {
     ipblock = oxy.object:new( 'ipblock' ),
     group = oxy.object:new( 'group' ),
 
-    --ssh connecting
-    ssh = require( oxy.config.root .. 'modules/network/ssh' ),
+    --node connecting
+    node = require( oxy.config.root .. 'modules/network/node' ),
 
     --ip/subnet processing
     ipv4 = require( oxy.config.root .. 'modules/network/ipv4' ),
-    ipv6 = require( oxy.config.root .. 'modules/network/ipv6' )
+    ipv6 = require( oxy.config.root .. 'modules/network/ipv6' ),
+
+    --cache device configs (only works when nginx cache = on)
+    configs = {}
 }
 
 
@@ -52,7 +53,8 @@ function network:subnav()
 
         servernav.submenus['Type'] = {
             { title = 'Server', link = '/devices?type=server' },
-            { title = 'Storage', link = '/devices?type=storage' }
+            { title = 'Storage', link = '/devices?type=storage' },
+            { title = 'Network', link = '/devices?type=network' }
         }
 
         table.insert( nav, servernav )
@@ -93,6 +95,8 @@ end
 
 --load a server type => deals with inheriting commands from parent services
 function network:getDeviceConfig( type )
+    if self.configs[type] then return self.configs[type] end
+
     --since we start with our service and work 'up' to the 'base' we must check each time before adding a command so as to not overwrite the lower config
     local config = require( oxy.config.root .. 'modules/network/devices/' .. type )
     config.tabs, config.commands, config.js = config.tabs or {}, config.commands or {}, config.js or {}
@@ -138,6 +142,8 @@ function network:getDeviceConfig( type )
             end
         end
     end
+
+    self.configs[type] = object
     return object
 end
 

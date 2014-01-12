@@ -20,10 +20,9 @@
 <script type="text/javascript" src="/inc/auto/oxypanel.js"></script>
 <script type="text/javascript" src="/inc/core/js/lib/jquery.min.js" /></script>
 <script type="text/javascript" src="/inc/network/js/lib/socket.io.min.js"></script>
-<script type="text/javascript" src="/inc/network/js/lib/jquery.cookie.js"></script>
 <script type="text/javascript" src="/inc/network/js/ssh.js"></script>
 <script type="text/javascript" src="/inc/network/js/device.js"></script>
-<script type="text/javascript" src="/inc/network/js/term.js"></script>
+<script type="text/javascript" src="/inc/network/js/lib/term.js"></script>
 
 <script type="text/javascript">
     var term;

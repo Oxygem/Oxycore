@@ -1,3 +1,6 @@
+-- File: ipv6.lua
+-- Desc: ipv6 subnet parsing
+
 local utils = luawa.utils
 
 local ipv6 = {
@@ -35,7 +38,7 @@ function ipv6:blockInfo( subnet )
 		--remove zeroblock
 		ipbits[zeroblock] = '0000'
 		local padding = 8 - #ipbits
-		
+
 		for i = 1, padding do
 			table.insert( ipbits, zeroblock, '0000' )
 		end

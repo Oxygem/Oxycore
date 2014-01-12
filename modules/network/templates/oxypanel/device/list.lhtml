@@ -61,31 +61,34 @@
 
 	<tbody>
 	<? if self:get( 'devices' ) then
-		for k, service in pairs( self:get( 'devices' ) ) do
-		local config = network.config.devices[service.config].names or network.config.devices[service.config].name ?>
+		for k, device in pairs( self:get( 'devices' ) ) do
+		local config = network.config.devices[device.config].names or network.config.devices[device.config].name ?>
 	<tr>
-		<td><?=service.id ?></td>
+		<td><?=device.id ?></td>
 
 		<? if request.get.action == 'all' then ?><td>
-			<? if service.user_id > 0 then ?><a class="button admin" href="/admin/users?id=<?=service.user_id ?>">User</a><? end ?>
-			<? if service.group_id > 0 then ?><a class="button admin" href="/admin/groups?id=<?=service.group_id ?>">Group</a><? end ?>
+			<? if device.user_id > 0 then ?><a class="button admin" href="/admin/users?id=<?=device.user_id ?>">User</a><? end ?>
+			<? if device.group_id > 0 then ?><a class="button admin" href="/admin/groups?id=<?=device.group_id ?>">Group</a><? end ?>
 		</td><? end ?>
 
-		<td><?=service.name ?></td>
-		<td><?=service.type ?></td>
+		<td><?=device.name ?></td>
+		<td><?=device.type ?></td>
 		<td><?=config ?></td>
-		<td><?=service.status ?></td>
+		<td><?=device.status ?></td>
 
 		<td>
-			<? if service.device_group_id > 0 then ?>
-				<a href="/group/<?=service.device_group_id ?>" class="button lightblue pop" data-object-id="<?=service.device_group_id ?>" data-object-type="group">Group</a>
+			<? if device.device_group_id > 0 then ?>
+				<a href="/group/<?=device.device_group_id ?>" class="button lightblue pop" data-object-id="<?=device.device_group_id ?>" data-object-type="group">Group</a>
 			<? end ?>
 		</td>
 
 		<td>
-			<a href="/device/<?=service.id ?>" class="button green">View</a>
-			<? if service.permissions.edit then ?><a href="/device/<?=service.id ?>/edit" class="button black">Edit</a><? end ?>
-			<? if service.permissions.delete then ?><form class="inline"><button config="submit" class="admin red">Delete</button></form><? end ?>
+			<a href="/device/<?=device.id ?>" class="button green">View</a>
+			<? if device.permissions.edit then ?><a href="/device/<?=device.id ?>/edit" class="button black">Edit</a><? end ?>
+			<? if device.permissions.delete then ?><form class="inline" action="/device/<?=device.id ?>/delete" method="post">
+				<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+				<button class="admin red" data-confirm="Are you sure you wish to delete this device?">Delete</button>
+			</form><? end ?>
 		</td>
 	</tr>
 	<? end else ?>

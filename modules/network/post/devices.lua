@@ -1,4 +1,4 @@
-local request, template, database, network, ssh, user, header, json = luawa.request, oxy.template, luawa.database, oxy.network, oxy.network.ssh, luawa.user, luawa.header, require( 'cjson.safe' )
+local request, template, database, network, node, user, header, json = luawa.request, oxy.template, luawa.database, oxy.network, oxy.network.node, luawa.user, luawa.header, require( 'cjson.safe' )
 
 if request.get.action == 'add' then
     --permission
@@ -26,14 +26,16 @@ if request.get.action == 'add' then
         commands = actions
     }
 
+    request.post.password = request.post.password:len() > 0 and request.post.password or false
+
     --make request
-    local key, err = ssh:request( req, request.post.password )
+    local key, err = node:request( req, request.post.password )
     if not key then
         return header:redirect( '/network/devices/add', 'error', err )
     end
 
     --capture request
-    local status, err = ssh:capture( key )
+    local status, err = node:capture( key )
     if not status then
         return header:redirect( '/network/devices/add', 'error', err )
     end

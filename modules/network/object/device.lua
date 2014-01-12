@@ -1,39 +1,41 @@
---locals
-local database, user, network, ssh, template, request, header, session, json = luawa.database, luawa.user, oxy.network, oxy.network.ssh, oxy.template, luawa.request, luawa.header, luawa.session, require( 'cjson.safe' )
+-- File: object/device.lua
+-- Desc: device object definition
 
---service object
+-- Locals
+local database, user, network, node, template, request, header, session, utils, json = luawa.database, luawa.user, oxy.network, oxy.network.node, oxy.template, luawa.request, luawa.header, luawa.session, luawa.utils, require( 'cjson.safe' )
+
+-- Device object
 local device = {}
 
---prepare function
+-- Prepare function
 function device:prepare()
     --get the device config
-    self.config = network:getDeviceConfig( self.config )
+    self.configuration = network:getDeviceConfig( self.config )
 end
 
---when getting device (ie GET /device/id)
+-- When getting device (ie GET /device/id)
 function device:prepareView()
     --add any js
-    if self.config.js and request.get.type == 'device' then
+    if self.configuration.js and request.get.type == 'device' then
         local js = {}
-        for k, v in pairs( self.config.js ) do
+        for k, v in pairs( self.configuration.js ) do
             js[k] = 'network/js/' .. v
         end
         template:add( 'module_js', js )
     end
 
-    --status request to node
-    local key, err = self:command( 'status' )
-    if err then self.status_request_error = err else self.status_request_key = key end
+    --live stat request to autonode
+    self.stat_request_key, self.stat_request_err = self:stat()
 end
 
---when getting edit page of device (ie GET /device/id/edit)
+-- When getting edit page of device (ie GET /device/id/edit)
 function device:prepareEdit()
     --get owned device groups
     local groups, err = network.group:getOwned()
     template:set( 'groups', groups or {} )
 end
 
---when getting console page of device (ie GET /device/id/console) - popup page
+-- When getting console page of device (ie GET /device/id/console) - popup page
 function device:prepareConsole()
     --console request to node
     local key, err = self:command( 'console' )
@@ -43,15 +45,22 @@ end
 
 
 
---command functon
+-- Stats request function
+-- does no permission checking
+function device:stat()
+    return node:stat( self.id )
+end
+
+-- Command functon
+-- in: command name, arguments
 function device:command( command, args )
 	args = args or {}
 
 	--get our commands list, check command
-	if not self.config.commands[command] then
+	if not self.configuration.commands[command] then
 		return false, 'Invalid command'
 	end
-    local command = self.config.commands[command]
+    local command = self.configuration.commands[command]
 
 	--check we can do this command to this object
 	if not network.device:permission( self.id, command.permission ) then
@@ -81,9 +90,9 @@ function device:command( command, args )
     }
 
 	--make the request
-	local status, err = ssh:request( request )
+	local status, err = node:request( request )
 	if not status then
-		return false, err
+		return false, 'Could not connect to Node SSH-proxy'
 	end
 	return status
 end
@@ -91,11 +100,11 @@ end
 
 
 
---allowed post functions (command => permission)
-device.posts = { runCommand = 'view', edit = 'edit', ssh = 'edit', snmp = 'edit' }
+-- Allowed post functions (command => permission)
+device.posts = { runCommand = 'view', ssh = 'edit', edit = 'edit', delete = 'delete' }
 
---POST to request a command - API mode only
-function device:runCommand()
+-- POST to request a command - API mode only (does own permission checks)
+function device:runCommand( request )
     if not request.get._api then return template:error( 'API only' ) end
 
     --token validated by core module, add token here for api even if error
@@ -116,9 +125,9 @@ function device:runCommand()
     end
 end
 
---POST to edit - non API
-function device:edit()
-    if not request.post.name or not request.post.host or not request.post.status or not request.post.type or not request.post.config or not request.post.group then
+-- POST to edit - non API
+function device:edit( request )
+    if not utils.tableKeys( request.post, { 'name', 'host', 'status', 'type', 'config', 'group', 'stat_frequency' }) then
         return template:error( 'Please complete all fields' )
     end
 
@@ -129,26 +138,17 @@ function device:edit()
         return template:error( 'You do not have permission to add the device to that group' )
     end
 
-    --set
-    self.name = request.post.name
-    self.status = request.post.status
-    self.type = request.post.type
-    self.config = request.post.config
-    self.device_group_id = request.post.group
-    self.host = request.post.host
+    --set data
+    local update, err = self:_edit({
+        name = request.post.name,
+        status = request.post.status,
+        type = request.post.type,
+        config = request.post.config,
+        device_group_id = request.post.group,
+        host = request.post.host,
+        stat_frequency = request.post.stat_frequency
+    })
 
-    --update service
-    local update, err = database:update(
-        'network_device',
-        {
-            name = request.post.name,
-            status = request.post.status,
-            type = request.post.type,
-            config = request.post.config,
-            device_group_id = request.post.group,
-            host = request.post.host
-        }, { id = self.id }
-    )
     if not update then
         return header:redirect( '/device/' .. self.id .. '/edit', 'error', err )
     else
@@ -156,14 +156,25 @@ function device:edit()
     end
 end
 
---POST to edit ssh details
-function device:ssh()
-    if not request.post.port or not request.post.user or not request.post.password then
+-- POST to delete
+function device:delete( request )
+    local delete, err = self:_delete()
+
+    if not delete then
+        return header:redirect( '/device/' .. self.id, 'error', err )
+    else
+        return header:redirect( '/network/devices', 'success', 'Device deleted' )
+    end
+end
+
+-- POST to edit ssh details
+function device:ssh( request )
+    if not utils.tableKeys( request.post, { 'port', 'user', 'password' }) then
         return template:error( 'Please complete all fields' )
     end
 
     --get actions for config
-    local actions, err = self.config.commands.add.actions( request.post )
+    local actions, err = self.configuration.commands.add.actions( request.post )
     if not actions then return template:error( err ) end
 
     --build request
@@ -177,13 +188,13 @@ function device:ssh()
     request.post.password = request.post.password:len() > 0 and request.post.password or false
 
     --make request
-    local key, err = ssh:request( req, request.post.password )
+    local key, err = node:request( req, request.post.password )
     if not key then
         return header:redirect( '/device/' .. self.id .. '/edit', 'error', err )
     end
 
     --capture request
-    local status, err = ssh:capture( key )
+    local status, err = node:capture( key )
     if not status then
         return header:redirect( '/device/' .. self.id .. '/edit', 'error', err )
     end
@@ -197,18 +208,12 @@ function device:ssh()
         return header:redirect( '/device/' .. self.id .. '/edit', 'error', luawa.utils.tableString( data.data ) )
     end
 
-    --set
-    self.ssh_port = request.post.port
-    self.ssh_user = request.post.user
+    --set data
+    local update, err = self:_edit({
+        ssh_port = request.post.port,
+        ssh_user = request.post.user
+    })
 
-    --update service
-    local update, err = database:update(
-        'network_device',
-        {
-            ssh_port = request.post.port,
-            ssh_user = request.post.user
-        }, { id = self.id }
-    )
     if not update then
         return header:redirect( '/device/' .. self.id .. '/edit', 'error', err )
     else
@@ -216,8 +221,5 @@ function device:ssh()
     end
 end
 
---POST to edit snmp details
-function device:snmp()
-end
 
 return device

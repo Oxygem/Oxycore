@@ -1,6 +1,5 @@
---[[
-    modules/network/config.lua
-]]
+-- File: config.lua
+-- Desc: network module config
 
 local config = {
     --nice name
@@ -11,8 +10,7 @@ local config = {
         device = {
             name = 'Device',
             names = 'Devices',
-            title_meta = 'status',
-            fields = 'id, user_id, group_id, name, status, config, type, device_group_id',
+            title_meta = '{host}',
             filters = { 'type', 'config', 'status', 'device_group_id' },
             actions = { console = { permission = 'console', wrap = false } }, --action = { permission / wrap template }
             searches = { 'name' },
@@ -28,7 +26,7 @@ local config = {
         ipblock = {
             name = 'IP Block',
             names = 'IP Blocks',
-            title_meta = 'subnet',
+            title_meta = '{subnet}',
             permission = 'IPBlock',
             filters = { 'type' },
             --search_fields = { 'name' }
@@ -74,10 +72,10 @@ local config = {
     },
     --node files to include
     ngxnode = {
-        'ngx.js'
+        'ngx/core.js'
     },
     autonode = {
-        'auto.js'
+        'auto/core.js'
     }
 }
 
