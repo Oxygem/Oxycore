@@ -1,4 +1,7 @@
-//ssh connection manager
+// File: node/ssj.js
+// Desc: ssh connection pool/manager
+
+'use strict';
 
 //get ssh module
 var ssh2 = require( 'ssh2' ),

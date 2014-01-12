@@ -1,19 +1,29 @@
-//define actions in this file
-// all: exec, moveTo, copyFrom
-// client only: interactiveShell, fileBrowser
+// File: node/ngx/request.js
+// Desc: handles ssh requests
 
-//get randomstring
+'use strict';
+
+/*
+	Request 'actions' can either be:
+	1. 'exec'ute a command, parse the output
+		returns data/json
+	2. enter 'console' session
+*/
+
+// Modules
 var randomstring = require( 'randomstring' ),
-	ssh = require( './ssh.js' );
+	ssh = require( '../ssh.js' );
 
-//request module
+// Request module
 var request = {
-	//store requests
+	// store requests
 	requests: [],
 
-	//console action
+
+	// ------------------------------------- Start actions
+	// Console session
 	console: function( key, data ) {
-		//get request
+		// get request
 		var req = this.requests[key];
 
 		//start console
@@ -24,7 +34,7 @@ var request = {
 
 			//on stream/shell data, send to browser
 			stream.on( 'data', function( data, extended ) {
-				req.client.emit( 'console_data', data + '' );
+				req.client.emit( 'console_data', data.toString() );
 			});
 
 			//recieve data from browser, send to stream/shell
@@ -40,7 +50,7 @@ var request = {
 			});
 			stream.on( 'exit', function( code, signal ) {
 				//notify command end
-				req.callbacks.cmdEnd( 'console' );
+				req.callbacks.cmdEnd( 'console', 0 );
 				console.log( '[Request: ' + key + '] console closed' );
 				//next step in 100ms to avoid overlap
 				setTimeout( function() { request.step( key ); }, 100 );
@@ -48,30 +58,36 @@ var request = {
 		});
 	},
 
-	//exec action
+	// Execute & parse shell command
 	exec: function( key, data ) {
 		//get request
-		var req = this.requests[key];
+		var req = this.requests[key],
+			self = this;
 
 		//execute command
 		req.connection.exec( data.command, function( err, stream ) {
 			if( err ) request.end( key, err );
 
 			//callback: notify command start
-			req.callbacks.cmdStart( { out: data.out, in: data.command } );
+			req.callbacks.cmdStart( data.out );
 			console.log( '[Request: ' + key + '] command start: ' + data.command );
 
 			//data callback
 			stream.on( 'data', function( data ) {
-				req.callbacks.data( data );
+				req.callbacks.data( String( data ) );
+			});
+
+			stream.on( 'exit', function( code, signal ) {
+				req.exit_code = code;
+				req.exit_signal = signal;
 			});
 
 			//end
-			stream.on( 'exit', function( code, signal ) {
+			stream.on( 'close', function() {
 				//expect?
 				if( data.expect ) {
 					//signal failure?
-					if( data.expect.signal != code ) {
+					if( data.expect.signal != req.exit_code ) {
 						//set of commands to run?
 						if( data.expect.fail ) {
 							for( var i = data.expect.fail.length - 1; i >= 0; i-- ) {
@@ -87,16 +103,18 @@ var request = {
 				}
 
 				//callback: notify command end
-				req.callbacks.cmdEnd( data.out, code );
+				req.callbacks.cmdEnd( data.out, req.exit_code, data.parse );
 				console.log( '[Request: ' + key + '] command complete: ' + data.command );
 				//next step in 100ms to avoid overlap
 				setTimeout( function() { request.step( key ); }, 100 );
 			});
 		});
 	},
+	// --------------------------------------- End actions
 
-	//make new request
-	new: function( key, client, server, actions, onData, onCmdStart, onCmdEnd, onEnd, onError ) {
+
+	// New request
+	new: function( key, client, server, actions, options ) {
 		//make our connection
 		ssh.connect( server,
 			//success
@@ -106,12 +124,13 @@ var request = {
 					connection: connection,
 					client: client,
 					actions: actions,
+					buffer: '',
 					callbacks: {
-						data: onData,
-						cmdStart: onCmdStart,
-						cmdEnd: onCmdEnd,
-						end: onEnd,
-						error: onError
+						data: options.data,
+						cmdStart: options.cmdStart,
+						cmdEnd: options.cmdEnd,
+						end: options.end,
+						error: options.error
 					}
 				}
 				//start it
@@ -119,7 +138,7 @@ var request = {
 			},
 			//err
 			function( err ) {
-				onError( err );
+				options.error( err );
 				console.log( '[Request: ' + key + '] error: ' + err );
 			}
 		);
