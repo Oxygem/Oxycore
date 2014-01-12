@@ -1,4 +1,6 @@
---oxypanel app config file
+-- File: config.lua
+-- Desc: Oxypanel configuration
+
 local config = {
 
     ------- Core
