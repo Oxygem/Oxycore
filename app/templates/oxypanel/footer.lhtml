@@ -1,0 +1,27 @@
+		</div><!--end main-->
+
+		<div id="footer">
+			<span class="left">
+				&copy; <a href="<?=oxy.brand.web ?>"><?=oxy.brand.name ?></a> 2013
+			</span>
+			<span class="right">
+				Powered by <a href="http://oxypanel.com/">Oxypanel</a>
+			</span>
+		</div><!--end footer-->
+	</div><!--end wrap-->
+
+	<script type="text/javascript" src="/inc/core/js/lib/util.js"></script>
+	<script type="text/javascript" src="/inc/core/js/noscript.js"></script>
+	<script type="text/javascript" src="/inc/core/js/debug.js"></script>
+	<script type="text/javascript" src="/inc/core/js/menu.js"></script>
+	<script type="text/javascript" src="/inc/core/js/search.js"></script>
+	<script type="text/javascript" src="/inc/core/js/popinfo.js"></script>
+	<script type="text/javascript" src="/inc/core/js/showall.js"></script>
+	<script type="text/javascript" src="/inc/core/js/tabs.js"></script>
+<? if self:get( 'module_js' ) then
+	for k, file in pairs( self:get( 'module_js' ) ) do ?>
+	<script type="text/javascript" src="/inc/<?=file ?>"></script>
+<? end
+end ?>
+</body>
+</html>
