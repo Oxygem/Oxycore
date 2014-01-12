@@ -42,5 +42,5 @@ elseif not module[request.get.type]:permission( request.get.id, object.posts[req
 
 else
     local func = object[request.get.action]
-    return func( object )
+    return func( object, request )
 end
