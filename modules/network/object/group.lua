@@ -1,3 +1,6 @@
+-- File: object/group.lua
+-- Desc: device group object definition
+
 --locals
 local database, request, header = luawa.database, luawa.request, luawa.header
 
@@ -18,7 +21,7 @@ end
 --posts
 group.posts = { edit = 'edit' }
 
-function group:edit()
+function group:edit( request )
 	if not request.post.name then
 		return template:error( 'Please complete all fields' )
 	end
