@@ -1,3 +1,6 @@
+-- File: object/ipblock.lua
+-- Desc: IP block definition
+
 --locals
 local database, network, template, request, utils, header = luawa.database, oxy.network, oxy.template, luawa.request, luawa.utils, luawa.header
 
@@ -46,7 +49,7 @@ end
 ipblock.posts = { edit = 'edit', addIP = 'edit', autoIP = 'edit', generateIP = 'edit' }
 
 --edit ip block
-function ipblock:edit()
+function ipblock:edit( request )
 	if not request.post.name or not request.post.device or not request.post.group or not request.post.prefix or not request.post.mask then
 		return template:error( 'Please complete all fields' )
 	end
@@ -92,7 +95,7 @@ function ipblock:edit()
 end
 
 --add IP's manually (ipv4 only)
-function ipblock:addIP()
+function ipblock:addIP( request )
 	--ipv6 type
 	if self.type ~= 'IPv4' then
 		return template:error( 'You can only add IPs manually to IPv4 blocks' )
@@ -157,7 +160,7 @@ function ipblock:addIP()
 end
 
 --auto add subnet ips (ipv4 only)
-function ipblock:autoIP()
+function ipblock:autoIP( request )
 	--ipv6 type
 	if self.type ~= 'IPv4' then
 		return template:error( 'You can only add subnet IPs to IPv4 blocks' )
@@ -184,7 +187,7 @@ function ipblock:autoIP()
 end
 
 --generate IP's (ipv6 only)
-function ipblock:generateIP()
+function ipblock:generateIP( request )
 	--ipv6 type
 	if self.type ~= 'IPv6' then
 		return template:error( 'You can only generate IPs on IPv6 blocks' )
