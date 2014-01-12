@@ -1,13 +1,13 @@
---[[
-    file: <service module>/ssh.lua
-    desc: ssh connection management
-]]
+-- File: node.lua
+-- Desc: talks to node (auto & ngx)
+
 local user, socket = luawa.user, ngx.socket
 local json = require( 'cjson.safe' )
 
 local ssh = {}
 
---make a request to node, return the request ID
+-- Make a request to node, return the request ID (oxyngx.js)
+-- in: request table, password (default = use key)
 function ssh:request( request, password )
 	--open socket
 	local node = socket.tcp()
@@ -76,7 +76,8 @@ function ssh:request( request, password )
 	end
 end
 
---capture a request
+-- Capture a request (oxyngx.js)
+-- in: request key
 function ssh:capture( key )
 	--open socket
 	local node = socket.tcp()
@@ -112,6 +113,11 @@ function ssh:capture( key )
 	until line == nil
 
 	return lines
+end
+
+-- Capture stats (oxyauto.js)
+-- in: device_id
+function ssh:stat( id )
 end
 
 return ssh
