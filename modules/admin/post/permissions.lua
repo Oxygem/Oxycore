@@ -17,7 +17,7 @@ request.post = ngx.req.get_post_args( 0 )
 local permissions = {}
 for k, v in pairs( request.post ) do
 	if v == 'on' then
-		local a, b, group, permission = k:find( '(%d)_([%w]+)')
+		local a, b, group, permission = k:find( '(%d+)_([%w]+)')
 		if a then
 			table.insert( permissions, { group, permission } )
 		end
@@ -27,10 +27,12 @@ end
 --delete all permissions
 database:delete( 'user_permissions' )
 --re-add new permissions
-database:insert( 'user_permissions', { 'group', 'permission' }, permissions )
+local update, err = database:insert( 'user_permissions', { 'group', 'permission' }, permissions )
 
---flush the user shared memory, force permission reload
-ngx.shared[luawa.shm_prefix .. 'user']:flush_all()
-
---redirect
-header:redirect( '/admin/permissions', 'success', 'Permissions updated' )
+if update then
+    --flush the user shared memory, force permission reload
+    ngx.shared[luawa.shm_prefix .. 'user']:flush_all()
+    header:redirect( '/admin/permissions', 'success', 'Permissions updated' )
+else
+    header:redirect( '/admin/permissions', 'error', err )
+end
