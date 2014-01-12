@@ -1,5 +1,7 @@
 <div class="block">
 	<div class="third">
+		<h2>Your Profile</h2>
+
 		<form action="/profile" method="post" class="wide">
 			<label for="name">Display Name:</label>
 			<input type="text" name="name" id="name" value="<?=self:get( 'user' ).name ?>" />
@@ -22,7 +24,7 @@
 	</div><!--end left-->
 
 	<div class="third">
-		<h3>Address</h3>
+		<h2>Your Address</h2>
 
 		<form action="/profile" method="post" class="wide">
 			<label for="real_name">Company or Individual Name:</label>
@@ -44,10 +46,15 @@
 		</form>
 	</div><!--end right-->
 
-	<div class="third last">
-		<div class="message info">
-			<strong>Profile:</strong> display name &amp; login details.<br />
-			<strong>Address:</strong> for invoicing &amp; verification.
-		</div>
+	<div class="third">
+		<h2>Your SSH Key</h2>
+
+		<form action="/profile" method="post" class="wide">
+			<label for="ssh_key">Public SSH Key</label>
+			<textarea name="ssh_key" id="ssh_key"><?=self:get( 'user' ).ssh_key ?></textarea>
+
+			<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+			<button type="submit" class="submit lightgreen" name="update" value="address">Update SSH Key &#187;</button>
+		</form>
 	</div>
 </div>
