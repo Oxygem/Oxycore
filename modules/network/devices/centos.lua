@@ -5,7 +5,7 @@
 local config = {
     group = 'linux',
     parent = 'linux',
-    name = 'Linux: CentOS',
+    name = 'CentOS',
 
     --javascript file(s) to load on service page
     js = {

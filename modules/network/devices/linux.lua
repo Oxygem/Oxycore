@@ -5,38 +5,34 @@
 local config = {
     group = 'linux',
     parent = 'base',
-    name = 'Linux: Generic',
-
-    --javascript file(s) to load on service page
-    js = {
-        'device.linux.js'
-    },
-
+    name = 'Generic Linux',
 
     --tabs
     tabs = {
-        { name = 'Overview', js = 'overview', permission = 'view', order = 0, default = true, buttons = {
-            { name = 'Refresh Status', command = 'status', color = 'lightgreen' },
+        { name = 'Status', js = 'overview', permission = 'view', order = 0, default = true, buttons = {
+            { name = 'Live Stats', command = 'stat', js = 'stat', color = 'lightblue' },
+            { name = 'Active Users', command = 'list_active_user', color = 'lightgreen' },
             { name = 'Process List', command = 'list_process', color = 'green' },
-            { name = 'Open Console', js = 'console', command = 'console', color = 'black' }
-        } },
+            { name = 'Open Console', command = 'console', js = 'console', color = 'black' }
+        }},
 
         { name = 'Power', js = 'power', permission = 'edit', buttons = {
                 { name = 'Reboot', command = 'reboot', color = 'lightblue', confirm = 'Are you sure you wish to reboot this server' },
                 { name = 'Shutdown', command = 'shutdown', color = 'red', confirm = 'You will not be able to reboot the server via Oxypanel' }
-        } },
+        }},
 
         { name = 'Users', js = 'users', permission = 'edit', buttons = {
-                { name = 'List Users', command = 'status', color = 'black' },
-                { name = 'Add User', command = 'status', color = 'green', data = { name = 'IP or subnet', id = 'ip' } }
-        } },
+                { name = 'List Users', command = 'reboot', color = 'black' },
+                { name = 'Add User', command = 'reboot', color = 'green', data = {{ name = 'Username', id = 'user' }}},
+                { name = 'Delete User', command = 'reboot', color = 'red', data = {{ name = 'Username', id = 'user' }}}
+        }},
 
         { name = 'Firewall', js = 'firewall', permission = 'edit', buttons = {
                 { name = 'List Rules', command = 'list_firewall', color = 'black' },
-                { name = 'Allow IP', command = 'allow_firewall', color = 'green', data = { name = 'IP or subnet', id = 'ip' } },
-                { name = 'Block IP', command = 'block_firewall', color = 'blue', data = { name = 'IP or subnet', id = 'ip' } },
+                { name = 'Allow IP', command = 'allow_firewall', color = 'green', data = {{ name = 'IP or subnet', id = 'ip' }}},
+                { name = 'Block IP', command = 'block_firewall', color = 'blue', data = {{ name = 'IP or subnet', id = 'ip' }}},
                 { name = 'Flush Rules', command = 'flush_firewall', color = 'red', confirm = 'This will delete all non-saved firewall rules' }
-        } }
+        }}
     },
 
 
@@ -82,18 +78,30 @@ local config = {
         },
 
         --basic status
-        status = {
-            permission = 'view',
-            actions = {
-                { action = 'exec', out = 'uptime', command = 'uptime' },
-                { action = 'exec', out = 'memory', command = 'free -m' },
-                { action = 'exec', out = 'disk', command = 'df -m' }
-            }
+        stat = {
+            permission = 'view'
         },
+
         list_process = {
             permission = 'view',
             actions = {
-                { action = 'exec', out = 'processes', command = 'ps aux' }
+                { action = 'exec', out = 'processes', command = 'ps aux',
+                    parse = {
+                        skip = 1,
+                        rows = { 'User', 'PID', 'CPU', 'Memory', 'VSZ', 'RSS', 'Stat', 'Start', 'Time', 'Command' }
+                    }
+                }
+            }
+        },
+        list_active_user = {
+            permission = 'view',
+            actions = {
+                { action = 'exec', out = 'users', command = 'w',
+                    parse = {
+                        skip = 2,
+                        rows = { 'User', 'TTY', 'IP', 'Time', 'Idle', 'JCPU', 'PCPU', 'What' }
+                    }
+                }
             }
         },
 
@@ -101,14 +109,14 @@ local config = {
         shutdown = {
             permission = 'edit',
             actions = {
-                { action = 'exec', out = 'status', command = 'shutdown now && echo "ok"' }
+                { action = 'exec', command = 'shutdown now' }
             }
         },
         --reboot
         reboot = {
             permission = 'edit',
             actions = {
-                { action = 'exec', out = 'status', command = 'shutdown -r && echo "ok"' }
+                { action = 'exec', command = 'shutdown -r' }
             }
         },
 
@@ -116,14 +124,20 @@ local config = {
         list_firewall = {
             permission = 'view',
             actions = {
-                { action = 'exec', out = 'rules', command = 'iptables -n -L' }
+                { action = 'exec', out = 'rules', command = 'iptables -nL',
+                    parse = {
+                        titles = '^Chain .+',
+                        title_skip = 1,
+                        rows = { 'target', 'protocol', 'opt', 'source', 'destination', 'filters' }
+                    }
+                }
             }
         },
         --flush firewall rules
         flush_firewall = {
             permission = 'edit',
             actions = {
-                { action = 'exec', out = 'status', command = 'iptables -F && echo "ok"' }
+                { action = 'exec', command = 'iptables -F' }
             }
         },
         allow_firewall = {
@@ -131,8 +145,8 @@ local config = {
             actions = function( args )
                if not args.ip then return false, 'IP or subnet not set' end
                 local out = {
-                    { action = 'exec', out = 'statusin', command = 'iptables -A INPUT -s ' .. args.ip .. ' -j ACCEPT && echo "ok"' },
-                    { action = 'exec', out = 'statusout', command = 'iptables -A OUTPUT -d ' .. args.ip .. ' -j ACCEPT && echo "ok"' }
+                    { action = 'exec', command = 'iptables -A INPUT -s ' .. args.ip .. ' -j ACCEPT' },
+                    { action = 'exec', command = 'iptables -A OUTPUT -d ' .. args.ip .. ' -j ACCEPT' }
                 }
                 return out
             end
@@ -142,8 +156,8 @@ local config = {
             actions = function( args )
                if not args.ip then return false, 'IP or subnet not set' end
                 local out = {
-                    { action = 'exec', out = 'statusin', command = 'iptables -A INPUT -s ' .. args.ip .. ' -j DROP && echo "ok"' },
-                    { action = 'exec', out = 'statusout', command = 'iptables -A OUTPUT -d ' .. args.ip .. ' -j DROP && echo "ok"' }
+                    { action = 'exec', command = 'iptables -A INPUT -s ' .. args.ip .. ' -j DROP' },
+                    { action = 'exec', command = 'iptables -A OUTPUT -d ' .. args.ip .. ' -j DROP' }
                 }
                 return out
             end

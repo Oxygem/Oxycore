@@ -22,7 +22,6 @@ local config = {
 
     --javascript file(s) to load on service page
     js = {
-        'lib/jquery.cookie.js',
         'lib/socket.io.min.js',
         'ssh.js',
         'device.js'
