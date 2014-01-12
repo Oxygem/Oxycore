@@ -1,3 +1,8 @@
+// File: app/inc/js/search.js
+// Desc: ajaxy search
+
+'use strict';
+
 var search = {
 	element: document.querySelector( '#search' ),
 

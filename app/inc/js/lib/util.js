@@ -11,26 +11,41 @@
 	https://github.com/Fizzadar/util.js
 */
 
-var util = (function() {
+(function() {
 	var util = {
 		// Ajax call
 		ajax: function( method, url, options ) {
 			var req = new XMLHttpRequest();
+			req.open( method, url, options.sync ? false : true );
+
+			if( method == 'POST' && options.data ) {
+				var encoded_data = [];
+
+				this.each( options.data, function( key, value ) {
+					encoded_data.push( encodeURIComponent( key ) + '=' + encodeURIComponent( value ));
+				});
+				encoded_data = encoded_data.join( '&' );
+
+				options.data = encoded_data;
+				req.setRequestHeader( 'Content-type', 'application/x-www-form-urlencoded' );
+			}
+
 			req.onreadystatechange = function() {
 				if( req.readyState == 4 ) {
-					if( req.status != 200 )
+					if( req.status != 200 ) {
 						return options.error( req.status, 'Bad HTTP response' );
+					}
 
 					try {
 						var data = JSON.parse( req.responseText );
 						return options.success( req.status, data );
 					} catch( e ) {
-						return options.error( req.status, e.message );
+						return options.error( req.status, e.message, req.responseText );
 					}
 				}
 			}
-			req.open( method, url, options.async ? true : false );
-			req.send();
+
+			req.send( options.data ? options.data : null );
 		},
 
 
@@ -61,9 +76,25 @@ var util = (function() {
 		},
 
 
+		// Parse cookies
+		parseCookies: function() {
+			this.cookies = {};
+			var pairs = document.cookie.split( ';' ),
+				self = this;
+
+			this.each( pairs, function( key, value ) {
+				var data = value.split( '=' );
+				self.cookies[data[0].trim()] = data[1].trim();
+			});
+		},
+
 		// Get cookie
 		getCookie: function( key ) {
+			if( !this.cookies ) {
+				this.parseCookies();
+			}
 
+			return this.cookies[key];
 		},
 
 		// Set cookie
@@ -87,21 +118,25 @@ var util = (function() {
 				self.each( this, function( key, element ) {
 					element.css( data );
 				});
+				return this;
 			}
 			out.animate = function( data, duration ) {
 				self.each( this, function( key, element ) {
 					element.animate( data, duration );
 				});
+				return this;
 			}
 			out.addClass = function( class_name ) {
 				self.each( this, function( key, element ) {
 					element.addClass( class_name );
 				});
+				return this;
 			}
 			out.removeClass = function( class_name ) {
 				self.each( this, function( key, element ) {
 					element.removeClass( class_name );
 				});
+				return this;
 			}
 
 			return out;
@@ -114,10 +149,13 @@ var util = (function() {
 				element = element || target.querySelector( selector ),
 				self = this;
 
+			if( !element ) return;
+
 			element.css = function( data ) {
 				for( key in data ) {
 					this.style.setProperty( key, data[key] );
 				}
+				return this;
 			}
 			element.animate = function( data, duration ) {
 
@@ -130,20 +168,29 @@ var util = (function() {
 			// Set data-<key> attributes
 			element.set = function( key, value ) {
 				this.setAttribute( 'data-' + key, value );
+				return this;
 			}
 
 			element.append = function( content ) {
 				this.innerHTML += content;
+				return this;
 			},
 			element.prepend = function( content ) {
-				this.innerHTML = this.innerHTML + content;
+				this.innerHTML = content + this.innerHTML;
+				return this;
 			}
 
+			element.hasClass = function( css_class ) {
+				return this.className.match( new RegExp( css_class, 'g' ) );
+			},
 			element.addClass = function( css_class ) {
-				this.className += ' ' + css_class;
+				if( !this.hasClass( css_class ) )
+					this.className += ' ' + css_class;
+				return this;
 			}
 			element.removeClass = function( css_class ) {
 				this.className = this.className.replace( new RegExp( ' ?' + css_class, 'g' ), '' );
+				return this;
 			}
 
 			// Run util.elements with this element as the target
@@ -155,8 +202,49 @@ var util = (function() {
 			}
 
 			return element;
+		},
+
+
+		// Build elements
+		build: function( tag, data ) {
+			var root_element = document.createElement( tag ),
+				stack = [],
+				self = this;
+
+			stack.push( root_element );
+
+			root_element.add = function( tag, data ) {
+				if( !data ) {
+					var new_element = document.createElement( tag );
+					stack[stack.length - 1].appendChild( new_element );
+					stack.push( new_element );
+				} else {
+					self.each( data, function( key, value ) {
+						var new_element = document.createElement( tag );
+						new_element.innerHTML = value;
+						stack[stack.length -1].appendChild( new_element );
+					});
+				}
+
+				return this;
+			}
+
+			root_element.build = function( tag, data ) {
+				var new_element = self.build( tag, data );
+				new_element.stack = stack;
+				stack[stack.length - 1].appendChild( new_element );
+
+				return new_element;
+			}
+
+			root_element.up = function() {
+				stack.pop();
+				return this;
+			}
+
+			return root_element;
 		}
 	}
 
-	return util;
+	window.util = util;
 })();

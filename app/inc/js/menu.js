@@ -1,3 +1,8 @@
+// File: app/inc/js/menu.js
+// Desc: minor UX improvements to the menu which CSS couldn't provide
+
+'use strict';
+
 util.each( util.elements( 'ul.dropdown ul' ), function( key, $item ) {
     $item.addEventListener( 'click', function( ev ) {
         if( ev.toElement == this ) {

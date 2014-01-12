@@ -1,3 +1,8 @@
+// File: app/inc/js/showall.js
+// Desc: toggle all/owned objects in select field where admin
+
+'use strict';
+
 var showall = {
 	createSelect: function( $select, type, current, data ) {
 		$select.innerHTML = '<option value="0">Select ' + type.charAt( 0 ).toUpperCase() + type.slice( 1 ) + '</option>';
@@ -58,7 +63,7 @@ util.each( util.elements( 'a.show' ), function( key, show ) {
 
 	//work out if current is in existing list
 	if( current > 0 ) {
-		$select.querySelectorAll( 'option' ).each( function( key, opt ) {
+		util.each( $select.querySelectorAll( 'option' ), function( key, opt ) {
 			if( opt.getAttribute( 'value' ) == current )
 				current_in_owned = true;
 		});

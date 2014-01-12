@@ -1,3 +1,8 @@
+// File: app/inc/js/popinfo.js
+// Desc: ajax powered tooltips
+
+'use strict';
+
 var popinfos = {};
 
 util.each( util.elements( 'a.pop' ), function( key, $link ) {
