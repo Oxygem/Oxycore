@@ -7,9 +7,7 @@
 local database, user = luawa.database, luawa.user
 
 --oxy.object
-local object = {
-    cache = {}
-}
+local object = {}
 
 
 --new object 'factory'
@@ -18,12 +16,12 @@ function object:new( type )
 
     --create new object, set type
     local object = { type = type, module = oxy.config.objects[type].module, cache = {} }
-    --if custom fields for lists, load default (id, owners, name)
+    --if custom fields for lists
     object.fields = oxy.config.objects[type].fields or '*'
 
     --make object use self as index
     self.__index = self
-    setmetatable( object, self ) --this + above essentially makes object inherit self's methods
+    setmetatable( object, self ) --this + above essentially makes object inherit self/object's methods
 
     --return the new object class w/ type set
     return object
@@ -32,8 +30,6 @@ end
 
 --fetch an object as lua object (NO permission checks - ie internal)
 function object:fetch( id, prepare, fields )
-    if self.cache[id] then return self.cache[id] end --cache cleared at end of every request?
-
     fields = fields or 'id, name'
     --get object from mysql (get all fields - assume need all on fetch)
     local object, err = database:select(
@@ -55,11 +51,27 @@ function object:fetch( id, prepare, fields )
     type.__index = type
     setmetatable( object, type ) --this + above essentially makes object inherit type's methods
 
+    --helper functions
+    local this = self
+    --edit object details in database & as object
+    object._edit = function( self, data )
+        if not this:permission( self.id, 'edit' ) then return false, 'You do not have permission to edit this ' .. this.type end
+        for key, value in pairs( data ) do
+            self[key] = value
+        end
+        --update database
+        local update, err = database:update(
+            this.module .. '_' .. this.type, data, { id = self.id }
+        )
+        return update, err
+    end
+    --delete the object
+    object._delete = function( self )
+        return this:delete( self.id )
+    end
+
     --run any prepare function
     if prepare and object.prepare then object:prepare() end
-
-    --add to our cache
-    self.cache[id] = object
 
     return object
 end
@@ -102,6 +114,21 @@ function object:permission( id, permission )
 
     --default response
     return false
+end
+
+--delete (mysql only)
+function object:delete( id )
+    --we got permission?
+    if not self:permission( id, 'delete' ) then return false, 'You do not have permission to delete this ' .. self.type end
+
+    --delete
+    local delete, err = database:delete(
+        self.module .. '_' .. self.type,
+        { id = id },
+        1
+    )
+
+    return delete, err
 end
 
 
