@@ -1,22 +1,25 @@
+'use strict';
+
 //ssh object
 var ssh = {
-    //store current request LIMIT 1 at a time! (might be changed?)
-    request: false,
-    error: false,
-    complete: false,
+    init: false,
+    $console: util.element( '#device_console pre' ),
 
     //make a request
-    new: function( key, data_func, error_func, complete_func ) {
+    new: function( key, options ) {
         //no socket? active request?
-        if( !this.socket || this.request != false )
+        if( !this.socket )
             return false;
-        this.request = data_func;
-        this.error = error_func;
-        this.complete = complete_func;
+        this.onCmdEnd = options.cmdEnd;
+        this.onCmdStart = options.cmdStart;
+        this.onError = options.error;
+        this.onData = options.data;
+        this.onStart = options.start;
+        this.onEnd = options.end;
         //user keys
         var user = {};
-        for( var i = 1; i <= oxypanel.user_strength; i++ ) {
-            user['key' + i] = $.cookie( 'key' + i );
+        for( var i = 1; i <= oxypanel.user_keys; i++ ) {
+            user['key' + i] = util.getCookie( 'key' + i );
         }
         //send request to node
         this.socket.emit( 'capture_request', JSON.stringify({
@@ -26,97 +29,68 @@ var ssh = {
     },
 
     //end a request
-    end: function() {
-        this.complete();
-        this.request = false;
-        this.error = false;
-        this.complete = false;
+    end: function( data ) {
+        this.onEnd( data );
+        this.onCmdEnd = false;
+        this.onCmdStart = false;
+        this.onData = false;
+        this.onError = false;
+        this.onStart = false;
+        this.onEnd = false;
     }
 };
 
 //connect to node & build ssh socket
-$( document ).ready( function() {
-    //node port defined (should be when included)
-    if( oxypanel.node_port ) {
-        //connect
-        ssh.socket = io.connect( 'http://' + window.location.hostname + ':' + oxypanel.node_port );
+//node port defined (should be when included)
+if( oxypanel.node_port ) {
+    //connect
+    ssh.socket = io.connect( 'http://' + window.location.hostname + ':' + oxypanel.node_port );
 
-        //fail to connect?
-        ssh.socket.on( 'error', function( err ) {
-            device.showError( 'Could not connect to Node SSH-proxy' );
+    //fail to connect?
+    ssh.socket.on( 'error', function( error ) {
+        device.showError( 'Could not connect to Node SSH-proxy' );
+    });
+
+    //connected
+    ssh.socket.on( 'connect', function() {
+        debug.log( 'Connected to Node' );
+
+        if( ssh.init )
+            return;
+
+        //error
+        ssh.socket.on( 'request_error', function( data ) {
+            ssh.onError( data );
         });
 
-        //connected
-        ssh.socket.on( 'connect', function() {
-            console.log( 'Connected to Node' );
-
-            //error
-            ssh.socket.on( 'error', function( data ) {
-                if( ssh.error )
-                    ssh.error( data );
-            });
-
-            //capture request start
-            ssh.socket.on( 'request_start', function( data ) {
-                if( ssh.request ) {
-                    if( data != 'ACCEPTED' ) {
-                        console.error( data );
-                    }
-                } else {
-                    console.log( 'Uncaptured request_start: ' + data );
-                }
-            });
-            //capture request end
-            ssh.socket.on( 'request_end', function( data ) {
-                if( ssh.request ) {
-                    ssh.end();
-                } else {
-                    console.log( 'Uncaptured request_end: ' + data );
-                }
-            });
-
-            //add command (response)
-            ssh.socket.on( 'command_add', function( data ) {
-                if( ssh.request ) {
-
-                } else {
-                    console.log( 'Uncaptured command_add: ' + data );
-                }
-            });
-            //command start
-            ssh.socket.on( 'command_start', function( data ) {
-                if( ssh.request ) {
-                    console.log( 'Command start: ' + data.out + ' : ' + data.in );
-                    ssh.command = data.out;
-                    ssh.buffer = '';
-                } else {
-                    console.log( 'Uncaptured command_start: ' + data.out );
-                }
-            });
-            //command data (ALWAYS a string)
-            ssh.socket.on( 'command_data', function( data ) {
-                if( ssh.request ) {
-                    $( '#device_console.terminal pre' ).append( data );
-                    $( '#device_console.terminal pre' ).scrollTop( $( '#device_console.terminal pre' )[0].scrollHeight );
-                    ssh.buffer = ssh.buffer + String( data );
-                } else {
-                    console.log( 'Uncaptured command_data: ' + data );
-                }
-            });
-            //command end
-            ssh.socket.on( 'command_end', function( data ) {
-                if( ssh.request ) {
-                    ssh.request( ssh.buffer );
-                    console.log( 'Command complete: ' + ssh.command );
-                    delete ssh.command;
-                } else {
-                    console.log( 'Uncaptured command_end: ' + data );
-                }
-            });
-
-            //service?
-            if( device )
-                device.start();
+        //capture request start
+        ssh.socket.on( 'request_start', function( data ) {
+            if( data != 'ACCEPTED' ) {
+                return console.log( data );
+            }
+            ssh.onStart( data );
         });
-    }
-});
+
+        //capture request end
+        ssh.socket.on( 'request_end', function( data ) {
+            ssh.onEnd( data );
+        });
+
+        //command start
+        ssh.socket.on( 'command_start', function( data ) {
+            ssh.onCmdStart( data );
+        });
+
+        //command data - just for console
+        ssh.socket.on( 'command_data', function( data ) {
+            ssh.onData( data );
+        });
+
+        //command end
+        ssh.socket.on( 'command_end', function( data ) {
+            ssh.onCmdEnd( data );
+        });
+
+        ssh.init = true;
+    });
+}

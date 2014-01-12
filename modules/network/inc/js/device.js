@@ -1,257 +1,181 @@
-//define device
+'use strict';
+
+var $buttons = util.elements( 'button.service_button' );
 var device = {
+    active: false,
+    buffer: '',
+    $consoleContainer: util.element( '#device_console' ),
+    $console: util.element( '#device_console pre' ),
+    $feedback: util.element( '#device div.feedback' ),
+
+    writeConsole: function( data ) {
+        this.$console.append( data );
+        this.$console.scrollTop = this.$console.scrollHeight;
+    },
+
+    hideConsole: function() {
+        this.$consoleContainer.addClass( 'hidden' );
+    },
+
+    showConsole: function() {
+        this.$consoleContainer.removeClass( 'hidden' );
+    },
+
+    showError: function( error ) {
+        this.$feedback.innerHTML = '<div class="message error">' + error + '</div>';
+    },
+
+    showSuccess: function( message ) {
+        this.$feedback.innerHTML = '<div class="message success">' + message + '</div>';
+    },
+
+    showLoading: function() {
+        this.$feedback.innerHTML = '<div class="message"><img src="/inc/core/img/loader.gif" /> Loading...</div>';
+    },
+
+    //parse a request
+    parse: function( data, parse_data ) {
+        parse_data.skip = parse_data.skip || 0;
+        parse_data.titles = parse_data.titles ? new RegExp( parse_data.titles ) : false;
+        parse_data.title_skip = parse_data.title_skip || 0;
+
+        //go through data line by line
+        var lines = data.split( '\n' ),
+            out = { rows: [] },
+            blank = /^\s*$/,
+            title = parse_data.title_skip * -1;
+        for( var i = 0; i < lines.length - 1; i++ ) {
+            //blank line?
+            if( blank.exec( lines[i].trim() ) ) continue;
+            //skip this line?
+            if( i < parse_data.skip || i < title + parse_data.title_skip ) continue;
+
+            //is this line a title?
+            if( parse_data.titles && parse_data.titles.exec( lines[i] ) ) {
+                title = i + 1;
+                continue;
+            }
+
+            var bits = lines[i].split( /\s+/ );
+            var d = [];
+
+            for( var j = 0; j < parse_data.rows.length; j++ ) {
+                if( j + 1 != parse_data.rows.length )
+                    d[j] = bits[j];
+                else
+                    d[j] = bits.slice( j ).join( ' ' );
+            }
+
+            out.rows.push( d );
+        }
+        out.structure = parse_data.rows;
+
+        return out;
+    },
+
+    //js based device commands
     commands: {
-        //console open (every device)
         console: function() {
-            var left = screen.width / 2 - 495;
-            var top = screen.height / 2 - 330;
+            var left = screen.width / 2 - 495,
+                top = screen.height / 2 - 330;
+
             window.open( window.location.href + '/console', '_blank', 'height=660,width=990,toolbar=no,status=no,resizable=no,menubar=no,left=' + left + ',top=' + top );
         }
     },
 
-    //set our type
-    addCommands: function( type ) {
-        if( !type )
-            return false;
-
-        $.each( type, function( key, value ) {
-            device.commands[key] = value;
-        });
-    },
-
-    //start
-    start: function() {
-        if( this.commands.start )
-            this.commands.start();
-    },
-
-    //build a status bar
-    buildBar: function( name, used, max, measure ) {
-        if( measure == undefined ) measure = 'MB';
-        //work out percentage
-        var percent = Math.round( used / max * 100 );
-        //work out color
-        var color = 'green';
-        if( percent > 90 )
-            color = 'red';
-        else if( percent > 70 )
-            color = 'orange';
-
-        return '<div class="bar ' + color + '"><span><strong>' + name + ':</strong> ' + used + measure + ' / ' + max + measure + '</span><div style="width:' + percent + '%;"></div></div>'
-    },
-
-    //show an error
-    showError: function( message ) {
-        $( '.feedback' ).html( '<div class="message error">' + message + '</div>' );
-    },
-
-    //show a command
-    showCommand: function( message ) {
-        $( '.feedback' ).html( '<div class="message info"><img src="/inc/core/img/loader.gif" alt="loading..." /> <span>' + message + '</span> <a class="right button" onclick="device.toggleConsole( this ); return false;">console</a></div>' );
-
-        if( sessionStorage.getItem( 'service_console' ) == 'true' )
-            this.showConsole();
-    },
-
-    //show a command
-    showSimpleCommand: function( message ) {
-        $( '.feedback' ).html( '<div class="message info"><img src="/inc/core/img/loader.gif" alt="loading..." /> <span>' + message + '</span></div>' );
-    },
-
-    //complete a command
-    completeCommand: function( status, message ) {
-        //remove image
-        $( '.feedback div.message img' ).remove();
-        //make info => status
-        $( '.feedback div.message' ).removeClass( 'info' ).addClass( status );
-        //redo message
-        $( '.feedback div.message span' ).html( message );
-    },
-
-    //show console
-    showConsole: function() {
-        $( '#device_console.terminal' ).slideDown( 200 ).removeClass( 'hidden' );
-        sessionStorage.setItem( 'service_console', 'true' );
-    },
-    hideConsole: function() {
-        $( '#device_console.terminal' ).slideUp( 200 ).addClass( 'hidden' );
-        sessionStorage.setItem( 'service_console', 'false' );
-    },
-    toggleConsole: function() {
-        if( $( '#device_console.terminal' ).hasClass( 'hidden' ) ) {
-            this.showConsole();
-        } else {
-            this.hideConsole();
-        }
-    },
-
-    //show data input needed
-    showDataInput: function( el ) {
-        if( this.disabled )
-            return;
-
-        $( '#device_data_input' ).html( '<div class="message info"><form class="inline">' + el.attr( 'data-name' ) + ': <input value="" type="text" name="data_' + el.attr( 'data-needed' ) + '" /> <input type="submit" value="Go &#187;" /></form></div>').slideDown( 150 );
-        $( '#device_data_input form' ).bind( 'submit', function( ev ) {
-            ev.preventDefault();
-            var data = {};
-            data[el.attr( 'data-needed' )] = $( '#device_data_input form input[name=data_' + el.attr( 'data-needed' ) + ']' ).val();
-            device.commandRequest( el.attr( 'data-command' ), data );
-            $( '#device_data_input' ).slideUp( 150 );
-        });
-    },
-
-    //show data input needed
-    showConfirm: function( el ) {
-        if( this.disabled )
-            return;
-
-        $( '#device_data_input' ).html( '<div class="message warning">' + el.attr( 'data-confirm' ) + ' <button class="">Continue</button></div>').slideDown( 150 );
-        $( '#device_data_input button' ).bind( 'click', function( ev ) {
-            ev.preventDefault();
-            device.commandRequest( el.attr( 'data-command' ) );
-            $( '#device_data_input' ).slideUp( 150 );
-        });
-    },
-
-    //switch between tabs
-    switchTab: function( tab ) {
-        if( this.disabled )
-            return;
-
-        //switch tab
-        $( 'div.tab' ).addClass( 'hidden' );
-        $( 'div.' + tab ).removeClass( 'hidden' );
-        //switch button
-        $( 'li.service_tab' ).removeClass( 'active' );
-        $( 'li.service_tab[data-tab=' + tab + ']' ).addClass( 'active' );
-    },
-
-    //disable device functionality
     disable: function() {
-        this.disabled = true;
-        $( 'li.service_tab' ).addClass( 'disabled' );
-        $( 'button.service_button' ).addClass( 'disabled' );
+        device.active = true;
+        $buttons.addClass( 'disabled' );
     },
 
-    //enable device functionality
     enable: function() {
-        this.disabled = false;
-        $( 'li.service_tab.disabled' ).removeClass( 'disabled' );
-        $( 'button.service_button.disabled' ).removeClass( 'disabled' );
-    },
+        device.active = false;
+        $buttons.removeClass( 'disabled' );
+    }
+}
 
-    //make a request
-    commandRequest: function( command, data ) {
-        if( this.disabled )
-            return;
-        if( !data )
-            data = {};
+// Bind buttons
+util.each( $buttons, function( key, $button ) {
+    $button.addEventListener( 'click', function( ev ) {
+        ev.preventDefault();
 
-        //add commnad to data
-        data.command = command;
-        data.token = oxypanel.luawa_token;
-        //make our request
-        $.ajax( window.location.origin + window.location.pathname + '/runCommand?_api', {
-            type: 'POST',
+        if( device.active ) return;
+
+        var js = $button.get( 'js' );
+        if( js && device.commands[js] )
+            return device.commands[js]();
+
+        var data = {
+            command: this.get( 'command' ),
+            token: oxypanel.luawa_token
+        };
+
+        util.ajax( 'POST', window.location.origin + window.location.pathname + '/runCommand?_api', {
             data: data,
-            error: function( req, status, error ) {
-                device.showError( status + ': ' + error );
+            error: function( status, error, raw_response ) {
+                debug.log( 'error', status, error );
+                console.log( raw_response );
             },
-            success: function( data, status ) {
-                if( data.token )
-                    oxypanel.luawa_token = data.token;
+            success: function( status, data ) {
+                if( !data.token )
+                    return device.showError( data.messages[0].text );
+                oxypanel.luawa_token = data.token;
 
-                if( !data.request_key )
+                if( data.error )
                     return device.showError( data.error );
 
-                //disable device
-                device.disable();
-
-                //valid callback command?
-                if( device.commands[command] ) {
-                    device.commands[command]( data.request_key );
-                //default
-                } else {
-                    device.showConsole();
-                    device.disable();
-                    device.showCommand( 'Running command...' );
-
-                    ssh.new( data.request_key, function( data ) {
-                        console.log( data );
-                    }, function( err ) {
-                        device.showError( 'Error: ' + err );
+                var active_tab = util.element( '#control_tabs div.tab.active .content' );
+                ssh.new( data.request_key, {
+                    error: function( error ) {
+                        debug.log( 'request_error', error );
+                        device.showError( error.code );
                         device.enable();
-                    }, function() {
-                        device.completeCommand( 'success', 'Complete' );
+                    },
+                    data: function( data ) {
+                        debug.log( 'command_data', data );
+                        device.writeConsole( data );
+                        device.buffer += data;
+                    },
+                    cmdEnd: function( data ) {
+                        debug.log( 'command_end', data );
+
+                        if( data.parse_data ) {
+                            var parsed_data = device.parse( device.buffer, data.parse_data );
+
+                            var table = util.build( 'table' );
+                            table.add( 'thead' )
+                                    .add( 'tr' )
+                                        .add( 'th', parsed_data.structure )
+                                    .up()
+                                .up()
+                                .add( 'tbody' );
+                            util.each( parsed_data.rows, function( key, value ) {
+                                table.add( 'tr' )
+                                        .add( 'td', value )
+                                    .up();
+                            });
+                            table.up();
+
+                            active_tab.innerHTML = '';
+                            active_tab.appendChild( table );
+                        }
+                    },
+                    cmdStart: function( data ) {
+                        debug.log( 'command_start', data );
+                        device.buffer = '';
+                    },
+                    end: function( data ) {
+                        debug.log( 'request_end', data );
                         device.enable();
-                    });
-                }
+                        device.showSuccess( 'Complete' );
+                    },
+                    start: function( data ) {
+                        debug.log( 'request_start', data );
+                        device.disable();
+                        device.showLoading();
+                    }
+                });
             }
         });
-    },
-
-    //make a request
-    setData: function( form ) {
-        if( this.disabled )
-            return;
-
-        this.showSimpleCommand( 'Setting data...' );
-        var data = {};
-        //add details to data
-        data.key = $( 'input[name=key]', form ).val();
-        data.value = $( 'input[name=value]', form ).val();
-        data.token = oxypanel.luawa_token;
-        //make our request
-        $.ajax( window.location.origin + window.location.pathname + '/setData?_api', {
-            type: 'POST',
-            data: data,
-            error: function( req, status, error ) {
-                device.showError( status + ': ' + error );
-            },
-            success: function( data, status ) {
-                oxypanel.luawa_token = data.token;
-                if( data.error ) return device.showError( 'Error : ' + data.error );
-                device.completeCommand( 'success', 'Complete' );
-            }
-        });
-    },
-
-    //'tabed' ie output from iptables, apt, yum, df, etc
-    tabsToArray: function( data ) {
-        return $.grep( data.split( ' ' ), function( n ) {
-            if( n.length > 0 && n != '' )
-                return true;
-            else
-                return false;
-        });
-    }
-};
-
-
-//ev bindings
-$( document ).ready( function() {
-    //bind tab links
-    $( 'li.service_tab a' ).bind( 'click', function( ev ) {
-        ev.preventDefault();
-        device.switchTab( $( ev.target ).parent().attr( 'data-tab' ) );
-    });
-
-    //bind command links
-    $( 'button.service_button' ).bind( 'click', function( ev ) {
-        ev.preventDefault();
-
-        //direct command
-        if( $( ev.target ).attr( 'data-command' ) ) {
-            if( $( ev.target ).attr( 'data-needed' ) && $( ev.target ).attr( 'data-name' ) )
-                device.showDataInput( $( ev.target ) );
-            else if( $( ev.target ).attr( 'data-confirm' ) )
-                device.showConfirm( $( ev.target ) );
-            else
-                device.commandRequest( $( ev.target ).attr( 'data-command' ) );
-
-        //js function (popup etc)
-        } else if( $( ev.target ).attr( 'data-js' ) ) {
-            device.commands[$( ev.target ).attr( 'data-js' )]();
-        }
     });
 });

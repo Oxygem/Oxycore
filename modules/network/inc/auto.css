@@ -1,11 +1,11 @@
 ul#nav li.network a {
-    background-image: url( ../network/img/icons/network.png );
+    background-image: url( network/img/icons/network.png );
 }
 ul#nav li.network a:hover {
-    background-image: url( ../network/img/icons/network_hover.png );
+    background-image: url( network/img/icons/network_hover.png );
 }
 ul#nav li.network.active a {
-    background-image: url( ../network/img/icons/network_active.png );
+    background-image: url( network/img/icons/network_active.png );
 }
 
 div.message.info img {
@@ -62,6 +62,11 @@ div.feedback {
 			margin: 0;
 			padding: 3px;
 		}
+	div.feedback div.message img {
+		float: left;
+		margin-top: 3px;
+		margin-right: 4px;
+	}
 
 div.terminal {
 	margin-bottom: 20px;
