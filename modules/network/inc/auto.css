@@ -1,11 +1,11 @@
 ul#nav li.network a {
-    background-image: url( network/img/icons/network.png );
+    background-image: url( /inc/network/img/icons/network.png );
 }
 ul#nav li.network a:hover {
-    background-image: url( network/img/icons/network_hover.png );
+    background-image: url( /inc/network/img/icons/network_hover.png );
 }
 ul#nav li.network.active a {
-    background-image: url( network/img/icons/network_active.png );
+    background-image: url( /inc/network/img/icons/network_active.png );
 }
 
 div.message.info img {

@@ -62,7 +62,12 @@
 		<td>
 			<a href="/ipblock/<?=ipblock.id ?>" class="button green">View</a>
 			<? if ipblock.permissions.edit then ?><a href="/ipblock/<?=ipblock.id ?>/edit" class="button black">Edit</a><? end ?>
-			<? if ipblock.permissions.delete then ?><button class="admin red">Delete</button><? end ?>
+			<? if ipblock.permissions.delete then ?>
+				<form class="inline" data-confirm-message="Are you sure you wish to delete this IP block?" action="/ipblock/<?=ipblock.id ?>/delete" method="post">
+					<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+					<button class="admin red">Delete</button>
+				</form>
+			<? end ?>
 		</td>
 	</tr>
 	<? end if #self:get( 'ipblocks' ) == 0 then ?>

@@ -16,7 +16,7 @@ if request.get.action == 'add' then
 	if not user:checkPermission( 'AddUser' ) then return template:error( 'You do not have permission to do that' ) end
 
 	--register user
-	local status, err = user:register( request.post.email, request.post.password, request.post.name )
+	local status, err = user:register( request.post.email, request.post.password, request.post.name, request.post.group )
 	if err then
 		return header:redirect( '/admin/users/add', 'error', err )
 	else

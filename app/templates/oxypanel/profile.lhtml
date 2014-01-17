@@ -1,7 +1,5 @@
 <div class="block">
 	<div class="third">
-		<h2>Your Profile</h2>
-
 		<form action="/profile" method="post" class="wide">
 			<label for="name">Display Name:</label>
 			<input type="text" name="name" id="name" value="<?=self:get( 'user' ).name ?>" />
@@ -24,7 +22,7 @@
 	</div><!--end left-->
 
 	<div class="third">
-		<h2>Your Address</h2>
+		<h3>Your Address</h3>
 
 		<form action="/profile" method="post" class="wide">
 			<label for="real_name">Company or Individual Name:</label>
@@ -47,7 +45,7 @@
 	</div><!--end right-->
 
 	<div class="third">
-		<h2>Your SSH Key</h2>
+		<h3>Your SSH Key</h3>
 
 		<form action="/profile" method="post" class="wide">
 			<label for="ssh_key">Public SSH Key</label>

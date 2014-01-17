@@ -31,6 +31,7 @@ a {
 	color: #888;
 	text-decoration: none;
 	border-bottom: 1px solid #D7D7D7;
+	cursor: pointer;
 }
 a:hover {
 	color: #333;
@@ -837,6 +838,9 @@ div#main {
 	width: 100%;
 	margin: 0 0 0 0;
 }
+	div#main h3 {
+		margin-top: 0;
+	}
 
 div#footer {
 	float: left;

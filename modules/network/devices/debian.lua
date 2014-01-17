@@ -36,7 +36,12 @@ local config = {
         list_packages = {
             permission = 'view',
             actions = {
-                { action = 'exec', command = 'dpkg-query -l', out = 'packages' }
+                { action = 'exec', command = 'dpkg-query -l', out = 'packages',
+                    parse = {
+                        skip = 5,
+                        columns = { '', 'Name', 'Version', 'Architecture', 'Description' }
+                    }
+                }
             }
         },
         --update installed packages

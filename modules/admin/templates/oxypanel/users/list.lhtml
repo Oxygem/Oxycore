@@ -35,7 +35,7 @@
 				<td><?=user.email ?></td>
 				<td>
 					<a href="/admin/users/edit?id=<?=user.id ?>" class="button black">Edit</a>
-					<form class="inline" method="post" action="/admin/users/delete">
+					<form data-confirm-message="Are you sure you wish to delete this user?" class="inline" method="post" action="/admin/users/delete">
 						<input type="hidden" name="id" value="<?=user.id ?>" />
 						<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
 						<button type="submit" class="button red">Delete</button>

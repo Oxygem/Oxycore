@@ -5,7 +5,7 @@
 			<th width="100px">Core</th>
 			<th width="200px"></th>
 			<? for k, v in pairs( self:get( 'groups' ) ) do ?>
-				<th><?=v.name ?><br /><small>(select: <a href="#" onclick="$( 'input.core_group_<?=v.id ?>' ).prop( 'checked', true ); return false;">all</a>/<a href="#" onclick="$( 'input.core_group_<?=v.id ?>' ).prop( 'checked', false ); return false;">none</a>)</small></th>
+				<th><?=v.name ?><br /><small>(select: <a href="#" onclick="util.elements( 'input.core_group_<?=v.id ?>' ).set( 'checked', 'on' ); return false;">all</a>/<a href="#" onclick="util.elements( 'input.core_group_<?=v.id ?>' ).set( 'checked', false ); return false;">none</a>)</small></th>
 			<? end ?>
 		</tr></thead>
 		<tbody>
@@ -28,7 +28,7 @@
 				<th width="100px"><?=k ?></th>
 				<th width="200px"></th>
 				<? for c, d in pairs( self:get( 'groups' ) ) do ?>
-					<th><?=d.name ?><br /><small>(select: <a href="#" onclick="$( 'input.<?=k ?>_group_<?=d.id ?>' ).prop( 'checked', true ); return false;">all</a>/<a href="#" onclick="$( 'input.<?=k ?>_group_<?=d.id ?>' ).prop( 'checked', false ); return false;">none</a>)</small></th>
+					<th><?=d.name ?><br /><small>(select: <a href="#" onclick="util.elements( 'input.<?=k ?>_group_<?=d.id ?>' ).set( 'checked', 'on' ); return false;">all</a>/<a href="#" onclick="util.elements( 'input.<?=k ?>_group_<?=d.id ?>' ).set( 'checked', false ); return false;">none</a>)</small></th>
 				<? end ?>
 			</tr></thead>
 			<tbody>

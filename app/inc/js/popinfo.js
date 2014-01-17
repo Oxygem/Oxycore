@@ -25,14 +25,20 @@ util.each( util.elements( 'a.pop' ), function( key, $link ) {
 				console.error( error );
 			},
 			success: function( status, data ) {
-				self.querySelector( 'strong' ).innerHTML = data[type].name;
+				var name;
+				if( data[type] && data[type].name ) {
+					name = data[type].name;
+				} else {
+					name = 'Not found';
+					$link.element( 'span.meta' ).innerHTML = 'Error';
+				}
 
 				//cache
-				popinfos[type + id] = data[type].name;
+				popinfos[type + id] = name,
+				self.querySelector( 'strong' ).innerHTML = name;
 			}
 		});
 	});
 
-	//add html
 	$link.innerHTML ='<span class="container"><strong><img src="/inc/core/img/loader.gif" /></strong><span class="meta">' + type.charAt(0).toUpperCase() + type.slice(1) + '</span><span class="arrow"></span></span>' + $link.innerHTML;
 });

@@ -1,250 +1,230 @@
 /*
 
-	 __  __     ______   __     __                __     ______
-	/\ \/\ \   /\__  _\ /\ \   /\ \              /\ \   /\  ___\
-	\ \ \_\ \  \/_/\ \/ \ \ \  \ \ \____   __   _\_\ \  \ \___  \
-	 \ \_____\    \ \_\  \ \_\  \ \_____\ /\_\ /\_____\  \/\_____\
-	  \/_____/     \/_/   \/_/   \/_____/ \/_/ \/_____/   \/_____/
+     __  __     ______   __     __                __     ______
+    /\ \/\ \   /\__  _\ /\ \   /\ \              /\ \   /\  ___\
+    \ \ \_\ \  \/_/\ \/ \ \ \  \ \ \____   __   _\_\ \  \ \___  \
+     \ \_____\    \ \_\  \ \_\  \ \_____\ /\_\ /\_____\  \/\_____\
+      \/_____/     \/_/   \/_/   \/_____/ \/_/ \/_____/   \/_____/
 
-	util.js
-	(c) Nick Barrett 2014, MIT license
-	https://github.com/Fizzadar/util.js
+    util.js
+    (c) Nick Barrett 2014, MIT license
+    https://github.com/Fizzadar/util.js
 */
 
 (function() {
-	var util = {
-		// Ajax call
-		ajax: function( method, url, options ) {
-			var req = new XMLHttpRequest();
-			req.open( method, url, options.sync ? false : true );
+    var util = {
+        // Ajax call
+        ajax: function( method, url, options ) {
+            var req = new XMLHttpRequest();
+            req.open( method, url, options.sync ? false : true );
 
-			if( method == 'POST' && options.data ) {
-				var encoded_data = [];
+            if( method == 'POST' && options.data ) {
+                var encoded_data = [];
 
-				this.each( options.data, function( key, value ) {
-					encoded_data.push( encodeURIComponent( key ) + '=' + encodeURIComponent( value ));
-				});
-				encoded_data = encoded_data.join( '&' );
+                this.each( options.data, function( key, value ) {
+                    encoded_data.push( encodeURIComponent( key ) + '=' + encodeURIComponent( value ));
+                });
+                encoded_data = encoded_data.join( '&' );
 
-				options.data = encoded_data;
-				req.setRequestHeader( 'Content-type', 'application/x-www-form-urlencoded' );
-			}
+                options.data = encoded_data;
+                req.setRequestHeader( 'Content-type', 'application/x-www-form-urlencoded' );
+            }
 
-			req.onreadystatechange = function() {
-				if( req.readyState == 4 ) {
-					if( req.status != 200 ) {
-						return options.error( req.status, 'Bad HTTP response' );
-					}
+            req.onreadystatechange = function() {
+                if( req.readyState == 4 ) {
+                    if( req.status != 200 ) {
+                        return options.error( req.status, 'Bad HTTP response' );
+                    }
 
-					try {
-						var data = JSON.parse( req.responseText );
-						return options.success( req.status, data );
-					} catch( e ) {
-						return options.error( req.status, e.message, req.responseText );
-					}
-				}
-			}
+                    try {
+                        var data = JSON.parse( req.responseText );
+                        return options.success( req.status, data );
+                    } catch( e ) {
+                        return options.error( req.status, e.message, req.responseText );
+                    }
+                }
+            }
 
-			req.send( options.data ? options.data : null );
-		},
-
-
-		// Loop object/array
-		each: function( object, each_func ) {
-			if( typeof object.length == 'number' ) {
-				for( var i = 0; i < object.length; i++ ) {
-					each_func( i, object[i] );
-				}
-			} else {
-				for( key in object ) {
-					each_func( key, object[key] );
-				}
-			}
-		},
+            req.send( options.data ? options.data : null );
+        },
 
 
-		// Search object/array
-		search: function( object, search_func ) {
-			var found_key;
-			this.each( object, function( key, value ) {
-				if( search_func( key, value, found_key ) ) {
-					found_key = key;
-				}
-			});
-
-			return this[found_key] || null;
-		},
-
-
-		// Parse cookies
-		parseCookies: function() {
-			this.cookies = {};
-			var pairs = document.cookie.split( ';' ),
-				self = this;
-
-			this.each( pairs, function( key, value ) {
-				var data = value.split( '=' );
-				self.cookies[data[0].trim()] = data[1].trim();
-			});
-		},
-
-		// Get cookie
-		getCookie: function( key ) {
-			if( !this.cookies ) {
-				this.parseCookies();
-			}
-
-			return this.cookies[key];
-		},
-
-		// Set cookie
-		setCookie: function( key, value ) {
-
-		},
+        // Loop object/array
+        each: function( object, each_func ) {
+            if( typeof object.length == 'number' ) {
+                for( var i = 0; i < object.length; i++ ) {
+                    each_func( i, object[i] );
+                }
+            } else {
+                for( key in object ) {
+                    each_func( key, object[key] );
+                }
+            }
+        },
 
 
-		// Get util elements
-		elements: function( selector, target ) {
-			var target = target || document,
-				elements = target.querySelectorAll( selector ),
-				out = [],
-				self = this;
+        // Search object/array
+        search: function( object, search_func ) {
+            var found_key;
+            this.each( object, function( key, value ) {
+                if( search_func( key, value, found_key ) ) {
+                    found_key = key;
+                }
+            });
 
-			for( var i = 0; i < elements.length; i++ ) {
-				out.push( this.element( false, elements[i] ));
-			}
-
-			out.css = function( data ) {
-				self.each( this, function( key, element ) {
-					element.css( data );
-				});
-				return this;
-			}
-			out.animate = function( data, duration ) {
-				self.each( this, function( key, element ) {
-					element.animate( data, duration );
-				});
-				return this;
-			}
-			out.addClass = function( class_name ) {
-				self.each( this, function( key, element ) {
-					element.addClass( class_name );
-				});
-				return this;
-			}
-			out.removeClass = function( class_name ) {
-				self.each( this, function( key, element ) {
-					element.removeClass( class_name );
-				});
-				return this;
-			}
-
-			return out;
-		},
+            return this[found_key] || null;
+        },
 
 
-		// Get util element
-		element: function( selector, element, target ) {
-			var target = target || document,
-				element = element || target.querySelector( selector ),
-				self = this;
+        // Parse cookies
+        parseCookies: function() {
+            this.cookies = {};
+            var pairs = document.cookie.split( ';' ),
+                self = this;
 
-			if( !element ) return;
+            this.each( pairs, function( key, value ) {
+                var data = value.split( '=' );
+                self.cookies[data[0].trim()] = data[1].trim();
+            });
+        },
 
-			element.css = function( data ) {
-				for( key in data ) {
-					this.style.setProperty( key, data[key] );
-				}
-				return this;
-			}
-			element.animate = function( data, duration ) {
+        // Get cookie
+        getCookie: function( key ) {
+            if( !this.cookies ) {
+                this.parseCookies();
+            }
 
-			}
+            return this.cookies[key];
+        },
 
-			// Get data-<key> attributes
-			element.get = function( key ) {
-				return this.getAttribute( 'data-' + key );
-			}
-			// Set data-<key> attributes
-			element.set = function( key, value ) {
-				this.setAttribute( 'data-' + key, value );
-				return this;
-			}
+        // Set cookie
+        setCookie: function( key, value ) {
 
-			element.append = function( content ) {
-				this.innerHTML += content;
-				return this;
-			},
-			element.prepend = function( content ) {
-				this.innerHTML = content + this.innerHTML;
-				return this;
-			}
-
-			element.hasClass = function( css_class ) {
-				return this.className.match( new RegExp( css_class, 'g' ) );
-			},
-			element.addClass = function( css_class ) {
-				if( !this.hasClass( css_class ) )
-					this.className += ' ' + css_class;
-				return this;
-			}
-			element.removeClass = function( css_class ) {
-				this.className = this.className.replace( new RegExp( ' ?' + css_class, 'g' ), '' );
-				return this;
-			}
-
-			// Run util.elements with this element as the target
-			element.elements = function( selector ) {
-				return self.elements( selector, this );
-			}
-			element.element = function( selector ) {
-				return self.element( selector, false, this );
-			}
-
-			return element;
-		},
+        },
 
 
-		// Build elements
-		build: function( tag, data ) {
-			var root_element = document.createElement( tag ),
-				stack = [],
-				self = this;
+        // Get util elements
+        elementArguments: [ 'css', 'animate', 'get', 'set', 'getData', 'setData', 'addClass', 'removeClass' ],
+        elements: function( selector, target ) {
+            var target = target || document,
+                elements = target.querySelectorAll( selector ),
+                out = [],
+                self = this,
+                i;
 
-			stack.push( root_element );
+            this.each( elements, function( key, element ) {
+                out.push( self.element( false, element ));
+            });
 
-			root_element.add = function( tag, data ) {
-				if( !data ) {
-					var new_element = document.createElement( tag );
-					stack[stack.length - 1].appendChild( new_element );
-					stack.push( new_element );
-				} else {
-					self.each( data, function( key, value ) {
-						var new_element = document.createElement( tag );
-						new_element.innerHTML = value;
-						stack[stack.length -1].appendChild( new_element );
-					});
-				}
+            // Make certain element functions available on elements
+            this.each( this.elementArguments, function( key, func ) {
+                out[func] = function() {
+                    var args = arguments;
+                    self.each( out, function( key, element ) {
+                        element[func].apply( element, args );
+                    });
 
-				return this;
-			}
+                    return out;
+                };
+            });
 
-			root_element.build = function( tag, data ) {
-				var new_element = self.build( tag, data );
-				new_element.stack = stack;
-				stack[stack.length - 1].appendChild( new_element );
+            return out;
+        },
 
-				return new_element;
-			}
 
-			root_element.up = function() {
-				stack.pop();
-				return this;
-			}
+        // Get util element
+        element: function( selector, element, target ) {
+            var target = target || document,
+                element = element || target.querySelector( selector ),
+                self = this;
 
-			return root_element;
-		}
-	}
+            if( !element ) return;
 
-	window.util = util;
+            element.css = function( data ) {
+                for( key in data ) {
+                    this.style.setProperty( key, data[key] );
+                }
+                return this;
+            }
+            element.animate = function( data, duration ) {
+
+            }
+
+            // Set this.<key>, chainable
+            element.set = function( key, value ) {
+                this[key] = value;
+                return this;
+            },
+
+            // Get data-<key> attributes
+            element.getData = function( key ) {
+                return this.getAttribute( 'data-' + key );
+            }
+            // Set data-<key> attributes
+            element.setData = function( key, value ) {
+                this.setAttribute( 'data-' + key, value );
+                return this;
+            }
+
+            element.append = function( content ) {
+                this.innerHTML += content;
+                return this;
+            },
+            element.prepend = function( content ) {
+                this.innerHTML = content + this.innerHTML;
+                return this;
+            }
+
+            element.hasClass = function( css_class ) {
+                return this.className.match( new RegExp( css_class, 'g' ));
+            },
+            element.addClass = function( css_class ) {
+                if( !this.className.match( new RegExp( css_class, 'g' )))
+                    this.className += ' ' + css_class;
+                return this;
+            }
+            element.removeClass = function( css_class ) {
+                this.className = this.className.replace( new RegExp( ' ?' + css_class, 'g' ), '' );
+                return this;
+            }
+
+            // Build a new element as child of this
+            element.build = function( tag ) {
+                var element = self.build( tag );
+                this.appendChild( element );
+                return element;
+            },
+
+            // Enables chain builds
+            element.up = function() {
+                return this.parentNode;
+            },
+
+            element.each = function( data, callback ) {
+                var el_this = this;
+                self.each( data, function( key, value ) {
+                    callback.call( el_this, key, value );
+                });
+                return this;
+            },
+
+            // Run util.elements with this element as the target
+            element.elements = function( selector ) {
+                return self.elements( selector, this );
+            }
+            element.element = function( selector ) {
+                return self.element( selector, false, this );
+            }
+
+            return element;
+        },
+
+        // Build an element
+        build: function( tag ) {
+            var element = document.createElement( tag );
+            return this.element( false, element );
+        }
+    }
+
+    window.util = util;
 })();

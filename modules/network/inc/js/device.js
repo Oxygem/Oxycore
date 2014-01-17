@@ -1,12 +1,14 @@
 'use strict';
 
-var $buttons = util.elements( 'button.service_button' );
+var $content = util.element( '#device #tabs #tab_content' ),
+    $buttons = util.elements( 'button.service_button' );
 var device = {
     active: false,
     buffer: '',
     $consoleContainer: util.element( '#device_console' ),
     $console: util.element( '#device_console pre' ),
-    $feedback: util.element( '#device div.feedback' ),
+    $feedback: util.element( '#device div.feedback' ).build( 'div' ),
+    $consoleButton: util.build( 'button' ).addClass( 'right' ).append( 'Console: off' ),
 
     writeConsole: function( data ) {
         this.$console.append( data );
@@ -15,22 +17,34 @@ var device = {
 
     hideConsole: function() {
         this.$consoleContainer.addClass( 'hidden' );
+        this.$consoleButton.innerHTML = 'Console: off';
     },
 
     showConsole: function() {
         this.$consoleContainer.removeClass( 'hidden' );
+        this.$consoleButton.innerHTML = 'Console: on';
     },
 
     showError: function( error ) {
-        this.$feedback.innerHTML = '<div class="message error">' + error + '</div>';
+        this.$feedback
+            .set( 'className', 'message' )
+            .addClass( 'error' )
+            .set( 'innerHTML', error );
     },
 
     showSuccess: function( message ) {
-        this.$feedback.innerHTML = '<div class="message success">' + message + '</div>';
+        this.$feedback
+            .set( 'className', 'message' )
+            .addClass( 'success' )
+            .set( 'innerHTML', message )
+            .appendChild( this.$consoleButton );
     },
 
     showLoading: function() {
-        this.$feedback.innerHTML = '<div class="message"><img src="/inc/core/img/loader.gif" /> Loading...</div>';
+        this.$feedback
+            .set( 'className', 'message' )
+            .set( 'innerHTML', '<img src="/inc/core/img/loader.gif" /> Loading...' )
+            .appendChild( this.$consoleButton );
     },
 
     //parse a request
@@ -53,14 +67,15 @@ var device = {
             //is this line a title?
             if( parse_data.titles && parse_data.titles.exec( lines[i] ) ) {
                 title = i + 1;
+                out.rows.push( lines[i] );
                 continue;
             }
 
             var bits = lines[i].split( /\s+/ );
             var d = [];
 
-            for( var j = 0; j < parse_data.rows.length; j++ ) {
-                if( j + 1 != parse_data.rows.length )
+            for( var j = 0; j < parse_data.columns.length; j++ ) {
+                if( j + 1 != parse_data.columns.length )
                     d[j] = bits[j];
                 else
                     d[j] = bits.slice( j ).join( ' ' );
@@ -68,7 +83,7 @@ var device = {
 
             out.rows.push( d );
         }
-        out.structure = parse_data.rows;
+        out.structure = parse_data.columns;
 
         return out;
     },
@@ -101,20 +116,19 @@ util.each( $buttons, function( key, $button ) {
 
         if( device.active ) return;
 
-        var js = $button.get( 'js' );
+        var js = $button.getData( 'js' );
         if( js && device.commands[js] )
             return device.commands[js]();
 
         var data = {
-            command: this.get( 'command' ),
+            command: this.getData( 'command' ),
             token: oxypanel.luawa_token
         };
 
         util.ajax( 'POST', window.location.origin + window.location.pathname + '/runCommand?_api', {
             data: data,
             error: function( status, error, raw_response ) {
-                debug.log( 'error', status, error );
-                console.log( raw_response );
+                debug.log( 'error', status, error, raw_response );
             },
             success: function( status, data ) {
                 if( !data.token )
@@ -142,22 +156,30 @@ util.each( $buttons, function( key, $button ) {
                         if( data.parse_data ) {
                             var parsed_data = device.parse( device.buffer, data.parse_data );
 
-                            var table = util.build( 'table' );
-                            table.add( 'thead' )
-                                    .add( 'tr' )
-                                        .add( 'th', parsed_data.structure )
-                                    .up()
-                                .up()
-                                .add( 'tbody' );
-                            util.each( parsed_data.rows, function( key, value ) {
-                                table.add( 'tr' )
-                                        .add( 'td', value )
-                                    .up();
-                            });
-                            table.up();
+                            //build/render table
+                            var table = util.build( 'table' ); // table
+                                table.build( 'thead' ) // table +thead
+                                .build( 'tr' ) // table -> thead +tr
+                                .each( parsed_data.structure, function( key, value ) {
+                                    this.build( 'th' ).append( value ); // table > thead > tr +td
+                                })
+                                .parentNode // table -> thead -tr
+                                .parentNode // table -thead
+                                .build( 'tbody' ) // table +body
+                                .each( parsed_data.rows, function( key, values ) {
+                                    if( typeof values == 'string' ) {
+                                        this.build( 'tr' )
+                                        .build( 'th' ).append( values ).colSpan = parsed_data.structure.length;
+                                    } else {
+                                        this.build( 'tr' )
+                                        .each( values, function( k, v ) {
+                                            this.build( 'td' ).append( v );
+                                        });
+                                    }
+                                });
 
-                            active_tab.innerHTML = '';
-                            active_tab.appendChild( table );
+                            $content.innerHTML = '';
+                            $content.appendChild( table );
                         }
                     },
                     cmdStart: function( data ) {
@@ -178,4 +200,8 @@ util.each( $buttons, function( key, $button ) {
             }
         });
     });
+});
+
+device.$consoleButton.addEventListener( 'click', function() {
+    device.$consoleContainer.hasClass( 'hidden' ) ? device.showConsole() : device.hideConsole();
 });

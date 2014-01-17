@@ -19,7 +19,11 @@
             <td><?=v.status ?></td>
             <td>
                 <a href="/device/<?=v.id ?>" class="button green">View</a>
-                <a href="#" class="button red">Remove</a>
+                <form class="inline" action="/group/<?=self:get( 'group' ).id ?>/removeDevice" method="post">
+                    <input type="hidden" name="device_id" value="<?=v.id ?>" />
+                    <input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+                    <button class="admin red">Remove</button>
+                </form>
             </td>
         </tr>
         <? end if #self:get( 'group' ).devices <= 0 then ?>

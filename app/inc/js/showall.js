@@ -6,7 +6,7 @@
 var showall = {
 	createSelect: function( $select, type, current, data ) {
 		$select.innerHTML = '<option value="0">Select ' + type.charAt( 0 ).toUpperCase() + type.slice( 1 ) + '</option>';
-		data[type + 's'].each( function( key, item ) {
+		util.each( data[type + 's'], function( key, item ) {
 			if( item.id == current )
 				$select.innerHTML += '<option value="' + item.id + '" selected>' + item.name + '</option>';
 			else
@@ -14,7 +14,7 @@ var showall = {
 		});
 		$select.innerHTML += '<option value="0">None</option>';
 	}
-}
+};
 
 util.each( util.elements( 'a.show' ), function( key, show ) {
 	//get bits
@@ -28,8 +28,8 @@ util.each( util.elements( 'a.show' ), function( key, show ) {
 	show.showHide = function() {
 		if( show.innerHTML == 'Show All' ) {
 			util.ajax( 'GET', window.location.origin + '/' + module + '/' + type + 's/all?_api', {
-				error: function( status, error ) {
-					console.error( error );
+				error: function( status, error, response ) {
+					console.error( error, response );
 				},
 				success: function( status, data ) {
 					if( !data[type + 's'] ) {

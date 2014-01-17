@@ -22,7 +22,7 @@ local config = {
         }},
 
         { name = 'Users', js = 'users', permission = 'edit', buttons = {
-                { name = 'List Users', command = 'reboot', color = 'black' },
+                { name = 'List Users', command = 'list_user', color = 'black' },
                 { name = 'Add User', command = 'reboot', color = 'green', data = {{ name = 'Username', id = 'user' }}},
                 { name = 'Delete User', command = 'reboot', color = 'red', data = {{ name = 'Username', id = 'user' }}}
         }},
@@ -88,7 +88,7 @@ local config = {
                 { action = 'exec', out = 'processes', command = 'ps aux',
                     parse = {
                         skip = 1,
-                        rows = { 'User', 'PID', 'CPU', 'Memory', 'VSZ', 'RSS', 'Stat', 'Start', 'Time', 'Command' }
+                        columns = { 'User', 'PID', 'CPU', 'Memory', 'VSZ', 'RSS', 'Stat', 'Start', 'Time', 'Command' }
                     }
                 }
             }
@@ -99,7 +99,19 @@ local config = {
                 { action = 'exec', out = 'users', command = 'w',
                     parse = {
                         skip = 2,
-                        rows = { 'User', 'TTY', 'IP', 'Time', 'Idle', 'JCPU', 'PCPU', 'What' }
+                        columns = { 'User', 'TTY', 'IP', 'Time', 'Idle', 'JCPU', 'PCPU', 'What' }
+                    }
+                }
+            }
+        },
+
+        --users
+        list_user = {
+            permission = 'view',
+            actions = {
+                { action = 'exec', out = 'users', command = 'cat /etc/passwd',
+                    parse = {
+                        columns = { 'UserString' }
                     }
                 }
             }
@@ -124,11 +136,11 @@ local config = {
         list_firewall = {
             permission = 'view',
             actions = {
-                { action = 'exec', out = 'rules', command = 'iptables -nL',
+                { action = 'exec', out = 'rules', command = 'iptables -n -L',
                     parse = {
                         titles = '^Chain .+',
                         title_skip = 1,
-                        rows = { 'target', 'protocol', 'opt', 'source', 'destination', 'filters' }
+                        columns = { 'target', 'protocol', 'opt', 'source', 'destination', 'filters' }
                     }
                 }
             }

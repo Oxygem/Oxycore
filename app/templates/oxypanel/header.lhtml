@@ -18,12 +18,17 @@
 	<!--style-->
 	<link rel="stylesheet" href="/inc/core/font/ptsans/font.css" media="all" />
 	<link rel="stylesheet" href="/inc/core/css/style.css" media="all" />
-	<link rel="stylesheet" href="/inc/oxypanel.css" media="all" />
+	<? if not luawa.cache then
+		for k, module in pairs( oxy.config.modules ) do ?>
+		<link rel="stylesheet" href="/inc/<?=module ?>/auto.css" media="all" />
+	<? end
+	else ?>
+		<link rel="stylesheet" href="/inc/oxypanel.css" media="all" />
+	<? end ?>
 
-	<!--oxypanel here, rest @ footer-->
-	<script type="text/javascript" src="/inc/oxypanel.js"></script>
+	<script type="text/javascript">var oxypanel = {};</script>
 </head>
-<body id="in_module">
+<body>
 
 	<div id="wrap">
 
@@ -159,15 +164,15 @@
 		<div id="main">
 			<div class="message warning noscript" style="margin-top:20px;"><strong><noscript>JavaScript disabled:</noscript></strong><noscript> many features will not work. It is highly recommended to enable it.</noscript></div>
 
-			<? if not self:get( 'ignore_header_title' ) then ?><h2>
+			<h2>
                 <?=self:get( 'page_title' ) ?> <span class="meta"><?=self:get( 'page_title_meta' ) ?></span>
                 <span class="right"><? if self:get( 'page_title_buttons' ) then
                         for k, button in pairs( self:get( 'page_title_buttons' ) ) do ?>
                         <a href="<?=button.link ?>" class="button <?=button.class ?>"><?=button.text ?></a>
                 <? end
                 end ?></span>
-            </h2><? end ?>
+            </h2>
 
-			<? for k, message in pairs( session:getMessages() ) do ?>
+			<div id="messages"><? for k, message in pairs( session:getMessages() ) do ?>
 				<div class="message <?=message.type ?>"><?=message.text ?><? if message.type == 'error' and luawa.header:getHeader( 'referer' ) then ?> <a href="<?=luawa.header:getHeader( 'referer' ) ?>" class="right">Go back</a><? end ?></div>
-			<? end ?>
+			<? end ?></div>

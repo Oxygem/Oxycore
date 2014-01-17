@@ -85,10 +85,12 @@
 		<td>
 			<a href="/device/<?=device.id ?>" class="button green">View</a>
 			<? if device.permissions.edit then ?><a href="/device/<?=device.id ?>/edit" class="button black">Edit</a><? end ?>
-			<? if device.permissions.delete then ?><form class="inline" action="/device/<?=device.id ?>/delete" method="post">
-				<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
-				<button class="admin red" data-confirm="Are you sure you wish to delete this device?">Delete</button>
-			</form><? end ?>
+			<? if device.permissions.delete then ?>
+				<form class="inline" data-confirm-message="Are you sure you wish to delete this device?" action="/device/<?=device.id ?>/delete" method="post">
+					<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+					<button class="admin red">Delete</button>
+				</form>
+			<? end ?>
 		</td>
 	</tr>
 	<? end else ?>

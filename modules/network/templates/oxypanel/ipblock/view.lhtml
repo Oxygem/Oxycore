@@ -33,12 +33,17 @@
 					<? end ?>
 				</select>
 
-				<button class="green">Auto Generate IP's &#187;</button><br />
-				<small>Automatically generate and add IP's to this block.</small>
+				<button class="green">Auto Generate IP's &#187;</button>
 
 				<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
 			</form>
 		<? end ?>
+
+
+		<form data-confirm-message="Are you sure you wish to delete all IPs?" action="/ipblock/<?=self:get( 'ipblock' ).id ?>/deleteAllIP" method="post">
+			<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+			<button class="big red">Delete All IP's</button>
+		</form>
 	</div>
 
 
@@ -59,7 +64,11 @@
 					<td></td>
 					<td>
 						<a href="#" class="button blue">Unreserve</a>
-						<a href="#" class="button red">Delete</a>
+						<form class="inline" action="/ipblock/<?=self:get( 'ipblock' ).id ?>/deleteIP" method="post">
+							<input type="hidden" name="ip" value="<?=v.address ?>" />
+							<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+							<button class="admin red">Delete</button>
+						</form>
 					</td>
 				</tr>
 				<? end if #self:get( 'ipblock' ).ips <= 0 then ?>

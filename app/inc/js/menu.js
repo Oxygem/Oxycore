@@ -13,4 +13,4 @@ util.each( util.elements( 'ul.dropdown ul' ), function( key, $item ) {
             window.location = link;
         }
     });
-})
+});

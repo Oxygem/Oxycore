@@ -35,7 +35,7 @@ function object:fetch( id, prepare, fields )
     local object, err = database:select(
         self.module .. '_' .. self.type, fields,
         { id = id },
-        order, limit, offset
+        nil, 1
     )
     --if we got none back
     if #object ~= 1 then
@@ -53,15 +53,14 @@ function object:fetch( id, prepare, fields )
 
     --helper functions
     local this = self
-    --edit object details in database & as object
+    --edit object details in database
     object._edit = function( self, data )
         if not this:permission( self.id, 'edit' ) then return false, 'You do not have permission to edit this ' .. this.type end
-        for key, value in pairs( data ) do
-            self[key] = value
-        end
         --update database
         local update, err = database:update(
-            this.module .. '_' .. this.type, data, { id = self.id }
+            this.module .. '_' .. this.type, data,
+            { id = self.id },
+            1
         )
         return update, err
     end

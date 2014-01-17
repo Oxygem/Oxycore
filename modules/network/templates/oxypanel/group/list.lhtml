@@ -42,7 +42,12 @@
 		<td>
 			<a href="/group/<?=group.id ?>" class="button green">View</a>
 			<? if group.permissions.edit then ?><a href="/group/<?=group.id ?>/edit" class="button black">Edit</a><? end ?>
-			<? if group.permissions.delete then ?><button class="admin red">Delete</button><? end ?>
+			<? if group.permissions.delete then ?>
+				<form class="inline" data-confirm-message="Are you sure you wish to delete this group?" action="/group/<?=group.id ?>/delete" method="post">
+					<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+					<button class="admin red">Delete</button>
+				</form>
+			<? end ?>
 		</td>
 	</tr>
 	<? end if #self:get( 'groups' ) == 0 then ?>

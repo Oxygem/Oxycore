@@ -46,7 +46,18 @@ end
 
 
 --posts
-ipblock.posts = { edit = 'edit', addIP = 'edit', autoIP = 'edit', generateIP = 'edit' }
+ipblock.posts = { delete = 'delete', edit = 'edit', addIP = 'edit', autoIP = 'edit', generateIP = 'edit', deleteIP = 'edit', deleteAllIP = 'edit' }
+
+-- POST to delete
+function ipblock:delete( request )
+    local delete, err = self:_delete()
+
+    if not delete then
+        return header:redirect( '/ipblock/' .. self.id, 'error', err )
+    else
+        return header:redirect( '/network/ipblocks', 'success', 'IP block deleted' )
+    end
+end
 
 --edit ip block
 function ipblock:edit( request )
@@ -223,5 +234,33 @@ function ipblock:generateIP( request )
 	--return
 	header:redirect( '/ipblock/' .. self.id, 'success', 'IP\'s Added' )
 end
+
+--remove ip
+function ipblock:deleteIP( request )
+    if not request.post.ip then return
+        template:error( 'Invalid IP' )
+    end
+
+    --delete ip
+    local delete, err = database:delete(
+        'network_ipblock_ip',
+        { address = request.post.ip, ipblock_id = self.id },
+        1
+    )
+
+    return err and header:redirect( '/ipblock/' .. self.id, 'error', err ) or header:redirect( '/ipblock/' .. self.id, 'success', 'IP Deleted' )
+end
+
+--remove all ips
+function ipblock:deleteAllIP( request )
+    --delete ips
+    local delete, err = database:delete(
+        'network_ipblock_ip',
+        { ipblock_id = self.id }
+    )
+
+    return err and header:redirect( '/ipblock/' .. self.id, 'error', err ) or header:redirect( '/ipblock/' .. self.id, 'success', 'IPs Removed' )
+end
+
 
 return ipblock
