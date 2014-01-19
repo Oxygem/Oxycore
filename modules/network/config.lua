@@ -48,9 +48,9 @@ local config = {
         --list services & available software
         devices = function()
             local devices = {}
-            for k, device in pairs( ls( 'modules/network/devices' ) ) do
+            for k, device in pairs( ls( 'modules/network/devices/*.lua' ) ) do
                 --config
-                device = device:sub( 0, -5 )
+                local a, b, device = device:find( 'modules/network/devices/([a-z]+)\.lua' )
                 local config = require( 'modules/network/devices/' .. device )
                 if not config.hidden then
                     --add to list
