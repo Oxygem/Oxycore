@@ -50,7 +50,6 @@ server {
     rewrite ^/$                         /?request=dashboard last;                       #get
     rewrite ^/login$                    /?request=login last;                           #get+post
     rewrite ^/logout$                   /?request=logout last;                          #get
-    rewrite ^/register$                 /?request=register last;                        #get+post
     rewrite ^/resetpw$                  /?request=resetpw last;                         #get+post
     rewrite ^/profile$                  /?request=profile last;                         #get+post
     rewrite ^/help$                     /?request=help last;                            #get
