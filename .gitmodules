@@ -1,3 +1,3 @@
 [submodule "luawa"]
 	path = luawa
-	url = ./luawa
+	url = https://github.com/Fizzadar/Luawa.git
