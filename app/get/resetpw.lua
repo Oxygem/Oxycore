@@ -4,6 +4,5 @@ local template = oxy.template
 template:set( 'page_title', 'Reset Password' )
 
 --load templates
-template:load( 'header' )
+template:load( 'head' )
 template:load( 'resetpw' )
-template:load( 'footer' )

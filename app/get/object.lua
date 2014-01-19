@@ -66,21 +66,19 @@ else
 
 	--view/edit buttons
 	if action == 'view' and module[request.get.type]:permission( object.id, 'edit' ) then
-		template:add( 'page_title_buttons', { { text = 'Edit', link = './' .. object.id .. '/edit' } } )
+		template:add( 'page_title_buttons', { { text = 'Edit', link = './' .. object.id .. '/edit' }})
 	elseif action == 'edit' then
 		template:add( 'page_title_buttons', { { text = 'View', link = '../' .. object.id } } )
 	end
 	--change owner?
 	if module[request.get.type]:permission( object.id, 'owner' ) then
-		template:add( 'page_title_buttons', { { text = 'Change Owner', link = '', class = 'admin' } } )
+		template:add( 'page_title_buttons', { { text = 'Change Owner', link = '', class = 'admin' }})
 	end
 end
 
 --templates
 if wrap then
-	template:load( 'header' )
-	template:loadModule( type.module, request.get.type .. '/' .. action )
-	template:load( 'footer' )
+	template:wrap( template:loadModule( type.module, request.get.type .. '/' .. action, true ))
 else
 	template:loadModule( type.module, request.get.type .. '/' .. action )
 end

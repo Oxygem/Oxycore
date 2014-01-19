@@ -44,7 +44,7 @@ if request.get.group then
 			break
 		end
 	end
-	wheres.group = request.get.group
+	wheres.group = ( type( request.get.group ) == 'string' and request.get.group ~= '' ) and request.get.group or nil
 end
 
 --id

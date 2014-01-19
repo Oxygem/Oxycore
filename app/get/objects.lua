@@ -61,6 +61,4 @@ else
 end
 
 --load templates
-template:load( 'header' )
-template:loadModule( request.get.module, object_type .. '/' .. action_template )
-template:load( 'footer' )
+template:wrap( template:loadModule( request.get.module, object_type .. '/' .. action_template, true ))

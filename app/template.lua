@@ -32,6 +32,7 @@ end
 --wrap template w/ header+footer (template inline)
 --don't use template as name because can either be loadModule or load
 function template:wrap( template )
+    self:load( 'head' )
     self:load( 'header' )
     self:put( template )
     self:load( 'footer' )

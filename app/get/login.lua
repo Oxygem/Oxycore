@@ -6,4 +6,5 @@ if user:checkLogin() then
 end
 
 --load templates
+template:load( 'head' )
 template:load( 'login' )
