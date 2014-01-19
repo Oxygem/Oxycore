@@ -5,7 +5,7 @@
             <label for="name">Name:</label>
             <input type="text" name="name" id="name" value="<?=self:get( 'device' ).name ?>" />
 
-            <label for="host">Hostname/IP (for SSH &amp;):</label>
+            <label for="host">Hostname/IP (used for SSH):</label>
             <input type="text" name="host" id="host" value="<?=self:get( 'device' ).host ?>" />
 
             <label for="status">Status:</label>
@@ -39,8 +39,8 @@
                 <option value="0">None</option>
             </select>
 
-            <label for="stat_frequency">Stat Collection Frequency (seconds)</label>
-            <input type="text" id="stat_frequency" name="stat_frequency" value="<?=self:get( 'device' ).stat_frequency ?>" />
+            <label for="stat_interval">Stat Collection Interval (seconds) <a href="http://doc.oxypanel.com/Network/Devices/Monitor" target="_blank">More info &rarr;</a></label>
+            <input type="text" id="stat_interval" name="stat_interval" value="<?=self:get( 'device' ).stat_interval ?>" />
 
             <button type="submit" class="submit lightgreen" name="update" value="profile">Update Service &#187;</button>&nbsp;&nbsp;
             <a href="/device/<?=self:get( 'device' ).id ?>">back to device</a>
