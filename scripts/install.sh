@@ -1,31 +1,116 @@
 #!/bin/sh
 
+# Configure paths
+OXYPANEL_PATH="/opt/oxypanel"
+
+# Configure versions
+LUAJIT_VERSION="2.0.2"
+LUACJSON_VERSION="2.1.0"
+NGINX_VERSION="1.4.4"
+NGINXLUA_VERSION="0.9.4"
+NGINXDEV_VERSION="0.2.19"
+NODE_VERSION="0.10.24"
+
+echo ""
 echo "###"
 echo "Welcome to the Oxypanel Installer"
 echo "###"
+echo ""
 
 # Enable job control
 set -m
 
-# Dependency install
+
+# Dependency install/check
 if which yum > /dev/null; then
-    printf "[1] Installing yum packages..."
-    yum install libpcre3 libpcre3-dev libpcre++-dev libreadline6 libreadline6-dev openssl libssl-dev gcc gcc-c++ python cmake git -y > /dev/null
+    prinf "[1] Updating & installing yum packages..."
+    yum update >> install.log
+    yum install libpcre3 libpcre3-dev libpcre++-dev libreadline6 libreadline6-dev openssl libssl-dev gcc gcc-c++ python cmake git -y >> install.log
+elif which apt-get > /dev/null; then
+    echo "[1] Updating & installing apt packages..."
+    apt-get update >> install.log
+    apt-get install libpcre3 libpcre3-dev libpcre++-dev libreadline6 libreadline6-dev openssl libssl-dev build-essential python cmake git -y >> install.log
 else
-    printf "[1] Installing apt packages..."
-    apt-get install libpcre3 libpcre3-dev libpcre++-dev libreadline6 libreadline6-dev openssl libssl-dev build-essential python cmake git -y > /dev/null
+    echo "No yum or apt detected, exiting..."
+    echo "This script only supports OS's with yum/apt installed"
+    echo "Please visit http://doc.oxypanel.com/Install for a manual/generic install guide"
+    exit 1
 fi
-echo " complete"
+
 
 # Download install files
-printf "[2] Downloading all files..."
-wget http://cachefly.cachefly.net/10mb.test -O /tmp/test1 --quiet &
-wget http://cachefly.cachefly.net/10mb.test -O /tmp/test2 --quiet &
-wget http://cachefly.cachefly.net/10mb.test -O /tmp/test3 --quiet &
+echo "[2] Downloading files..."
+printf "    LuaJIT $LUAJIT_VERSION... "
+wget "http://luajit.org/download/LuaJIT-$LUAJIT_VERSION.tar.gz" -O /tmp/luajit.tar.gz --quiet
+echo "complete"
+printf "    LuaCJSON $LUACJSON_VERSION... "
+wget "http://www.kyne.com.au/~mark/software/download/lua-cjson-$LUACJSON_VERSION.tar.gz" -O /tmp/luacjson.tar.gz --quiet
+echo "complete"
+printf "    Nginx $NGINX_VERSION... "
+wget "http://nginx.org/download/nginx-$NGINX_VERSION.tar.gz" -O /tmp/nginx.tar.gz --quiet
+echo "complete"
+printf "    Nginx-Lua $NGINXLUA_VERSION... "
+wget "https://github.com/chaoslawful/lua-nginx-module/archive/v$NGINXLUA_VERSION.tar.gz" -O /tmp/nginxlua.tar.gz --quiet
+echo "complete"
+printf "    Nginx-Devel $NGINXDEV_VERSION... "
+wget "https://github.com/simpl/ngx_devel_kit/archive/v$NGINXDEV_VERSION.tar.gz" -O /tmp/nginxdev.tar.gz --quiet
+echo "complete"
+printf "    Node $NODE_VERSION... "
+wget "http://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION.tar.gz" -O /tmp/node.tar.gz --quiet
+echo "complete"
 
-# Wait for the downloads
-while [ 1 ]; do fg > /dev/null 2>&1; [ $? == 1 ] && break; done
-echo " complete"
+# Untar files
+echo "[3] Untarring files... "
+tar -xf /tmp/*.tar.gz -C /tmp
+
+
+# Setup user
+echo "[3] Add oxypanel user..."
+echo "### If prompted please use a strong password, you do not need to remember it"
+adduser oxypanel --home $OXYPANEL_PATH >> install.log
+mkdir -p "$OXYPANEL_PATH/src" >> install.log
 
 
 # Start installing
+echo "[4] Compiling & installing LuaJIT & LuaCJSON..."
+cd /tmp/LuaJIT*
+make clean >> install.log
+make >> install.log
+make install PREFIX=$OXYPANEL_PATH >> install.log
+cd /tmp/lua-cjson*
+make clean >> install.log
+make PREFIX=$OXYPANEL_PATH LUA_INCLUDE_DIR=$OXYPANEL_PATH/include/luajit-2.0 >> install.log
+make install PREFIX=$OXYPANEL_PATH >> install.log
+
+echo "[5] Compiling & installing Nginx..."
+cd /tmp/nginx-*
+export LUAJIT_INC="$OXYPANEL_PATH/include/luajit-2.0"
+export LUAJIT_LIB="$OXYPANEL_PATH/lib"
+make clean >> install.log
+./configure --prefix=$OXYPANEL_PATH --with-http_ssl_module --add-module=../ngx_devel_kit* --add-module=../lua-nginx-module* >> install.log
+make >> install.log
+make install >> install.log
+
+echo "[6] Compiling & installing Node..."
+cd /tmp/node-*
+make clean >> install.log
+./configure --prefix=$OXYPANEL_PATH >> install.log
+make >> install.log
+make install >> install.log
+
+echo "[7] Preparing Oxypanel..."
+echo "### setup SSH key"
+echo "### general secret keys"
+echo "### clone git repo"
+echo "### copy config example"
+echo "### import database structure"
+echo "### setup init scripts"
+
+
+# Done!
+echo ""
+echo "###"
+echo "Oxypanel Install Complete"
+echo "###"
+echo ""
+exit 0
