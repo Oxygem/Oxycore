@@ -1,22 +1,7 @@
 <? local request, session = luawa.request, luawa.session ?>
-<!DOCTYPE html>
-<html>
-<head>
-	<!--meta-->
-	<title>Login / <?=oxy.brand.name ?></title>
-	<meta charset="UTF-8" />
+<link rel="stylesheet" href="/inc/core/css/login.css" media="all" />
 
-	<!--favicon-->
-	<link rel="shortcut icon" href="/inc/core/img/favicon.png" />
-
-	<!--style-->
-	<link rel="stylesheet" href="/inc/core/font/ptsans/font.css" media="all" />
-	<link rel="stylesheet" href="/inc/core/css/style.css" media="all" />
-
-	<!--scripts-->
-</head>
-<body id="login">
-
+<div id="login">
 		<div id="login-header">
 			<div id="logo"><a href="/login"><img src="/inc/core/<?=oxy.brand.logo ?>" alt="<?=oxy.brand.name ?>" /></a></div>
 		</div><!--end header-->
@@ -38,12 +23,11 @@
 
 					<div>
 						<button type="submit" class="lightgreen submit">Login &#187;</button>
-						or <a href="#">reset your password</a>
+						or <a href="/resetpw">reset your password</a>
 					</div>
 					<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
 				</form>
 			</div><!--end main-->
 		</div><!--end login-->
 
-</body>
-</html>
+</div>

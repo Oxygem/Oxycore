@@ -1,35 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<? local request, oxy, user, session = luawa.request, oxy, luawa.user, luawa.session ?>
-	<!--title-->
-	<? if self:get( 'page_title' ) then ?>
-	    <title><?=self:get( 'page_title' ) ?> - <?=oxy.brand.name ?></title>
-	<? else ?>
-		<title><?=oxy.brand.name ?></title>
-	<? end ?>
-
-	<!--meta-->
-	<meta charset="UTF-8" />
-
-	<!--favicon-->
-	<link rel="shortcut icon" href="/inc/core/img/favicon.png" />
-
-	<!--style-->
-	<link rel="stylesheet" href="/inc/core/font/ptsans/font.css" media="all" />
-	<link rel="stylesheet" href="/inc/core/css/style.css" media="all" />
-	<? if not luawa.cache then
-		for k, module in pairs( oxy.config.modules ) do ?>
-		<link rel="stylesheet" href="/inc/<?=module ?>/auto.css" media="all" />
-	<? end
-	else ?>
-		<link rel="stylesheet" href="/inc/oxypanel.css" media="all" />
-	<? end ?>
-
-	<script type="text/javascript">var oxypanel = {};</script>
-</head>
-<body>
-
+<? local request, oxy, user, session = luawa.request, oxy, luawa.user, luawa.session ?>
 	<div id="wrap">
 
 		<div id="header">
@@ -174,5 +143,5 @@
             </h2>
 
 			<div id="messages"><? for k, message in pairs( session:getMessages() ) do ?>
-				<div class="message <?=message.type ?>"><?=message.text ?><? if message.type == 'error' and luawa.header:getHeader( 'referer' ) then ?> <a href="<?=luawa.header:getHeader( 'referer' ) ?>" class="right">Go back</a><? end ?></div>
+				<div class="message click <?=message.type ?>"><?=message.text ?><? if message.type == 'error' and luawa.header:getHeader( 'referer' ) then ?> <a href="<?=luawa.header:getHeader( 'referer' ) ?>" class="right">Go back</a><? end ?></div>
 			<? end ?></div>
