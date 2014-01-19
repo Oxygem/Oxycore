@@ -1,0 +1,19 @@
+/* Text formatting
+--------------------------------------------------------------*/
+.red {
+    color: rgb( 192, 54, 56 );
+}
+.green {
+    color: green;
+}
+.blue {
+    color: rgb( 56, 117, 215 );
+}
+
+.hidden {
+    display: none !important;
+}
+
+small.light {
+    color: #999;
+}

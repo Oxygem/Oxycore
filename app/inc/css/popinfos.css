@@ -1,0 +1,49 @@
+/* Popinfo
+--------------------------------------------------------------*/
+a.pop {
+    display: block;
+    width: auto;
+    float: left;
+    margin-top: 0px;
+    margin-right: 3px;
+}
+    a.pop span.container {
+        display: none;
+        position: absolute;
+        margin-top: -58px;
+        background: #FFFFFF;
+        border: 1px solid #D7D7D7;
+        border-radius: 2px;
+        padding: 5px;
+        width: auto;
+        height: 45px;
+        box-shadow: 0px 0px 5px rgba( 0, 0, 0, 0.1 );
+        color: #1A1B1B;
+        text-shadow: none;
+        white-space: nowrap;
+    }
+    a.pop:hover span.container {
+        display: block;
+    }
+        a.pop span.container img {
+            float: left;
+            margin: 0 5px;
+        }
+        a.pop span.container span.arrow {
+            display: block;
+            position: absolute;
+            width: 80px;
+            height: 20px;
+            margin-left: -5px;
+            background: url( /inc/core/img/pop_bottom.png ) 10px 4px no-repeat;
+        }
+        a.pop span.container strong {
+            font-size: 14px;
+        }
+        a.pop span.container span.meta {
+            display: block;
+            color: #666;
+            margin-top: -3px;
+            font-family: Verdana;
+            font-size: 11px;
+        }

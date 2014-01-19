@@ -1,0 +1,28 @@
+/* Login page
+--------------------------------------------------------------*/
+div#login {
+    background-image: none;
+}
+div#login-header, div#login-main {
+    margin: 0 auto;
+    max-width: 422px;
+}
+div#login-header {
+    width: 100%;
+    max-width: 1000000px;
+    background: #000;
+    height: 200px;
+    position: relative;
+    border-radius: 3px;
+}
+    div#login-header div#logo {
+        position: absolute;
+        top: 158px;
+        left: 50%;
+        margin-left: -211px;
+    }
+        div#login-header div#logo a {
+            border: none;
+        }
+div#login-main {
+}

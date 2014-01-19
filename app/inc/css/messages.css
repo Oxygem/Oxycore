@@ -1,0 +1,41 @@
+/* Messages
+--------------------------------------------------------------*/
+div.message {
+    background: #F7F7F7;
+    padding: 10px;
+    border-radius: 3px;
+    margin: 0 0 20px 0;
+    border: 1px solid #D7D7D7;
+}
+div.message.click {
+    cursor: pointer;
+}
+div.message.warning {
+    background: #FEEFB3;
+    border: 1px solid #000;
+}
+div.message.error {
+    background: rgba( 192, 54, 56, 0.9 );
+    color: #F7F7F7;
+    text-shadow: 1px 1px 1px #000;
+    border: 1px solid #000;
+}
+    div.message.error strong {
+        font-weight: normal;
+    }
+    div.message.error a {
+        color: #fff;
+        text-shadow: 0px 0px 1px #000;
+        border-color: rgb( 152, 4, 6 );
+    }
+div.message.success {
+    background: rgb( 223, 242, 191 );
+    text-shadow: 1px 1px 1px #FFF;
+    border: 1px solid #000;
+}
+div.message.info {
+    background: rgb( 180, 230, 255 );
+    text-shadow: 1px 1px 1px #FFF;
+    border: 1px solid #000;
+    width: 100%;
+}

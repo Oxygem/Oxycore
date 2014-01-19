@@ -1,0 +1,111 @@
+/* Buttons
+--------------------------------------------------------------*/
+button, .button {
+    border: 1px solid #A4A4A4;
+    background: #F7F7F7;
+    text-shadow: 1px 1px 0px #FFF;
+    padding: 2px 5px;
+    border-radius: 2px;
+    font-weight: normal;
+    font-size: 16px;
+    font-family: PTSansRegular;
+    cursor: pointer;
+    margin: 2px 0;
+    line-height: 18px;
+}
+button:hover, .button:hover {
+    background: #E7E7E7;
+}
+button.lightgreen, .button.lightgreen {
+    color: #fff;
+    background: rgb( 82, 177, 51 );
+    border: 1px solid rgb( 52, 147, 21 );
+    text-shadow: 1px 1px 1px #000;
+}
+button.lightgreen:hover, .button.lightgreen:hover  {
+    background: rgb( 42, 157, 31 );
+}
+button.green, .button.green {
+    color: #fff;
+    background: green;
+    text-shadow: 1px 1px 1px #000;
+    border: 1px solid #000;
+}
+button.green:hover, .button.green:hover {
+    background: rgb( 02, 97, 01 );
+}
+button.blue, .button.blue {
+    color: #fff;
+    background: rgb( 20, 20, 160 );
+    text-shadow: 1px 1px 1px #000;
+    border: 1px solid #000;
+}
+button.blue:hover, .button.blue:hover {
+    background: rgb( 02, 01, 97 );
+}
+button.lightblue, .button.lightblue {
+    color: #fff;
+    background: rgb( 100, 100, 240 );
+    text-shadow: 1px 1px 1px #000;
+    border: 1px solid #000;
+}
+button.lightblue:hover, .button.lightblue:hover {
+    background: rgb( 70, 70, 220 );
+}
+button.red, .button.red {
+    color: #fff;
+    background: rgb( 192, 54, 56 );
+    text-shadow: 1px 1px 1px #000;
+    border: 1px solid #000;
+}
+button.red:hover, .button.red:hover {
+    background: rgb( 152, 34, 36 );
+}
+button.black, .button.black {
+    color: #fff;
+    background: #666;
+    border: 1px solid rgb( 0, 0, 0 );
+    text-shadow: 1px 1px 1px #000;
+}
+button.black:hover, .button.black:hover {
+    background: #444;
+}
+
+button.software {
+    text-align: left;
+    width: auto;
+    float: left;
+}
+    button.software span.info {
+        float: right;
+        width: auto;
+        font-size: 10px;
+        font-family: Verdana;
+        line-height: 16px;
+        margin-right: 10px;
+        margin-left: 20px;
+    }
+
+button.admin, .button.admin {
+    border: 1px solid rgb( 192, 54, 56 );
+}
+button.disabled {
+    opacity: 0.5;
+    cursor: progress;
+}
+button.big, .button.big {
+    width: 120px;
+    height: 40px;
+}
+button.small, .button.small {
+    padding: 2px;
+    font-size: 12px;
+    border: none;
+    font-weight: normal;
+    text-shadow: none;
+}
+
+    h2 span.meta {
+        font-size: 14px;
+        font-weight: normal;
+    }

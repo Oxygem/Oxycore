@@ -1,0 +1,36 @@
+/* Tables
+--------------------------------------------------------------*/
+table {
+    width: 100%;
+    border-spacing: 0;
+}
+    table th {
+        background: #E7E7E7;
+        border-bottom: 1px solid #D7D7D7;
+        padding: 5px;
+        text-align: left;
+    }
+        table tr th:first-child {
+            border-radius: 2px 0 0 0;
+        }
+        table tr th:last-child {
+            border-radius: 0 2px 0 0;
+        }
+    table td {
+        padding: 5px;
+    }
+        table tr:hover td {
+            background: #F9F9F9;
+        }
+        table tr.no_hover:hover td {
+            background: transparent;
+        }
+        table tr .header {
+            background: #E7E7E7 url( /inc/core/img/table/default.gif ) 97% center no-repeat;
+        }
+        table tr .headerSortUp {
+            background-image: url( /inc/core/img/table/ascending.gif );
+        }
+        table tr .headerSortDown {
+            background-image: url( /inc/core/img/table/descending.gif );
+        }

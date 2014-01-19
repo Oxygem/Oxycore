@@ -1,0 +1,313 @@
+/* Layout
+--------------------------------------------------------------*/
+div#wrap {
+    margin: 0 auto;
+    width: 95%;
+    max-width: 1500px;
+}
+
+div#header {
+    float: left;
+    width: 100%;
+    height: 90px;
+    position: relative;
+}
+
+ul#nav {
+    font-family: PTSansRegular;
+    margin: 20px 0 0 0px;
+    padding: 0;
+    float: left;
+    width: 100%;
+    position: relative;
+    z-index: 10;
+    height: 0px;
+}
+    ul#nav li {
+        list-style: none;
+        float: left;
+        margin-right: 10px;
+    }
+    ul#nav li.right {
+        margin-right: 0px;
+        float: right;
+    }
+    ul#nav li:last-child {
+        margin-right: 10px;
+    }
+    ul#nav li#logo {
+        width: 260px;
+        height: 66px;
+        margin-left: -40px;
+        float: left;
+        margin-right: 2px;
+        margin-top: -20px;
+    }
+        ul#nav li#logo img {
+            margin-top: 0px;
+        }
+
+        ul#nav li a, ul#nav li span {
+            float: left;
+            padding-left: 38px;
+            padding-top: 7px;
+            font-size: 18px;
+            padding-bottom: 0px;
+            color: #D1D1D1;
+            font-weight: normal;
+            border: none;
+            background-position: top left;
+            background-repeat: no-repeat;
+        }
+        ul#nav li.right.noimg a, ul#nav li.right.noimg span {
+            padding-left: 7px;
+        }
+        ul#nav li a:hover, ul#nav li.active a {
+            color: #F9F9F9;
+        }
+        ul#nav li.active a {
+            background-position: top left;
+            padding-bottom: 6px;
+        }
+
+        ul#nav li.dashboard a {
+            background-image: url( /inc/core/img/icons/dashboard.png );
+        }
+        ul#nav li.dashboard a:hover {
+            background-image: url( /inc/core/img/icons/dashboard_hover.png );
+        }
+        ul#nav li.dashboard.active a {
+            background-image: url( /inc/core/img/icons/dashboard_active.png );
+        }
+
+        ul#nav li.profile a {
+            background-image: url( /inc/core/img/icons/profile.png );
+        }
+        ul#nav li.profile a:hover {
+            background-image: url( /inc/core/img/icons/profile_hover.png );
+        }
+        ul#nav li.profile.active a {
+            background-image: url( /inc/core/img/icons/profile_active.png );
+        }
+
+ul#subnav {
+    float: left;
+    width: 100%;
+    margin: 29px 0 0 0;
+    padding: 0;
+    font-family: PTSansRegular;
+    text-shadow: 1px 1px 0px #FFF;
+    font-size: 15px;
+    border-left: 1px solid #E7E7E7;
+    border-right: 1px solid #E7E7E7;
+}
+    ul#subnav li {
+        list-style: none;
+        float: left;
+        padding: 0;
+        margin-top: 1px;
+        position: relative;
+    }
+    ul#subnav li.right {
+        float: right;
+        margin-right: 0;
+    }
+    ul#subnav li:nth-child( 2 ) {
+        z-index: 1;
+    }
+    ul#subnav li:nth-child( 3 ) {
+        z-index: 2;
+    }
+    ul#subnav li:nth-child( 4 ) {
+        z-index: 3;
+    }
+    ul#subnav li:nth-child( 5 ) {
+        z-index: 4;
+    }
+        ul#subnav li > a {
+            padding: 10px 10px 6px 10px;
+            border: none;
+            float: left;
+        }
+        ul#subnav > li:hover > a {
+            background: #FFF;
+            color: #333;
+        }
+        ul#subnav li.red a {
+            color: rgba( 192, 54, 56, 1 );
+        }
+        ul#subnav li.active > a {
+            color: #1A1B1B;
+            font-family: PTSansBold;
+            background: #FFF;
+        }
+        ul#subnav li.active a.red {
+            color: rgb( 192, 54, 56 );
+        }
+        ul#subnav li ul.dropdown {
+            position: absolute;
+            padding: 3px 0 0 5px;
+            margin: 38px 0 0 -6px;
+            display: none;
+            width: 500px;
+            z-index: 99;
+            font-size: 14px;
+            pointer-events: none;
+            cursor: pointer;
+        }
+        ul#subnav li:hover ul.dropdown {
+            display: block;
+        }
+            ul#subnav li ul li {
+                float: none;
+            }
+                ul#subnav li ul li a {
+                    padding: 0;
+                    background: transparent;
+                    float: none;
+                }
+                ul#subnav li ul li ul {
+                    margin: -11px 0 0 -1px;
+                    float: left;
+                    pointer-events: all;
+                    display: inline-block;
+                    padding: 10px 0 0 0;
+                    width: auto;
+                    box-shadow: 0px 5px 10px rgba( 0, 0, 0, 0.1 );
+                }
+                ul#subnav li ul li:first-child ul {
+                    margin-left: 0;
+                }
+                    ul#subnav li ul li ul li {
+                        padding: 0px 10px;
+                        margin-top: -1px;
+                        background: #F7F7F7;
+                        border-left: 1px solid #D7D7D7;
+                        border-right: 1px solid #D7D7D7;
+                    }
+                    ul#subnav li ul li ul li:first-child {
+                        border-top: 1px solid #D7D7D7;
+                        padding-top: 7px;
+                        cursor: default;
+                    }
+                    ul#subnav li ul li ul li:last-child {
+                        border-bottom: 1px solid #D7D7D7;
+                        padding-bottom: 7px;
+                    }
+    ul#subnav li.search {
+        float: left;
+        margin-top: 8px;
+        margin-left: 5px;
+        margin-right: 10px;
+    }
+        ul#subnav li.search form {
+            float: left;
+        }
+        ul#subnav li.search input {
+            border: 1px solid #D7D7D7;
+            background: #FFFFFF;
+            padding: 2px 4px;
+            margin: 0px 0 0 0;
+            font-family: PTSansRegular;
+            font-size: 14px;
+            width: 200px;
+            float: left;
+            margin-right: -21px;
+            border-radius: 2px;
+        }
+        ul#subnav li.search input:hover {
+            border: 1px solid #C7C7C7;
+        }
+        ul#subnav li.search input:focus {
+            border: 1px solid #000;
+        }
+        ul#subnav li.search button {
+            background: transparent;
+            border: none;
+            font-size: 14px;
+            margin: 1px 0 0 0px;
+            padding: 3px;
+            width: 20px;
+            height: 23px;
+            float: right;
+            background: rgba( 0, 0, 0, 0.1 );
+            border-left: 1px solid #D7D7D7;
+            cursor: pointer;
+            border-radius: 0;
+        }
+
+div#search {
+    position: absolute;
+    top: 90px;
+    width: 100%;
+    display: none;
+    z-index: 1;
+}
+    div#search ul {
+        float: left;
+        width: 250px;
+        padding: 0;
+        margin: 0;
+        margin-left: 1px;
+        background: #F7F7F7;
+        border-top: none;
+        box-shadow: 0px 5px 5px rgba( 0, 0, 0, 0.2 );
+    }
+    div#search ul:first-child {
+        margin-left: 0;
+    }
+        div#search ul li {
+            list-style: none;
+            border: 1px solid rgb( 215, 215, 215 );
+            border-top: none;
+            float: left;
+            width: 100%;
+        }
+            div#search ul li.title {
+                padding: 5px;
+                background: #F7F7F7;
+                width: 240px;
+                border-left: 1px solid #F7F7F7;
+            }
+            div#search ul:first-child li.title {
+                border-left: 1px solid #D7D7D7;
+            }
+            div#search ul li a {
+                padding: 10px 5px;
+                float: left;
+                width: 240px;
+                border: none;
+                background: #FFF;
+            }
+            div#search ul li a:hover {
+                background: rgb( 249, 249, 249 );
+            }
+            div#search ul li strong {
+                display: block;
+                line-height: 11px;
+                color: #1A1B1B;
+            }
+            div#search ul li span {
+                font-size: 11px;
+                font-family: Verdana;
+                line-height: 11px;
+            }
+
+div#main {
+    float: left;
+    width: 100%;
+    margin: 0 0 0 0;
+}
+    div#main h3 {
+        margin-top: 0;
+    }
+
+div#footer {
+    float: left;
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    font-size: 12px;
+    padding-top: 20px;
+    border-top: 1px solid #F7F7F7;
+}

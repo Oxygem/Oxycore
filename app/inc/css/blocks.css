@@ -1,0 +1,89 @@
+/* Positioning
+--------------------------------------------------------------*/
+.fixed {
+    position: fixed;
+}
+
+.left {
+    float: left;
+}
+.right {
+    float: right;
+}
+.text_right {
+    text-align: right;
+}
+
+.left_margin {
+    margin-left: 1%;
+}
+.right_margin {
+    margin-right: 1%;
+}
+.top_margin {
+    margin-top: 1%;
+}
+.bottom_margin {
+    margin-bottom: 1%;
+}
+
+.right_align {
+    text-align: right;
+}
+
+.block {
+    float: left;
+    width: 100%;
+    font-size: 0;
+}
+.block .wide {
+    font-size: 14px;
+}
+.block .half, .block .third, .block .twothird, .block .quarter, .block .threequarter {
+    font-size: 14px;
+    display: inline-block;
+    vertical-align: top;
+}
+.wide {
+    width: 100%;
+}
+.half {
+    width: 49%;
+    margin-right: 1%;
+}
+.half:last-child {
+    margin-right: 0;
+    margin-left: 1%;
+}
+.half:first-child:last-child {
+    margin: 0;
+}
+.third {
+    width: 32%;
+    margin-right: 2%;
+}
+.third:last-child {
+    margin-right: 0;
+}
+.twothird {
+    width: 66%;
+    margin-right: 2%;
+}
+.twothird:last-child {
+    margin-right: 0;
+}
+.quarter {
+    width: 24%;
+    margin-right: 1.33333333%;
+}
+.quarter:last-child {
+    margin-right: 0;
+}
+.threequarter {
+    width: 74%;
+    margin-right: 1.99999999%;
+}
+.threequarter:last-child {
+    margin-right: 0;
+    margin-left: 0.66666666%;
+}

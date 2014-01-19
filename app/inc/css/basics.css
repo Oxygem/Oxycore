@@ -1,0 +1,54 @@
+/* Basics
+--------------------------------------------------------------*/
+* {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    outline: none;
+    position: relative;
+}
+
+body {
+    width: 100%;
+    overflow-x: hidden;
+    margin: 0;
+    background: url( /inc/core/img/top_bg.png ) left -47px repeat-x;
+    line-height: 24px;
+    font-size: 14px;
+    color: #1A1B1B;
+    font-family: Arial;
+}
+
+img {
+    border: none;
+}
+strong {
+    font-family: PTSansBold;
+    font-weight: normal;
+}
+
+a {
+    color: #888;
+    text-decoration: none;
+    border-bottom: 1px solid #D7D7D7;
+    cursor: pointer;
+}
+a:hover {
+    color: #333;
+}
+
+h1, h2, h3 {
+    font-family: PTSansBold;
+    font-weight: normal;
+}
+h3 {
+    font-family: PTSansRegular;
+    font-size: 18px;
+}
+    h2 span {
+        font-family: PTSansRegular;
+    }
+    h3 span.right a {
+        font-size: 14px;
+        border: none;
+    }

@@ -1,0 +1,13 @@
+/* Dashboard
+--------------------------------------------------------------*/
+div#dashboard {
+}
+	div#dashboard h3 {
+		font-weight: normal;
+		padding: 8px 5px;
+		margin: 0;
+	}
+		div#dashboard h3 span.right a {
+			font-size: 14px;
+			border: none;
+		}
