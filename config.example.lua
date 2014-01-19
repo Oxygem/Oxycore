@@ -93,7 +93,6 @@ local config = {
     posts = {
         --core requests
         login = { file = 'app/post/login' },
-        register = { file = 'app/post/register' },
         resetpw = { file = 'app/post/resetpw' },
         profile = { file = 'app/post/profile' },
 
