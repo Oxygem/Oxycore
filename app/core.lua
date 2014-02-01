@@ -1,7 +1,5 @@
---[[
-    file: app/core.lua
-    desc: Oxypanel core
-]]
+-- File: app/core.lua
+-- Desc: Oxypanel core
 
 
 --localize lua
@@ -25,6 +23,8 @@ function oxy:setConfig( config )
     self.brand = require( self.config.root .. 'app/brand' )
     --get users (note not luawa.user)
     self.users = require( self.config.root .. 'app/users' )
+    --log
+    self.log = require( self.config.root .. 'app/log' )
 end
 
 --load module
