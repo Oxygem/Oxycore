@@ -1,8 +1,5 @@
---[[
-    file: app/template.lua
-    desc: Oxypanel template class (deals w/ module templates)
-        inherits from luawa.template
-]]
+-- File: app/template.lua
+-- Desc: extends luawa.template to extend functionality
 
 --our template class
 local template = {}
@@ -16,31 +13,35 @@ function template:setup()
     end
 end
 
-function template:load( template, inline )
+function template:load( template )
     local dir = 'app/templates/' .. oxy.config.oxyngx.template .. '/' .. template
 
-    return luawa.template:load( dir, inline )
+    return luawa.template:load( dir )
 end
 
 --loading module templates
-function template:loadModule( module, template, inline )
+function template:loadModule( module, template )
     local dir = 'modules/' .. module .. '/templates/' .. oxy.config.oxyngx.template .. '/' .. template
 
-    return luawa.template:load( dir, inline )
+    return luawa.template:load( dir )
 end
 
---wrap template w/ header+footer (template inline)
---don't use template as name because can either be loadModule or load
-function template:wrap( template )
+--wrap template w/ header+footer
+function template:wrap( template, module )
     self:load( 'head' )
     self:load( 'header' )
-    self:put( template )
+    if module then
+        self:loadModule( module, template )
+    else
+        self:load( template )
+    end
     self:load( 'footer' )
 end
 
 --error only w/ api
 function template:error( message )
     luawa.session:addMessage( 'error', message )
+    self:load( 'head' )
     self:load( 'header' )
     self:load( 'footer' )
 end
