@@ -7,7 +7,7 @@
 #
 # Host: localhost (MySQL 5.5.32-MariaDB)
 # Database: oxypanel
-# Generation Time: 2013-10-13 13:38:33 +0000
+# Generation Time: 2014-02-01 16:57:26 +0000
 # ************************************************************
 
 
@@ -20,57 +20,16 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
-# Dump of table billing_invoice
+# Dump of table log
 # ------------------------------------------------------------
 
-CREATE TABLE `billing_invoice` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+CREATE TABLE `log` (
+  `object_type` varchar(16) NOT NULL DEFAULT '',
+  `object_id` int(10) unsigned NOT NULL,
   `user_id` int(10) unsigned NOT NULL,
-  `group_id` int(10) unsigned NOT NULL,
-  `name` varchar(64) NOT NULL DEFAULT '',
-  `order_id` int(10) unsigned NOT NULL,
-  `status` enum('Paid','Unpaid','Cancelled') NOT NULL DEFAULT 'Unpaid',
-  `time_created` int(10) unsigned NOT NULL,
-  `time_due` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-# Dump of table billing_invoice_items
-# ------------------------------------------------------------
-
-CREATE TABLE `billing_invoice_items` (
-  `invoice_id` int(10) unsigned NOT NULL,
-  `description` varchar(64) NOT NULL DEFAULT '',
-  `price` int(6) unsigned NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-# Dump of table billing_invoice_transactions
-# ------------------------------------------------------------
-
-CREATE TABLE `billing_invoice_transactions` (
-  `invoice_id` int(10) unsigned NOT NULL,
-  `transaction_id` varchar(255) NOT NULL DEFAULT '',
-  `transaction_gateway` varchar(32) NOT NULL DEFAULT '',
-  `amount` int(6) unsigned NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-# Dump of table billing_order
-# ------------------------------------------------------------
-
-CREATE TABLE `billing_order` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) unsigned NOT NULL,
-  `group_id` int(10) unsigned NOT NULL,
-  `service_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `price` int(6) unsigned NOT NULL,
-  `time_invoice` int(10) unsigned NOT NULL COMMENT 'time afterwhich next invoice is generated',
-  PRIMARY KEY (`id`)
+  `time` int(10) unsigned NOT NULL,
+  `action` varchar(128) NOT NULL DEFAULT '',
+  `data` text NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
@@ -90,11 +49,26 @@ CREATE TABLE `network_device` (
   `host` varchar(64) NOT NULL DEFAULT '',
   `ssh_port` int(4) NOT NULL,
   `ssh_user` varchar(64) NOT NULL DEFAULT '',
-  `snmp_port` varchar(4) NOT NULL DEFAULT '',
-  `snmp_community` varchar(64) NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`),
-  FULLTEXT KEY `name_ft` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  `ssh_sudo` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `stat_interval` smallint(5) unsigned NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table network_device_stats
+# ------------------------------------------------------------
+
+CREATE TABLE `network_device_stats` (
+  `device_id` int(11) unsigned NOT NULL,
+  `time` int(10) unsigned NOT NULL,
+  `type` varchar(16) NOT NULL DEFAULT '' COMMENT 'stat type (cpu,memory,disk)',
+  `key` varchar(16) NOT NULL DEFAULT '' COMMENT 'specific',
+  `value` int(10) unsigned NOT NULL COMMENT '% used',
+  `percentage` int(10) unsigned NOT NULL,
+  KEY `device_stats-device_id` (`device_id`),
+  CONSTRAINT `device_stats-device_id` FOREIGN KEY (`device_id`) REFERENCES `network_device` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
@@ -107,7 +81,7 @@ CREATE TABLE `network_group` (
   `group_id` int(10) unsigned NOT NULL,
   `name` varchar(64) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
@@ -124,7 +98,7 @@ CREATE TABLE `network_ipblock` (
   `device_id` int(10) unsigned NOT NULL,
   `device_group_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
@@ -138,8 +112,10 @@ CREATE TABLE `network_ipblock_ip` (
   `status` enum('Used','Unused','Reserved') NOT NULL DEFAULT 'Unused',
   `service_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `address` (`address`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  UNIQUE KEY `address` (`address`),
+  KEY `ipblock_ip-ipblock_id` (`ipblock_id`),
+  CONSTRAINT `ipblock_ip-ipblock_id` FOREIGN KEY (`ipblock_id`) REFERENCES `network_ipblock` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
@@ -164,19 +140,10 @@ CREATE TABLE `services_cloud_devices` (
   `cloud_id` int(10) unsigned NOT NULL,
   `device_id` int(10) unsigned NOT NULL,
   `role` varchar(64) NOT NULL DEFAULT '',
-  UNIQUE KEY `device_id` (`device_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-
-# Dump of table services_cloud_settings
-# ------------------------------------------------------------
-
-CREATE TABLE `services_cloud_settings` (
-  `cloud_id` int(10) unsigned NOT NULL,
-  `setting` varchar(32) NOT NULL DEFAULT '',
-  `value` varchar(32) NOT NULL DEFAULT '',
-  UNIQUE KEY `cloud_id` (`cloud_id`,`setting`)
+  UNIQUE KEY `device_id` (`device_id`),
+  KEY `cloud_devices-cloud_id` (`cloud_id`),
+  CONSTRAINT `cloud_devices-device_id` FOREIGN KEY (`device_id`) REFERENCES `network_device` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `cloud_devices-cloud_id` FOREIGN KEY (`cloud_id`) REFERENCES `services_cloud` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -203,19 +170,8 @@ CREATE TABLE `services_service_data` (
   `service_id` int(10) unsigned NOT NULL,
   `key` varchar(32) NOT NULL DEFAULT '',
   `value` varchar(128) NOT NULL DEFAULT '',
-  UNIQUE KEY `service_id` (`service_id`,`key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-
-# Dump of table services_service_lists
-# ------------------------------------------------------------
-
-CREATE TABLE `services_service_lists` (
-  `service_id` int(10) unsigned NOT NULL,
-  `list` varchar(32) NOT NULL DEFAULT '',
-  `value` varchar(128) NOT NULL DEFAULT '',
-  UNIQUE KEY `service_id` (`service_id`,`list`,`value`)
+  UNIQUE KEY `service_id` (`service_id`,`key`),
+  CONSTRAINT `service_data-service_id` FOREIGN KEY (`service_id`) REFERENCES `services_service` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -240,12 +196,13 @@ CREATE TABLE `user` (
   `real_name` varchar(255) NOT NULL DEFAULT '',
   `address` text NOT NULL,
   `country` varchar(3) NOT NULL DEFAULT '',
+  `phone` int(10) unsigned NOT NULL DEFAULT '0',
   `credit` int(10) unsigned NOT NULL DEFAULT '0',
   `two_factor` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `pubkey` text NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
@@ -256,7 +213,7 @@ CREATE TABLE `user_groups` (
   `id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
@@ -266,7 +223,7 @@ CREATE TABLE `user_groups` (
 CREATE TABLE `user_messages` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
@@ -276,8 +233,9 @@ CREATE TABLE `user_messages` (
 CREATE TABLE `user_permissions` (
   `group` tinyint(3) unsigned NOT NULL,
   `permission` varchar(64) NOT NULL DEFAULT '',
-  UNIQUE KEY `group_id` (`group`,`permission`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  UNIQUE KEY `group_id` (`group`,`permission`),
+  CONSTRAINT `permissions-user_groups_id` FOREIGN KEY (`group`) REFERENCES `user_groups` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
