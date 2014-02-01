@@ -25,7 +25,7 @@ set -m
 if which yum > /dev/null; then
     prinf "[1] Updating & installing yum packages..."
     yum update >> install.log
-    yum install libpcre3 libpcre3-dev libpcre++-dev libreadline6 libreadline6-dev openssl libssl-dev gcc gcc-c++ python cmake git -y >> install.log
+    yum install NEED_TO_GET_YUM_LIST_SORTED -y >> install.log
 elif which apt-get > /dev/null; then
     echo "[1] Updating & installing apt packages..."
     apt-get update >> install.log
@@ -98,13 +98,30 @@ make clean >> install.log
 make >> install.log
 make install >> install.log
 
-echo "[7] Preparing Oxypanel..."
+echo "[7] Installing MariaDB..."
+
+
+echo "[8] Preparing Oxypanel..."
+
+
 echo "### setup SSH key"
+
+
 echo "### general secret keys"
+
+
 echo "### clone git repo"
+git clone https://github.com/Oxygem/Oxypanel.git $OXYPANEL_PATH/src >> install.log
+
 echo "### copy config example"
+cp $OXYPANEL_PATH/src/config.example.lua $OXYPANEL_PATH/src/config.lua
+
 echo "### import database structure"
-echo "### setup init scripts"
+cat $OXYPANEL_PATH/src/scripts/layout.sql
+
+echo "### build scripts"
+cd $OXYPANEL_PATH/src
+$OXYPANEL_PATH/bin/luajit scripts/build.lua >> install.log
 
 
 # Done!
