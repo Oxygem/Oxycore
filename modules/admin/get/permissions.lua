@@ -64,4 +64,4 @@ template:set( 'set_permissions', set_permissions )
 template:set( 'groups', groups )
 
 --load template
-template:wrap( template:loadModule( 'admin', 'permissions', true ) )
+template:wrap( 'permissions', 'admin' )

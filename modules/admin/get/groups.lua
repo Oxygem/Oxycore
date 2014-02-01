@@ -46,4 +46,4 @@ if user:checkPermission( 'AddUserGroup' ) then
 	template:add( 'page_title_buttons', { { text = 'Add Group', link = '/admin/groups/add', class = 'admin' } } )
 end
 --header+footer+template
-template:wrap( template:loadModule( 'admin', 'groups/list', true ) )
+template:wrap( 'groups/list', 'admin' )

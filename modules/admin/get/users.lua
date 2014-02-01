@@ -59,4 +59,4 @@ local users = database:select( 'user', '*', wheres )
 template:set( 'page_title', 'Users' )
 template:set( 'users', users )
 
-template:wrap( template:loadModule( 'admin', 'users/list', true ) )
+template:wrap( 'users/list', 'admin' )
