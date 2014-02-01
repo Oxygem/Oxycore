@@ -30,6 +30,11 @@ end
 
 --fetch an object as lua object (NO permission checks - ie internal)
 function object:fetch( id, prepare, fields )
+    local tmp = luawa.request.tmp
+    if tmp[self.type .. id] then
+        return tmp[self.type .. id]
+    end
+
     fields = fields or 'id, name'
     --get object from mysql (get all fields - assume need all on fetch)
     local object, err = database:select(
@@ -72,6 +77,7 @@ function object:fetch( id, prepare, fields )
     --run any prepare function
     if prepare and object.prepare then object:prepare() end
 
+    tmp[self.type .. id] = object
     return object
 end
 
@@ -101,13 +107,21 @@ function object:permission( id, permission )
 
     --permission to owned
     if user:checkPermission( permission .. 'Own' .. self.type ) then
+        local tmp, tmp_key = luawa.request.tmp, self.type .. id .. user:getData().id
+        if tmp[tmp_key] ~= nil then
+            return tmp[tmp_key]
+        end
+
         local test = database:select(
             self.module .. '_' .. self.type, 'id',
             { id = id, { user_id = user:getData().id, group_id = user:getData().group } },
             'id ASC', 1
         )
         if #test == 1 then
+            tmp[tmp_key] = true
             return true
+        else
+            tmp[tmp_key] = false
         end
     end
 
