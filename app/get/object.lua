@@ -1,44 +1,39 @@
---[[
-    file: app/get/object.lua
-    desc: Pass object requests to the module
-]]
+-- File: app/get/object.lua
+-- Desc: Pass object requests to the module
 
+-- Locals
 local oxy, luawa, header, request, user, template, utils = oxy, luawa, luawa.header, luawa.request, luawa.user, oxy.template, luawa.utils
 
---id not set?
+-- Id not set?
 if not request.get.id or not request.get.type then return template:error( 'Invalid ID or type' ) end
 
---find our object type
+-- Find our object type
 local type = oxy.config.objects[request.get.type]
 if not type or type.hidden then return template:error( 'Invalid object type' ) end
 
---not logged in and not public type?
+-- Not logged in and not public type?
 if not user:checkLogin() and not type.public then return template:error( 'You need to be logged in to do that' ) end
 
 --try to load the module in question
 local module = oxy:loadModule( type.module )
---fail? cya!
+-- No module? cya!
 if not module then
     return template:error( 'Could not find module' )
 end
 
---set our request module to the module (for header)
+-- Set our request module to the module (for header)
 request.get.module = type.module
 request.get.mreq = request.get.type .. 's'
 
---default template = view
+-- Defaults
 local action, permission, wrap = 'view', 'view', true
-
---edit action?
+-- Edit?
 if request.get.action == 'edit' then
 	action, permission = 'edit', 'edit'
-
---owner action
+-- Change owner?
 elseif request.get.action == 'owner' then
 	action, permission = 'owner', 'owner'
-	--get GROUPS for OWNER CHANGE PAGE?
-
---custom action
+-- Custom action?
 else
 	if type.actions and type.actions[request.get.action] then
 		action, permission = request.get.action, type.actions[request.get.action].permission
@@ -46,7 +41,7 @@ else
 	end
 end
 
---get our object
+-- Get our object
 local object, err = module[request.get.type]:get( request.get.id, permission )
 if not object then
 	return template:error( err )
@@ -66,19 +61,19 @@ else
 
 	--view/edit buttons
 	if action == 'view' and module[request.get.type]:permission( object.id, 'edit' ) then
-		template:add( 'page_title_buttons', { { text = 'Edit', link = './' .. object.id .. '/edit' }})
+		template:add( 'page_title_buttons', {{ text = 'Edit', link = './' .. object.id .. '/edit' }})
 	elseif action == 'edit' then
-		template:add( 'page_title_buttons', { { text = 'View', link = '../' .. object.id } } )
+		template:add( 'page_title_buttons', {{ text = 'View', link = '../' .. object.id } } )
 	end
 	--change owner?
 	if module[request.get.type]:permission( object.id, 'owner' ) then
-		template:add( 'page_title_buttons', { { text = 'Change Owner', link = '', class = 'admin' }})
+		template:add( 'page_title_buttons', {{ text = 'Change Owner', link = '', class = 'admin' }})
 	end
 end
 
---templates
+-- Load templates
 if wrap then
-	template:wrap( template:loadModule( type.module, request.get.type .. '/' .. action, true ))
+	template:wrap( request.get.type .. '/' .. action, type.module )
 else
 	template:loadModule( type.module, request.get.type .. '/' .. action )
 end

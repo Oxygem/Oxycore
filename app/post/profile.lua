@@ -1,22 +1,23 @@
---[[
-	file: app/post/profile
-	desc: update profile
-]]
+-- File: app/post/profile
+-- Desc: update profile
 
---modules
+-- Modules
 local user, header, request, template, countries, session = luawa.user, luawa.header, luawa.request, oxy.template, require( oxy.config.root .. 'app/countries' ).iso, luawa.session
 
---login? or invalid request (update type MUST be set)
+-- Login? or invalid request (update type MUST be set)
 if not user:checkLogin() or not request.post.update then
 	return header:redirect( '/' )
 end
 
---token?
+-- Token?
 if not request.post.token or not session:checkToken( request.post.token ) then
 	return template:error( 'Invalid token' )
 end
 
---update address?
+-- Update SSH key?
+if request.post.update == 'ssh' then
+
+-- Update address?
 if request.post.update == 'address' then
 	--make sure we have stuff
 	if not request.post.address or not request.post.country or not countries[request.post.country] then
@@ -35,7 +36,7 @@ if request.post.update == 'address' then
 		return header:redirect( '/profile', 'success', 'Address updated' )
 	end
 
---update details?
+-- Update details?
 else
 	--make sure we have stuff
 	if not request.post.name or not request.post.email then

@@ -25,4 +25,4 @@ template:set( 'dashboard', dashboard )
 template:set( 'page_title', 'Dashboard' )
 
 --load header
-template:wrap( template:load( 'dashboard', true ) )
+template:wrap( 'dashboard' )

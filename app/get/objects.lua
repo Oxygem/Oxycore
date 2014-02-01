@@ -61,4 +61,4 @@ else
 end
 
 --load templates
-template:wrap( template:loadModule( request.get.module, object_type .. '/' .. action_template, true ))
+template:wrap( object_type .. '/' .. action_template, request.get.module )

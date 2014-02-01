@@ -19,4 +19,4 @@ template:set( 'countries', countries )
 template:set( 'user', user:getData() )
 
 --load templates
-template:wrap( template:load( 'profile', true ))
+template:wrap( 'profile' )
