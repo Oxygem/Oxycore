@@ -1,11 +1,8 @@
 #!/usr/bin/env lua
 
---[[
-    file: build.lua
-    desc: Oxypanel build
-        + creates oxyngx.lua for Nginx
-        + creates oxynode.js for Node
-]]
+-- Oxypanel Core
+-- File: scripts/build.lua
+-- Desc: build
 
 --localize
 local type, pairs, tostring, io, oxy, table = type, pairs, tostring, io, oxy, table
@@ -395,9 +392,11 @@ local function build()
         modules = {},
         objects = {},
         brands = {},
-        oxyngx = luawaconf.oxyngx,
-        oxynode = luawaconf.oxynode
+        node = luawaconf.node
     }
+    for k, v in pairs( luawaconf.oxypanel ) do
+        _autoconf[k] = v
+    end
     --node files to include
     local ngxnode_files, autonode_files = {}, {}
 
