@@ -4,7 +4,8 @@
 inc/*
 
 # Auto-built files
-oxy*.*
+oxy.lua
+oxy.js
 config.nginx
 
 # Security risk
