@@ -31,9 +31,9 @@
         <link rel="stylesheet" href="/inc/core/css/text.css" media="all" />
 
         <link rel="stylesheet" href="/inc/core/css/rickshaw.css" media="all" />
-    <? for k, module in pairs( oxy.config.modules ) do ?>
-        <link rel="stylesheet" href="/inc/<?=module ?>/auto.css" media="all" />
-    <? end
+        <? for k, module in pairs( oxy.config.modules ) do ?>
+            <link rel="stylesheet" href="/inc/<?=module ?>/auto.css" media="all" />
+        <? end
     else ?>
         <link rel="stylesheet" href="/inc/oxypanel.css" media="all" />
     <? end ?>
