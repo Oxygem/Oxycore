@@ -4,7 +4,7 @@
 'use strict';
 
 var search = {
-	element: document.querySelector( '#search' ),
+	element: util.element( '#search' ),
 
     toggle: function() {
         if( this.element.style.getPropertyValue( 'display' ) == 'block' ) {
