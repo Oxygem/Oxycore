@@ -6,7 +6,7 @@ inc/*
 # Auto-built files
 oxy.lua
 oxy.js
-config.nginx
+oxy.nginx
 
 # Security risk
 config.lua
