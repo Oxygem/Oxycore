@@ -1,7 +1,6 @@
---[[
-    file: <service module>/post/users
-    desc: admin users
-]]
+-- Oxypanel Admin
+-- File: post/permissions.lua
+-- Desc: edit permission set
 
 local template, database, request, session, user, header = oxy.template, luawa.database, luawa.request, luawa.session, luawa.user, luawa.header
 
@@ -19,7 +18,7 @@ for k, v in pairs( request.post ) do
 	if v == 'on' then
 		local a, b, group, permission = k:find( '(%d+)_([%w]+)')
 		if a then
-			table.insert( permissions, { group, permission } )
+			table.insert( permissions, { group, permission })
 		end
 	end
 end

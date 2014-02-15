@@ -1,7 +1,6 @@
---[[
-    file: <service module>/get/permissions
-    desc: show/edit permissions
-]]
+-- Oxypanel Admin
+-- File: get/permissions.lua
+-- Display permissions set in table
 
 local template, database, request, user = oxy.template, luawa.database, luawa.request, luawa.user
 
@@ -14,11 +13,11 @@ local action = 'user/list'
 
 
 --select groups
-local groups = database:select( 'user_groups', '*' )
+local groups = database:select( 'user_groups' )
 
 --select/build set permissions table
 local set_permissions = {}
-for k, v in pairs( database:select( 'user_permissions', '*' ) ) do
+for k, v in pairs( database:select( 'user_permissions' )) do
 	set_permissions[v.group .. v.permission] = true
 end
 

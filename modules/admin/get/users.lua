@@ -21,7 +21,7 @@ elseif request.get.action == 'edit' then
 
 	template:set( 'user', users:get( request.get.id ) )
 
-	return template:wrap( template:loadModule( 'admin', 'users/edit', true ) )
+	return template:wrap( template:loadModule( 'admin', 'users/edit', true ))
 end
 
 

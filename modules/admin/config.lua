@@ -35,7 +35,9 @@ local config = {
         'AddUserGroup',
         'ViewUserGroup',
         'EditUserGroup',
-        'DeleteUserGroup'
+        'DeleteUserGroup',
+
+        'ViewLog'
     }
 }
 
