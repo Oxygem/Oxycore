@@ -1,5 +1,11 @@
-/* Basics
---------------------------------------------------------------*/
+/*  Oxypanel
+    File: app/inc/css/basics.css
+    Desc: basic css for elements */
+
+*::selection {
+    background: #FFFECC;
+}
+
 * {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;

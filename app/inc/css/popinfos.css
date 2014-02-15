@@ -26,8 +26,7 @@ a.pop {
         display: block;
     }
         a.pop span.container img {
-            float: left;
-            margin: 0 5px;
+            margin: 0 5px -2px 0;
         }
         a.pop span.container span.arrow {
             display: block;
