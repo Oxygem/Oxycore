@@ -22,7 +22,19 @@
 	</div><!--end left-->
 
 	<div class="third">
-		<h3>Your Address</h3>
+		<h3>SSH Keys</h3>
+
+		<form action="/profile" method="post" class="wide">
+			<label for="ssh_key">Public SSH Key</label>
+			<textarea name="ssh_key" id="ssh_key"><?=self:get( 'user' ).ssh_key ?></textarea>
+
+			<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+			<button type="submit" class="submit lightgreen" name="update" value="address">Update SSH Key &#187;</button>
+		</form>
+	</div>
+
+	<div class="third">
+		<h3>Billing Address</h3>
 
 		<form action="/profile" method="post" class="wide">
 			<label for="real_name">Company or Individual Name:</label>
@@ -43,16 +55,4 @@
 			<button type="submit" class="submit lightgreen" name="update" value="address">Update Address &#187;</button>
 		</form>
 	</div><!--end right-->
-
-	<div class="third">
-		<h3>Your SSH Key</h3>
-
-		<form action="/profile" method="post" class="wide">
-			<label for="ssh_key">Public SSH Key</label>
-			<textarea name="ssh_key" id="ssh_key"><?=self:get( 'user' ).ssh_key ?></textarea>
-
-			<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
-			<button type="submit" class="submit lightgreen" name="update" value="address">Update SSH Key &#187;</button>
-		</form>
-	</div>
 </div>
