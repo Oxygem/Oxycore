@@ -1,7 +1,6 @@
---[[
-    file: app/object.lua
-    desc: Manage object storage
-]]
+-- Oxypanel Core
+-- File: app/object.lua
+-- Desc: generic object handler (mapped to <module>_<object-type> in db)
 
 --localize luawa
 local database, user = luawa.database, luawa.user
@@ -17,7 +16,7 @@ function object:new( type )
     --create new object, set type
     local object = { type = type, module = oxy.config.objects[type].module, cache = {} }
     --if custom fields for lists
-    object.fields = oxy.config.objects[type].fields or '*'
+    object.fields = oxy.config.objects[type].fields or true
 
     --make object use self as index
     self.__index = self
@@ -40,7 +39,7 @@ function object:fetch( id, prepare, fields )
     local object, err = database:select(
         self.module .. '_' .. self.type, fields,
         { id = id },
-        nil, 1
+        { limit = 1 }
     )
     --if we got none back
     if #object ~= 1 then
@@ -146,17 +145,17 @@ end
 
 
 --get all objects (mysql list only)
-function object:getAll( wheres, order, limit, offset )
-    return self:getList( wheres, order, limit, offset, true )
+function object:getAll( wheres, options )
+    return self:getList( wheres, options, true )
 end
 
 --get all owned objects (mysql list only)
-function object:getOwned( wheres, order, limit, offset )
-    return self:getList( wheres, order, limit, offset )
+function object:getOwned( wheres, options )
+    return self:getList( wheres, options )
 end
 
 --get list of objects from mysql (DRY, see above)
-function object:getList( wheres, order, limit, offset, all )
+function object:getList( wheres, options, all )
     --not logged in?
     if not user:checkLogin() then return false, 'You need to be logged in' end
     --type edit/delete permissions
@@ -185,7 +184,7 @@ function object:getList( wheres, order, limit, offset, all )
     local objects = database:select(
         self.module .. '_' .. self.type, self.fields,
         wheres,
-        order, limit, offset
+        options
     )
     --assign edit & delete permissions
     for k, object in pairs( objects ) do

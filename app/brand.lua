@@ -1,3 +1,7 @@
+-- Oxypanel Core
+-- File: app/brands.lua
+-- Desc: determine which brand info to show
+
 local brands = oxy.config.brands
 
 local brand = {}

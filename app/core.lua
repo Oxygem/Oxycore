@@ -1,3 +1,4 @@
+-- Oxypanel Core
 -- File: app/core.lua
 -- Desc: Oxypanel core
 

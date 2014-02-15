@@ -1,4 +1,4 @@
-local template, user, header = luawa.template, luawa.user, luawa.header
+local user, header = luawa.user, luawa.header
 
 --logout the user
 if user:logout() then

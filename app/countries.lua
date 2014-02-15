@@ -1,3 +1,4 @@
+-- Oxypanel Core
 -- File: app/countries.lua
 -- Desc: auto generated list of countries, iso and iso => country
 
