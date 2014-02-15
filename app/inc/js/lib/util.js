@@ -98,13 +98,13 @@
         },
 
         // Set cookie
-        setCookie: function( key, value ) {
-
+        setCookie: function( key, value, options ) {
+            document.cookie = key + '=' + value;
         },
 
 
         // Get util elements
-        elementArguments: [ 'css', 'animate', 'get', 'set', 'getData', 'setData', 'addClass', 'removeClass' ],
+        elementArguments: ['css', 'animate', 'set', 'setData', 'addClass', 'removeClass', 'addEventListener'],
         elements: function( selector, target ) {
             var target = target || document,
                 elements = target.querySelectorAll( selector ),
@@ -175,16 +175,12 @@
                 return this;
             }
 
-            element.hasClass = function( css_class ) {
-                return this.className.match( new RegExp( css_class, 'g' ));
-            },
             element.addClass = function( css_class ) {
-                if( !this.className.match( new RegExp( css_class, 'g' )))
-                    this.className += ' ' + css_class;
+                this.classList.add( css_class );
                 return this;
             }
             element.removeClass = function( css_class ) {
-                this.className = this.className.replace( new RegExp( ' ?' + css_class, 'g' ), '' );
+                this.classList.remove( css_class );
                 return this;
             }
 
@@ -193,11 +189,6 @@
                 var element = self.build( tag );
                 this.appendChild( element );
                 return element;
-            },
-
-            // Enables chain builds
-            element.up = function() {
-                return this.parentNode;
             },
 
             element.each = function( data, callback ) {
