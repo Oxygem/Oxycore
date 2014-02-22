@@ -1,7 +1,6 @@
---[[
-    file: <service module>/get/users
-    desc: admin users
-]]
+-- Oxypanel Core/Admin
+-- File: get/users.lua
+-- Desc: add/edit/list users
 
 local template, database, request, user, users = oxy.template, luawa.database, luawa.request, luawa.user, oxy.users
 
@@ -12,7 +11,7 @@ template:set( 'groups', groups )
 --add user?
 if request.get.action == 'add' then
 	if not user:checkPermission( 'AddUser' ) then return template:error( 'You don\'t have permission to do that' ) end
-	return template:wrap( template:loadModule( 'admin', 'users/add', true ) )
+    return template:wrap( 'admin', 'users/add' )
 
 --edit
 elseif request.get.action == 'edit' then
@@ -21,7 +20,7 @@ elseif request.get.action == 'edit' then
 
 	template:set( 'user', users:get( request.get.id ) )
 
-	return template:wrap( template:loadModule( 'admin', 'users/edit', true ))
+    return template:wrap( 'admin', 'users/edit' )
 end
 
 
@@ -59,4 +58,4 @@ local users = database:select( 'user', '*', wheres )
 template:set( 'page_title', 'Users' )
 template:set( 'users', users )
 
-template:wrap( 'users/list', 'admin' )
+template:wrap( 'admin', 'users/list' )

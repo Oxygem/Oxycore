@@ -5,4 +5,4 @@
 
 local template = oxy.template
 
-template:wrap( 'dashboard', 'admin' )
+template:wrap( 'admin', 'dashboard' )

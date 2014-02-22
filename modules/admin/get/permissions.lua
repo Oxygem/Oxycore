@@ -1,4 +1,4 @@
--- Oxypanel Admin
+-- Oxypanel Core/Admin
 -- File: get/permissions.lua
 -- Display permissions set in table
 
@@ -63,4 +63,4 @@ template:set( 'set_permissions', set_permissions )
 template:set( 'groups', groups )
 
 --load template
-template:wrap( 'permissions', 'admin' )
+template:wrap( 'admin', 'permissions' )
