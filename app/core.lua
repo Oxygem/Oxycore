@@ -2,7 +2,6 @@
 -- File: app/core.lua
 -- Desc: Oxypanel core
 
-
 --localize lua
 local require = require
 
@@ -22,7 +21,7 @@ function oxy:setConfig( config )
     self.email = require( self.config.root .. 'app/email' )
     --get brand
     self.brand = require( self.config.root .. 'app/brand' )
-    --get users (note not luawa.user)
+    --users
     self.users = require( self.config.root .. 'app/users' )
     --log
     self.log = require( self.config.root .. 'app/log' )
