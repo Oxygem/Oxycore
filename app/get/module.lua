@@ -1,7 +1,6 @@
---[[
-    file: app/get/module.lua
-    desc: Pass module requests on to the module
-]]
+-- Oxypanel Core
+-- File: app/get/module.lua
+-- Pass module requests to module
 
 local oxy, luawa, header, request, user, template = oxy, luawa, luawa.header, luawa.request, luawa.user, oxy.template
 

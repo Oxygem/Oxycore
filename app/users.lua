@@ -1,3 +1,7 @@
+-- Oxypanel Core
+-- File: app/users.lua
+-- Desc: helper functions to list users
+
 local database = luawa.database
 
 local users = {

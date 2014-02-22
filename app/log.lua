@@ -1,4 +1,4 @@
--- Oxypanel
+-- Oxypanel Core
 -- File: app/log.lua
 -- Desc: logging of all actions for Oxypanel
 

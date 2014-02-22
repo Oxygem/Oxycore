@@ -1,6 +1,6 @@
 -- Oxypanel Core
 -- File: app/get/object.lua
--- Desc: Pass object requests to the module
+-- Desc: Process object related requests using the object factory from the module
 
 -- Locals
 local header, request, user, utils = luawa.header, luawa.request, luawa.user, luawa.utils
@@ -105,7 +105,7 @@ end
 
 -- Load templates
 if wrap then
-	template:wrap( request.get.type .. '/' .. action, type.module )
+	template:wrap( type.module, request.get.type .. '/' .. action )
 else
 	template:loadModule( type.module, request.get.type .. '/' .. action )
 end
