@@ -32,13 +32,30 @@ var graph = {
         };
 
         //build series data
+        var min_x = 999999999999999;
         util.each( data, function( key, value ) {
+            util.each( value.data, function( _, point ) {
+                if( min_x > point.x )
+                        min_x = point.x;
+            });
+
             graph.data.push({
                 color: palette.color(),
                 data: value.data,
                 name: value.name
             });
         });
+
+        //force scale if dealing with percentages
+        if( options.percentify ) {
+            graph.data.push({
+                color: 'white',
+                data: [
+                    { x: min_x, y: 0 },
+                    { x: min_x, y: 100 }
+                ]
+            });
+        }
 
         //create rickshaw graph
         graph.rickshaw = new Rickshaw.Graph({
