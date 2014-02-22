@@ -8,7 +8,9 @@ This repo is for [_Oxypanel Core_](http://oxypanel.org) which is a modular, obje
 + Oxypanel Billing
 
 
-#[Documentation](http://doc.oxypanel.com)
+#Documentation
+
+Documentation for Oxypanel Core and the various modules is found at [doc.oxypanel.com](http://doc.oxypanel.com). This readme & the readme's of the various modules contain development information.
 
 + [Requirements](http://doc.oxypanel.com/Requirements)
 + [Install](http://doc.oxypanel.com/Install)
