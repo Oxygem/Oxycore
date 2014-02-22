@@ -28,7 +28,7 @@ function template:loadModule( module, template )
 end
 
 --wrap template w/ header+footer
-function template:wrap( template, module )
+function template:wrap( module, template )
     self:load( 'head' )
     self:load( 'header' )
     if module then
