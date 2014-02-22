@@ -3,7 +3,6 @@
     <script type="text/javascript" src="/inc/oxypanel.js"></script>
     <? if not luawa.cache then ?>
         <script type="text/javascript" src="/inc/core/js/debug.js"></script>
-        <script type="text/javascript" src="/inc/core/js/noscript.js"></script>
         <script type="text/javascript" src="/inc/core/js/confirm.js"></script>
         <script type="text/javascript" src="/inc/core/js/messages.js"></script>
         <script type="text/javascript" src="/inc/core/js/menu.js"></script>
