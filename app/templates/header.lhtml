@@ -86,7 +86,7 @@
                 <?  end
                 end ?>
 
-                <li class="right"><a target="_blank" href="http://help.oxypanel.com?module=<?=request.get.module ?>&module_request=<?=request.get.module_request ?>&action=<?=request.get.action ?>&request=<?=request.get.request ?>&type=<?=request.get.type ?>">Help</a></li>
+                <!--<li class="right"><a target="_blank" href="http://help.oxypanel.com?module=<?=request.get.module ?>&module_request=<?=request.get.module_request ?>&action=<?=request.get.action ?>&request=<?=request.get.request ?>&type=<?=request.get.type ?>">Help</a></li>-->
                 <li class="right"><a target="_blank" href="http://doc.oxypanel.com">Wiki</a></li>
             </ul>
 

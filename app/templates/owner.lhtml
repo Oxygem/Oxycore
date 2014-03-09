@@ -1,0 +1,24 @@
+<div class="third left">
+    <form class="wide" action="/admin/users/add" method="post">
+        <label for="user">User</label>
+        <select id="user" name="user">
+            <option value="0">None</option>
+            <? for k, user in pairs( self:get( 'users' ) ) do ?>
+                <option value="<?=user.id ?>"<? if user.id == self:get( 'object' ).user_id then ?> selected<? end ?>><?=user.name ?></option>
+            <? end ?>
+        </select>
+
+        <label for="group">Group</label>
+        <select id="group" name="group">
+            <option value="0">None</option>
+            <? for k, group in pairs( self:get( 'groups' ) ) do ?>
+                <option value="<?=group.id ?>"<? if group.id == self:get( 'object' ).group_id then ?> selected<? end ?>><?=group.name ?></option>
+            <? end ?>
+        </select>
+
+        <button type="submit" class="submit lightgreen">Change Owners &#187;</button>
+        &nbsp;&nbsp;<a href="/<?=self:get( 'object' )._type ?>/<?=self:get( 'object' ).id ?>">back to <?=self:get( 'object' ).name ?></a>
+
+        <input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+    </form>
+</div>

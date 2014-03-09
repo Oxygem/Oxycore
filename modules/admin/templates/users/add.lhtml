@@ -1,0 +1,26 @@
+<h2>Add User</h2>
+
+<div class="third left">
+    <form class="wide" action="/admin/users/add" method="post">
+        <label for="name">Name:</label>
+        <input type="text" name="name" />
+
+        <label for="name">Email:</label>
+        <input type="text" name="email" />
+
+        <label for="name">Password:</label>
+        <input type="password" name="password" />
+
+        <label for="group">Group:</label>
+        <select name="group">
+            <? for k, group in pairs( self:get( 'groups' ) ) do ?>
+                <option value="<?=group.id ?>"><?=group.name ?></option>
+            <? end ?>
+        <select>
+
+        <button type="submit" class="submit lightgreen">Add User &#187;</button>
+        &nbsp;&nbsp;<a href="/admin/users">back to users</a>
+
+        <input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+    </form>
+</div>
