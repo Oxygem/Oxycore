@@ -12,7 +12,7 @@
 */
 
 (function() {
-    var util = {
+    window.util = {
         // Ajax call
         ajax: function( method, url, options ) {
             var req = new XMLHttpRequest();
@@ -40,7 +40,7 @@
                         var data = JSON.parse( req.responseText );
                         return options.success( req.status, data );
                     } catch( e ) {
-                        return options.error( req.status, e.message, req.responseText );
+                        return options.error( req.status, e, req.responseText );
                     }
                 }
             }
@@ -104,7 +104,7 @@
 
 
         // Get util elements
-        elementArguments: ['css', 'animate', 'set', 'setData', 'addClass', 'removeClass', 'addEventListener'],
+        elementArguments: ['css', 'set', 'setData', 'addClass', 'removeClass', 'addEventListener'],
         elements: function( selector, target ) {
             var target = target || document,
                 elements = target.querySelectorAll( selector ),
@@ -146,9 +146,6 @@
                 }
                 return this;
             }
-            element.animate = function( data, duration ) {
-
-            }
 
             // Set this.<key>, chainable
             element.set = function( key, value ) {
@@ -156,11 +153,9 @@
                 return this;
             },
 
-            // Get data-<key> attributes
             element.getData = function( key ) {
                 return this.getAttribute( 'data-' + key );
             }
-            // Set data-<key> attributes
             element.setData = function( key, value ) {
                 this.setAttribute( 'data-' + key, value );
                 return this;
@@ -216,6 +211,4 @@
             return this.element( false, element );
         }
     }
-
-    window.util = util;
 })();
