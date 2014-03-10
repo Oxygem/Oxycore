@@ -6,7 +6,7 @@ local template, database, request, session, user, header = oxy.template, luawa.d
 
 --login & permission
 if not user:checkLogin() or not user:checkPermission( 'EditPermission' ) then
-	return template:error( 'You do not have permission to do that' )
+    return template:error( 'You do not have permission to do that' )
 end
 
 --get ALL posts (lots of permissions)
@@ -15,12 +15,12 @@ request.post = ngx.req.get_post_args( 0 )
 --work out permissions from POST
 local permissions = {}
 for k, v in pairs( request.post ) do
-	if v == 'on' then
-		local a, b, group, permission = k:find( '(%d+)_([%w]+)')
-		if a then
-			table.insert( permissions, { group, permission })
-		end
-	end
+    if v == 'on' then
+        local a, b, group, permission = k:find( '(%d+)_([%w]+)')
+        if a then
+            table.insert( permissions, { group, permission })
+        end
+    end
 end
 
 --delete all permissions
