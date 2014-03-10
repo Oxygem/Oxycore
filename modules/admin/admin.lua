@@ -60,7 +60,7 @@ function admin:subnav()
     --logging
     if user:checkPermission( 'ViewLog' ) then
         local logs = { title = 'Logs', link = '/logs', admin = true }
-        --table.insert( nav, logs )
+        table.insert( nav, logs )
     end
 
     return nav
