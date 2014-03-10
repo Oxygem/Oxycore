@@ -29,6 +29,8 @@ server {
 
     #dev mode
     lua_code_cache ]] .. ( luawaconf.cache and 'on' or 'off' ) .. [[;
+    #shutdown properly
+    lua_check_client_abort on;
 
     #logging
     error_log ]] .. config.root .. [[logs/error.log;
@@ -96,15 +98,16 @@ _autoconf = {]] .. config .. [[
 
 
 --get luawa & set config
-luawa = require( _autoconf.root .. 'luawa/core' )
-luawa:setConfig( _autoconf.root, 'config' )
+luawa = require( 'luawa/core' )
+luawa:setConfig( 'config' )
 
 --set oxypanel & set config
-oxy = require( _autoconf.root .. 'app/core' )
+oxy = require( 'app/core' )
 oxy:setConfig( _autoconf )
 
 --prepare luawa
-if not luawa:prepareRequest() then
+local file, err = luawa:prepareRequest()
+if not file then
     return luawa:error( 500, 'Invalid Request' )
 end
 
@@ -112,7 +115,7 @@ end
 oxy:setup()
 
 --pass to luawa to process request
-luawa:processRequest()]]
+luawa:processRequest( file )]]
 
     return out
 end
@@ -411,7 +414,7 @@ local function build()
         brands = {},
         node = luawaconf.node
     }
-    for k, v in pairs( luawaconf.oxypanel ) do
+    for k, v in pairs( luawaconf.nginx ) do
         _autoconf[k] = v
     end
     --node files to include
