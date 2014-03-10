@@ -25,7 +25,7 @@ form {
         appearance: none;
         -webkit-appearance: none;
         -moz-appearance: none;
-        background: url( /inc/core/img/form/select_arrow.png ) 97% center no-repeat;
+        background: white url( /inc/core/img/form/select_arrow.png ) 97% center no-repeat;
         cursor: pointer;
     }
     form textarea {
