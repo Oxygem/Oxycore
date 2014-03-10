@@ -13,7 +13,10 @@ end
 
 local req
 --we have a request & it matches up
-if request.get.module_request and module.config.requests.get[request.get.module_request] then
+if request.get.module_request then
+    if not module.config.requests.get[request.get.module_request] then
+        return template:error( 'Invalid request for this module' )
+    end
     req = module.config.requests.get[request.get.module_request]
 --default
 else
