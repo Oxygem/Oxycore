@@ -14,17 +14,17 @@ local oxy = {
 function oxy:setConfig( config )
     self.config = config
     --get & set object
-    self.object = require( self.config.root .. 'app/object' )
+    self.object = require( 'app/object' )
     --get & set template
-    self.template = require( self.config.root .. 'app/template' )
+    self.template = require( 'app/template' )
     --get & set email
-    self.email = require( self.config.root .. 'app/email' )
+    self.email = require( 'app/email' )
     --get brand
-    self.brand = require( self.config.root .. 'app/brand' )
+    self.brand = require( 'app/brand' )
     --users
-    self.users = require( self.config.root .. 'app/users' )
+    self.users = require( 'app/users' )
     --log
-    self.log = require( self.config.root .. 'app/log' )
+    self.log = require( 'app/log' )
 end
 
 --load module
@@ -34,7 +34,7 @@ function oxy:loadModule( module )
 
     --need to load it?
     if not self[module] then
-        self[module] = require( self.config.root .. 'modules/' .. module .. '/' .. module )
+        self[module] = require( 'modules/' .. module .. '/' .. module )
         self[module].config = self.config[module]
     end
 
@@ -44,6 +44,8 @@ end
 
 --setup (post luawa setup)
 function oxy:setup()
+    self.log()
+    self.object:setup()
     self.brand:setup()
     self.template:setup()
 end
