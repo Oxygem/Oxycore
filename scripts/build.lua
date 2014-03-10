@@ -22,6 +22,8 @@ lua_shared_dict ]] .. luawaconf.shm_prefix .. [[session 10m;
 lua_shared_dict ]] .. luawaconf.shm_prefix .. [[user 10m;
 lua_shared_dict ]] .. luawaconf.shm_prefix .. [[requests 1m;
 
+lua_package_path /?.lua;
+
 server {
     #port & domains
     listen ]] .. luawaconf.nginx.port .. [[;
@@ -98,11 +100,11 @@ _autoconf = {]] .. config .. [[
 
 
 --get luawa & set config
-luawa = require( 'luawa/core' )
-luawa:setConfig( 'config' )
+luawa = require( _autoconf.root .. 'luawa/core' )
+luawa:setConfig( _autoconf.root, 'config' )
 
 --set oxypanel & set config
-oxy = require( 'app/core' )
+oxy = require( _autoconf.root .. 'app/core' )
 oxy:setConfig( _autoconf )
 
 --prepare luawa
