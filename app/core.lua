@@ -14,17 +14,17 @@ local oxy = {
 function oxy:setConfig( config )
     self.config = config
     --get & set object
-    self.object = require( 'app/object' )
+    self.object = require( config.root .. 'app/object' )
     --get & set template
-    self.template = require( 'app/template' )
+    self.template = require( config.root .. 'app/template' )
     --get & set email
-    self.email = require( 'app/email' )
+    self.email = require( config.root .. 'app/email' )
     --get brand
-    self.brand = require( 'app/brand' )
+    self.brand = require( config.root .. 'app/brand' )
     --users
-    self.users = require( 'app/users' )
+    self.users = require( config.root .. 'app/users' )
     --log
-    self.log = require( 'app/log' )
+    self.log = require( config.root .. 'app/log' )
 end
 
 --load module
@@ -34,7 +34,7 @@ function oxy:loadModule( module )
 
     --need to load it?
     if not self[module] then
-        self[module] = require( 'modules/' .. module .. '/' .. module )
+        self[module] = require( self.config.root .. 'modules/' .. module .. '/' .. module )
         self[module].config = self.config[module]
     end
 

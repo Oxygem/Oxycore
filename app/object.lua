@@ -53,7 +53,7 @@ function object:fetch( id, prepare, fields )
     object = object[1]
 
     --load the object 'class' according to type
-    local type = require( 'modules/' .. self.module .. '/object/' .. self.type )
+    local type = require( oxy.config.root .. 'modules/' .. self.module .. '/object/' .. self.type )
 
     --set new objects to inherit from type
     setmetatable( object, { __index = type })
