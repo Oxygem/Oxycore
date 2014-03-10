@@ -2,14 +2,20 @@
 -- File: app/object.lua
 -- Desc: generic object handler (mapped to <module>_<object-type> in db)
 
---localize luawa
-local database, user = luawa.database, luawa.user
+--Localize
+local ngx = ngx
+local database, user, request = luawa.database, luawa.user, luawa.request
 
---oxy.object
+
+-- Oxy.object
 local object = {}
 
+-- Oxy setup
+function object:setup()
+    ngx.ctx.objects = {}
+end
 
---new object 'factory'
+-- New object 'factory'
 function object:new( type )
     if not oxy.config.objects[type] then return false end
 
@@ -18,20 +24,18 @@ function object:new( type )
     --if custom fields for lists
     object.fields = oxy.config.objects[type].fields or true
 
-    --make object use self as index
-    self.__index = self
-    setmetatable( object, self ) --this + above essentially makes object inherit self/object's methods
+    --make this factory inherit from this
+    setmetatable( object, { __index = self })
 
     --return the new object class w/ type set
     return object
 end
 
 
---fetch an object as lua object (NO permission checks - ie internal)
+-- Fetch an object as lua object (NO permission checks - ie internal)
 function object:fetch( id, prepare, fields )
-    local tmp = luawa.request.tmp
-    if tmp[self.type .. id] then
-        return tmp[self.type .. id]
+    if ngx.ctx.objects[self.type .. id] then
+        return ngx.ctx.objects[self.type .. id]
     end
 
     fields = fields or 'id, name'
@@ -49,11 +53,13 @@ function object:fetch( id, prepare, fields )
     object = object[1]
 
     --load the object 'class' according to type
-    local type = require( oxy.config.root .. 'modules/' .. self.module .. '/object/' .. self.type )
+    local type = require( 'modules/' .. self.module .. '/object/' .. self.type )
 
-    --set our new objects index to that of the type
-    type.__index = type
-    setmetatable( object, type ) --this + above essentially makes object inherit type's methods
+    --set new objects to inherit from type
+    setmetatable( object, { __index = type })
+
+    --give object its type
+    object._type = self.type
 
     --helper functions
     local this = self
@@ -76,16 +82,14 @@ function object:fetch( id, prepare, fields )
     --run any prepare function
     if prepare and object.prepare then object:prepare() end
 
-    tmp[self.type .. id] = object
+    ngx.ctx.objects[self.type .. id] = object
     return object
 end
 
---get an object w/ permission check on active user
+-- Get an object w/ permission check on active user
 function object:get( id, permission )
     --permission
     permission = permission or 'view'
-    --not logged in?
-    if not user:checkLogin() then return false, 'You need to be logged in' end
 
     --we got permission?
     if not self:permission( id, permission ) then return false, 'You do not have permission to ' .. permission .. ' this ' .. self.type end
@@ -94,11 +98,8 @@ function object:get( id, permission )
     return self:fetch( id, true, '*' )
 end
 
---check current user permissions on object (Admin, View, Edit)
+-- Check current user permissions on object (Admin, View, Edit)
 function object:permission( id, permission )
-    --not logged in?
-    if not user:checkLogin() then return false end
-
     --permission to any
     if user:checkPermission( permission .. 'Any' .. self.type ) then
         return true
@@ -106,9 +107,9 @@ function object:permission( id, permission )
 
     --permission to owned
     if user:checkPermission( permission .. 'Own' .. self.type ) then
-        local tmp, tmp_key = luawa.request.tmp, self.type .. id .. user:getData().id
-        if tmp[tmp_key] ~= nil then
-            return tmp[tmp_key]
+        local tmp_key = self.type .. id .. user:getData().id
+        if ngx.ctx.permissions[tmp_key] ~= nil then
+            return ngx.ctx.permissions[tmp_key]
         end
 
         local test = database:select(
@@ -117,10 +118,10 @@ function object:permission( id, permission )
             'id ASC', 1
         )
         if #test == 1 then
-            tmp[tmp_key] = true
+            ngx.ctx.permissions[tmp_key] = true
             return true
         else
-            tmp[tmp_key] = false
+            ngx.ctx.permissions[tmp_key] = false
         end
     end
 
@@ -128,7 +129,7 @@ function object:permission( id, permission )
     return false
 end
 
---delete (mysql only)
+-- Delete (mysql only)
 function object:delete( id )
     --we got permission?
     if not self:permission( id, 'delete' ) then return false, 'You do not have permission to delete this ' .. self.type end
@@ -144,17 +145,17 @@ function object:delete( id )
 end
 
 
---get all objects (mysql list only)
+-- Get all objects (mysql list only)
 function object:getAll( wheres, options )
     return self:getList( wheres, options, true )
 end
 
---get all owned objects (mysql list only)
+-- Get all owned objects (mysql list only)
 function object:getOwned( wheres, options )
     return self:getList( wheres, options )
 end
 
---get list of objects from mysql (DRY, see above)
+-- Get list of objects from mysql (DRY, see above)
 function object:getList( wheres, options, all )
     --not logged in?
     if not user:checkLogin() then return false, 'You need to be logged in' end
@@ -196,6 +197,5 @@ function object:getList( wheres, options, all )
     end
     return objects
 end
-
 
 return object
