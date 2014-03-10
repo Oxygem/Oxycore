@@ -14,7 +14,8 @@ local config = {
             default = { file = 'get/dashboard' },
             users = { file = 'get/users' },
             permissions = { file = 'get/permissions' },
-            groups = { file = 'get/groups' }
+            groups = { file = 'get/groups' },
+            logs = { file = 'get/logs' }
         },
         post = {
             users = { file = 'post/users' },
