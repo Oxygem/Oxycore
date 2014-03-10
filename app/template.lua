@@ -4,27 +4,22 @@
 
 --our template class
 local template = {}
---set our template to inherit luawa.template's methods
-luawa.template.__index = luawa.template
-setmetatable( template, luawa.template )
 
 function template:setup()
     if luawa.request.get._api then
-        luawa.template.api = true
+        luawa.template:setApi( true )
     end
 end
 
-function template:load( template )
-    local dir = 'app/templates/' .. oxy.config.template .. '/' .. template
-
-    return luawa.template:load( dir )
+function template:load( template, inline )
+    local dir = 'app/templates/' .. template
+    return getmetatable( self ).__index.load( self, dir, inline )
 end
 
 --loading module templates
-function template:loadModule( module, template )
-    local dir = 'modules/' .. module .. '/templates/' .. oxy.config.template .. '/' .. template
-
-    return luawa.template:load( dir )
+function template:loadModule( module, template, inline )
+    local dir = 'modules/' .. module .. '/templates/' .. template
+    return getmetatable( self ).__index.load( self, dir, inline )
 end
 
 --wrap template w/ header+footer
@@ -49,4 +44,8 @@ function template:error( message )
     self:load( 'foot' )
 end
 
+--set our template to inherit luawa.template's methods
+setmetatable( template, { __index = luawa.template })
+--allow access to this from template files
+luawa.template.parent = template
 return template
