@@ -1,0 +1,29 @@
+<? local utils = luawa.utils ?>
+<h2>Logs</h2>
+
+<table width="100%">
+    <thead><tr>
+        <th>User</th>
+        <th>Time</th>
+        <th>Request</th>
+        <th>Module</th>
+        <th>Module Request</th>
+        <th>Action</th>
+        <th>Object</th>
+    </tr></thead>
+    <tbody>
+        <? for k, log in pairs( self:get( 'logs' ) ) do ?>
+            <tr>
+                <td><?=log.user_id ?></td>
+                <td><?=log.time ?></td>
+                <td><?=log.request ?></td>
+                <td><?=log.module ?></td>
+                <td><?=log.module_request ?></td>
+                <td><?=log.action ?></td>
+                <td><? if log.object_id > 0 then ?>
+                    <a class="button lightblue pop" data-object-id="<?=log.object_id ?>" data-object-type="<?=log.object_type ?>" href="/<?=log.object_type ?>/<?=log.object_id ?>"><?=utils.capitalizeFirst( log.object_type ) ?></a>
+                <? end ?></td>
+            </tr>
+        <? end ?>
+    </tbody>
+</table>
