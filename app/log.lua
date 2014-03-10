@@ -18,7 +18,7 @@ local function log()
             request.get.action or 'view',
             request.get.module or '',
             request.get.module_request or '',
-            request.func
+            request.get.request
         }},
         { delayed = true }
     )
