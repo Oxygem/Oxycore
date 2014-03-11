@@ -9,6 +9,11 @@ local admin = {
 function admin:subnav()
     local nav = {}
 
+    --status
+    if user:checkPermission( 'ViewStatus' ) then
+        --table.insert( nav, { title = 'Status', link = '/status', admin = true })
+    end
+
     --settings
     local settings = { title = 'Settings', link = '/settings', submenus = {}, admin = true }
     settings.submenus['Core'] = {

@@ -25,6 +25,8 @@ local config = {
     },
     --additional permissions
     permissions = {
+        'ViewStatus',
+
         'AddUser',
         'ViewUser',
         'EditUser',
