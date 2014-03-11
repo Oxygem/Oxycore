@@ -14,7 +14,7 @@
     <tbody>
         <? for k, log in pairs( self:get( 'logs' ) ) do ?>
             <tr>
-                <td><?=log.user_id ?></td>
+                <td><?=log.user_id ?>: <?=log.username ?></td>
                 <td><?=log.time ?></td>
                 <td><?=log.request ?></td>
                 <td><?=log.module ?></td>
