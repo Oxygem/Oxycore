@@ -3,23 +3,24 @@
 -- Desc: post to object
 
 -- Locals
+local ngx = ngx
 local luawa, header, request, user, session = luawa, luawa.header, luawa.request, luawa.user, luawa.session
 local oxy, template = oxy, oxy.template
 
 -- Id not set?
 if not request.get.id or not request.get.type then
-	return template:error( 'Invalid ID or type' )
+    return template:error( 'Invalid ID or type' )
 end
 
 -- Find our object type
 local type = oxy.config.objects[request.get.type]
 if not type or type.hidden then
-	return template:error( 'Invalid object type' )
+    return template:error( 'Invalid object type' )
 end
 
 -- Not logged in and not public type?
 if not user:checkLogin() and not type.public then
-	return template:error( 'You need to be logged in to do that' )
+    return template:error( 'You need to be logged in to do that' )
 end
 
 -- Token?
@@ -41,7 +42,7 @@ request.get.mreq = request.get.type .. 's'
 
 -- Post action exists?
 if not type.posts or not type.posts[request.get.action] then
-	return template:error( 'Invalid action' )
+    return template:error( 'Invalid action' )
 end
 
 -- Get our object
@@ -50,13 +51,12 @@ if err then return template:error( err ) end
 
 -- Check permission
 if not module[request.get.type]:permission( request.get.id, type.posts[request.get.action].permission ) then
-	return template:error( 'You do not have permission to do that' )
-
-else
-	--enforce api mode
-	luawa.template.api = type.posts[request.get.action].api or false
-
-	--run the object func
-    local func = object[request.get.action]
-    return func( object, request )
+    return template:error( 'You do not have permission to do that' )
 end
+
+--enforce api mode
+template:setApi( type.posts[request.get.action].api or ngx.ctx.api )
+
+--run the object func
+local func = object[request.get.action]
+return func( object, request )
