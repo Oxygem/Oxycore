@@ -7,9 +7,12 @@ OXYPANEL_PATH="/opt/oxypanel"
 LUAJIT_VERSION="2.0.2"
 LUACJSON_VERSION="2.1.0"
 NGINX_VERSION="1.4.4"
-NGINXLUA_VERSION="0.9.4"
+NGINXLUA_VERSION="0.9.5rc2"
 NGINXDEV_VERSION="0.2.19"
 NODE_VERSION="0.10.24"
+MARIADB_VERSION="5.5.36"
+ELASTICSEARCH_VERSION="1.0.1"
+
 
 echo ""
 echo "###"
@@ -17,112 +20,135 @@ echo "Welcome to the Oxypanel Installer"
 echo "###"
 echo ""
 
-# Enable job control
-set -m
-
+# Exit on errors
+set -e
+# Path
+export PATH=$PATH:$OXYPANEL_PATH/bin:$OXYPANEL_PATH/sbin
+# Log path
+LOG_PATH=$( pwd )
 
 # Dependency install/check
 if which yum > /dev/null; then
     prinf "[1] Updating & installing yum packages..."
-    yum update >> install.log
-    yum install NEED_TO_GET_YUM_LIST_SORTED -y >> install.log
+    yum install NEED_TO_GET_YUM_LIST_SORTED -y >> $LOG_PATH/install.log
 elif which apt-get > /dev/null; then
     echo "[1] Updating & installing apt packages..."
-    apt-get update >> install.log
-    apt-get install libpcre3 libpcre3-dev libpcre++-dev libreadline6 libreadline6-dev openssl libssl-dev build-essential python cmake git -y >> install.log
+    apt-get update >> $LOG_PATH/install.log
+    apt-get install libpcre3 libpcre3-dev libpcre++-dev libreadline6 libreadline6-dev openssl libssl-dev libncurses5-dev build-essential python cmake git -y >> $LOG_PATH/install.log 2>&1
 else
     echo "No yum or apt detected, exiting..."
     echo "This script only supports OS's with yum/apt installed"
     echo "Please visit http://doc.oxypanel.com/Install for a manual/generic install guide"
+    echo "Alternatively just cat this bash script, and run through it manually"
     exit 1
 fi
 
 
 # Download install files
+#function download() {
+#    printf "    LuaJIT $LUAJIT_VERSION... "
+#    find /tmp/luajit.tar.gz > /dev/null 2>&1 || wget "http://luajit.org/download/LuaJIT-$LUAJIT_VERSION.tar.gz" -O /tmp/luajit.tar.gz -a $LOG_PATH/install.log
+#    echo "complete"
+#}
+
 echo "[2] Downloading files..."
 printf "    LuaJIT $LUAJIT_VERSION... "
-wget "http://luajit.org/download/LuaJIT-$LUAJIT_VERSION.tar.gz" -O /tmp/luajit.tar.gz --quiet
+find /tmp/luajit.tar.gz > /dev/null 2>&1 || wget "http://luajit.org/download/LuaJIT-$LUAJIT_VERSION.tar.gz" -O /tmp/luajit.tar.gz -a $LOG_PATH/install.log
 echo "complete"
 printf "    LuaCJSON $LUACJSON_VERSION... "
-wget "http://www.kyne.com.au/~mark/software/download/lua-cjson-$LUACJSON_VERSION.tar.gz" -O /tmp/luacjson.tar.gz --quiet
+find /tmp/luacjson.tar.gz > /dev/null 2>&1 || wget "http://www.kyne.com.au/~mark/software/download/lua-cjson-$LUACJSON_VERSION.tar.gz" -O /tmp/luacjson.tar.gz -a $LOG_PATH/install.log
 echo "complete"
 printf "    Nginx $NGINX_VERSION... "
-wget "http://nginx.org/download/nginx-$NGINX_VERSION.tar.gz" -O /tmp/nginx.tar.gz --quiet
+find /tmp/nginx.tar.gz > /dev/null 2>&1 || wget "http://nginx.org/download/nginx-$NGINX_VERSION.tar.gz" -O /tmp/nginx.tar.gz -a $LOG_PATH/install.log
 echo "complete"
 printf "    Nginx-Lua $NGINXLUA_VERSION... "
-wget "https://github.com/chaoslawful/lua-nginx-module/archive/v$NGINXLUA_VERSION.tar.gz" -O /tmp/nginxlua.tar.gz --quiet
+find /tmp/nginxlua.tar.gz > /dev/null 2>&1 || wget "https://github.com/chaoslawful/lua-nginx-module/archive/v$NGINXLUA_VERSION.tar.gz" -O /tmp/nginxlua.tar.gz -a $LOG_PATH/install.log
 echo "complete"
 printf "    Nginx-Devel $NGINXDEV_VERSION... "
-wget "https://github.com/simpl/ngx_devel_kit/archive/v$NGINXDEV_VERSION.tar.gz" -O /tmp/nginxdev.tar.gz --quiet
+find /tmp/nginxdev.tar.gz > /dev/null 2>&1 || wget "https://github.com/simpl/ngx_devel_kit/archive/v$NGINXDEV_VERSION.tar.gz" -O /tmp/nginxdev.tar.gz -a $LOG_PATH/install.log
 echo "complete"
 printf "    Node $NODE_VERSION... "
-wget "http://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION.tar.gz" -O /tmp/node.tar.gz --quiet
+find /tmp/node.tar.gz > /dev/null 2>&1 || wget "http://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION.tar.gz" -O /tmp/node.tar.gz -a $LOG_PATH/install.log
+echo "complete"
+printf "    MariaDB $MARIADB_VERSION... "
+find /tmp/mariadb.tar.gz > /dev/null 2>&1 || wget "http://mirrors.coreix.net/mariadb/mariadb-$MARIADB_VERSION/kvm-tarbake-jaunty-x86/mariadb-$MARIADB_VERSION.tar.gz" -O /tmp/mariadb.tar.gz -a $LOG_PATH/install.log
 echo "complete"
 
 # Untar files
 echo "[3] Untarring files... "
-tar -xf /tmp/*.tar.gz -C /tmp
+tar -xf /tmp/luajit.tar.gz -C /tmp
+tar -xf /tmp/luacjson.tar.gz -C /tmp
+tar -xf /tmp/nginx.tar.gz -C /tmp
+tar -xf /tmp/nginxlua.tar.gz -C /tmp
+tar -xf /tmp/nginxdev.tar.gz -C /tmp
+tar -xf /tmp/node.tar.gz -C /tmp
+tar -xf /tmp/mariadb.tar.gz -C /tmp
 
-
-# Setup user
-echo "[3] Add oxypanel user..."
-echo "### If prompted please use a strong password, you do not need to remember it"
-adduser oxypanel --home $OXYPANEL_PATH >> install.log
-mkdir -p "$OXYPANEL_PATH/src" >> install.log
-
+# Setup directory
+mkdir -p "$OXYPANEL_PATH/src" >> $LOG_PATH/install.log
 
 # Start installing
-echo "[4] Compiling & installing LuaJIT & LuaCJSON..."
+echo "[4] Compiling & installing..."
+printf "    LuaJIT/LuaCJSON... "
 cd /tmp/LuaJIT*
-make clean >> install.log
-make >> install.log
-make install PREFIX=$OXYPANEL_PATH >> install.log
+make >> $LOG_PATH/install.log 2>&1
+make install PREFIX=$OXYPANEL_PATH >> $LOG_PATH/install.log
 cd /tmp/lua-cjson*
-make clean >> install.log
-make PREFIX=$OXYPANEL_PATH LUA_INCLUDE_DIR=$OXYPANEL_PATH/include/luajit-2.0 >> install.log
-make install PREFIX=$OXYPANEL_PATH >> install.log
+make PREFIX=$OXYPANEL_PATH LUA_INCLUDE_DIR=$OXYPANEL_PATH/include/luajit-2.0 >> $LOG_PATH/install.log 2>&1
+make install PREFIX=$OXYPANEL_PATH >> $LOG_PATH/install.log
+echo "complete"
 
-echo "[5] Compiling & installing Nginx..."
+printf "    Nginx... "
 cd /tmp/nginx-*
 export LUAJIT_INC="$OXYPANEL_PATH/include/luajit-2.0"
 export LUAJIT_LIB="$OXYPANEL_PATH/lib"
-make clean >> install.log
-./configure --prefix=$OXYPANEL_PATH --with-http_ssl_module --add-module=../ngx_devel_kit* --add-module=../lua-nginx-module* >> install.log
-make >> install.log
-make install >> install.log
+./configure --prefix=$OXYPANEL_PATH --with-http_ssl_module --add-module=../ngx_devel_kit* --add-module=../lua-nginx-module* >> $LOG_PATH/install.log
+make >> $LOG_PATH/install.log 2>&1
+make install >> $LOG_PATH/install.log
+echo "complete"
 
-echo "[6] Compiling & installing Node..."
+printf "    Node... "
 cd /tmp/node-*
-make clean >> install.log
-./configure --prefix=$OXYPANEL_PATH >> install.log
-make >> install.log
-make install >> install.log
+./configure --prefix=$OXYPANEL_PATH >> $LOG_PATH/install.log
+make >> $LOG_PATH/install.log 2>&1
+make install >> $LOG_PATH/install.log
+echo "complete"
 
-echo "[7] Installing MariaDB..."
+printf "    MariaDB... "
+cd /tmp/mariadb*
+cmake -DCMAKE_INSTALL_PREFIX:PATH=$OXYPANEL_PATH . >> $LOG_PATH/install.log 2>&1
+make >> $LOG_PATH/install.log 2>&1
+make install >> $LOG_PATH/install.log
+echo "complete"
+
+echo "[8] Cloning Oxypanel GitHub repo"
+( cd $OXYPANEL_PATH/src/ && git status > /dev/null 2>&1 ) || git clone https://github.com/Oxygem/Oxypanel.git $OXYPANEL_PATH/src >> $LOG_PATH/install.log
 
 
-echo "[8] Preparing Oxypanel..."
+echo "[9] Creating SSH key"
 
 
-echo "### setup SSH key"
+echo "[10] Generating secret keys"
 
 
-echo "### general secret keys"
+echo "[11] Copying config example"
+find $OXYPANEL_PATH/src/config.lua > /dev/null 2>&1 || cp $OXYPANEL_PATH/src/scripts/config.example.lua $OXYPANEL_PATH/src/config.lua
 
+echo "[12] Importing database structure"
+#cat $OXYPANEL_PATH/src/scripts/layout.sql
 
-echo "### clone git repo"
-git clone https://github.com/Oxygem/Oxypanel.git $OXYPANEL_PATH/src >> install.log
+echo "[13] Running build script"
+#cd $OXYPANEL_PATH/src
+cd $OXYPANEL_PATH/src/ && $OXYPANEL_PATH/bin/luajit scripts/build.lua >> $LOG_PATH/install.log
 
-echo "### copy config example"
-cp $OXYPANEL_PATH/src/config.example.lua $OXYPANEL_PATH/src/config.lua
+# Setup path env
+touch /root/.profile
+echo 'export PATH=$PATH:'"$OXYPANEL_PATH/bin:$OXYPANEL_PATH/sbin" >> /root/.profile
+echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:'"$OXYPANEL_PATH/lib" >> /root/.profile
 
-echo "### import database structure"
-cat $OXYPANEL_PATH/src/scripts/layout.sql
-
-echo "### build scripts"
-cd $OXYPANEL_PATH/src
-$OXYPANEL_PATH/bin/luajit scripts/build.lua >> install.log
-
+# Hacky fix!
+mkdir -p /usr/local/lib/lua/5.1/
+ln -s $OXYPANEL_PATH/lib/lua/5.1/cjson.so /usr/local/lib/lua/5.1/cjson.so
 
 # Done!
 echo ""
