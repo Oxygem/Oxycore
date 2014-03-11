@@ -43,28 +43,29 @@ local config = {
         --in production: always set server_port's to file string aka socket
         ngx = {
             client_port = 9001,
-            server_port = 9003
+            server_port = '/opt/oxypanel/tmp/ngx_server.sock'
         },
         auto = {
             client_port = 9005,
-            server_port = 9007
+            server_port = '/opt/oxypanel/tmp/auto_server.sock'
         },
         share_key = 'NODE_SECRET_KEY'
     },
 
     --nginx
     nginx = {
-        port = 9000
+        port = 80
     },
 
     --debug
     debug = {
-        enabled = true
+        enabled = false
     },
 
     --template
     template = {
         dir = '',
+        --currently broken!
         minimize = false
     },
 
