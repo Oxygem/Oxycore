@@ -28,9 +28,10 @@ var messages = {
     }
 };
 
-
-util.each( util.elements( 'div.message' ), function( key, $message ) {
-    $message.addEventListener( 'click', function() {
-        this.parentNode.removeChild( this );
+window.addEventListener( 'load', function() {
+    util.each( util.elements( 'div#messages div.message' ), function( key, $message ) {
+        $message.addEventListener( 'click', function() {
+            this.parentNode.removeChild( this );
+        });
     });
 });
