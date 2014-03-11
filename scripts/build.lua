@@ -22,7 +22,7 @@ lua_shared_dict ]] .. luawaconf.shm_prefix .. [[session 10m;
 lua_shared_dict ]] .. luawaconf.shm_prefix .. [[user 10m;
 lua_shared_dict ]] .. luawaconf.shm_prefix .. [[requests 1m;
 
-lua_package_path /?.lua;
+lua_package_path ?.lua;
 
 server {
     #port & domains
