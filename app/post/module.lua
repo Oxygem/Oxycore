@@ -31,7 +31,7 @@ if not user:checkLogin() and not public then
 end
 --no file?
 if not file then
-	header:redirect( '/' .. request.get.module, 'error', 'Invalid request' )
+    header:redirect( '/' .. request.get.module, 'error', 'Invalid request' )
 end
 
 return luawa:processFile( 'modules/' .. request.get.module .. '/' .. file )
