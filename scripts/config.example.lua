@@ -1,106 +1,105 @@
+-- Oxypanel
 -- File: config.lua
 -- Desc: Oxypanel configuration
 
 local config = {
+    ------- Basics
 
-    ------- Core
-    ---
-
-    --basics
-    hostname = 'oxypanel.dev', --only when host header not set
+    hostname = 'oxypanel.dev', --only used when host header not set
     cache = true, --cache template + app files (speeeeeed)
     shm_prefix = 'oxypanel_', --shared memory prefix for nginx
     limit_post = 1000, --limit number of POST arguments to process (prevent DOS, 0 = unlimited)
 
-    ------- Modules
-    ---
 
-    --database config
+    ------- Modules
+
+    --oxypanel
+    oxypanel = {
+        ssh_key = 'SSH_KEY_LOCATION',
+        ssh_key_pass = 'SSH_KEY_PASSPHRASE'
+    },
+
+    --database
     database = {
         driver = 'mysql',
         host = '127.0.0.1',
         port = 3306,
-        name = 'oxypanel',
-        user = 'root',
-        pass = 'root'
+        name = 'DATABASE_NAME',
+        user = 'DATABASE_USER',
+        pass = 'DATABASE_PASS'
     },
 
     --user
     user = {
         keys = 3,
         stretching = 3,
-        secret = 'SECRET_KEY',
+        secret = 'USER_SECRET_KEY',
         dbprefix = ''
     },
 
-    --email SMTP config
-    email = {
-        server = '',
-        port = 25,
-        user = '',
-        pass = '',
-        from = ''
+    --node
+    node = {
+        --ports for ngx/auto nodes client/server listens
+        --in production: always set server_port's to file string aka socket
+        ngx = {
+            client_port = 9001,
+            server_port = 9003
+        },
+        auto = {
+            client_port = 9005,
+            server_port = 9007
+        },
+        share_key = 'NODE_SECRET_KEY'
     },
 
-    --oxynode (for oxynode.js and inc/js/oxypanel.js)
-    oxynode = {
-        client_port = 9001, --port the node listens on for SSH requests
-        server_port = 9003, --server port, should be a socket
-        share_key = 'ANOTHER_SECRET_KEY'
-    },
-
-    --oxyngx (for config.nginx and oxynode.lua)
-    oxyngx = {
-        port = 8084,
-        template = 'oxypanel',
-        ssh_key = '/root/.ssh/id_rsa'
+    --nginx
+    nginx = {
+        port = 9000
     },
 
     --debug
     debug = {
-        enabled = false
+        enabled = true
     },
 
     --template
     template = {
         dir = '',
-        api = true,
         minimize = false
     },
 
 
     ------- Oxypanel Request Maps
-    ---
 
     --get requests
     gets = {
         --core requests
-        dashboard = { file = 'app/get/dashboard' },
-        login = { file = 'app/get/login' },
-        register = { file = 'app/get/register' },
-        resetpw = { file = 'app/get/resetpw' },
-        profile = { file = 'app/get/profile' },
-        logout = { file = 'app/get/logout' },
+        dashboard = 'app/get/dashboard',
+        login = 'app/get/login',
+        register = 'app/get/register',
+        resetpw = 'app/get/resetpw',
+        profile = 'app/get/profile',
+        logout = 'app/get/logout',
 
         --module requests
-        module = { file = 'app/get/module' },
+        module = 'app/get/module',
 
         --object requests
-        object = { file = 'app/get/object' }
+        object = 'app/get/object'
     },
 
     --post requests
     posts = {
         --core requests
-        login = { file = 'app/post/login' },
-        resetpw = { file = 'app/post/resetpw' },
-        profile = { file = 'app/post/profile' },
+        login = 'app/post/login',
+        resetpw = 'app/post/resetpw',
+        profile = 'app/post/profile',
 
         --module requests
-        module = { file = 'app/post/module' },
+        module = 'app/post/module',
 
         --object requests
-        object = { file = 'app/post/object' }
+        object = 'app/post/object'
     }
 }
 
