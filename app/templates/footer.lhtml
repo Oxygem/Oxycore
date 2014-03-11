@@ -1,11 +1,11 @@
-		</div><!--end main-->
+        </div><!--end main-->
 
-		<div id="footer">
-			<span class="left">
-				&copy; <a href="<?=oxy.brand.web ?>"><?=oxy.brand.name ?></a>
-			</span>
-			<span class="right">
-				Powered by <a title="Oxypanel network management tool" href="http://oxypanel.com/">Oxypanel</a>
-			</span>
-		</div><!--end footer-->
-	</div><!--end wrap-->
+        <div id="footer">
+            <span class="left">
+                &copy; <a href="<?=oxy.brand.web ?>"><?=oxy.brand.name ?></a>
+            </span>
+            <span class="right">
+                Powered by <a title="Oxypanel network management tool" href="http://oxypanel.com/">Oxypanel</a>
+            </span>
+        </div><!--end footer-->
+    </div><!--end wrap-->
