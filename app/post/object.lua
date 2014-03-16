@@ -58,5 +58,4 @@ end
 template:setApi( type.posts[request.get.action].api or ngx.ctx.api )
 
 --run the object func
-local func = object[request.get.action]
-return func( object, request )
+return object[request.get.action]( object )

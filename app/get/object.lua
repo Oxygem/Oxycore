@@ -75,7 +75,7 @@ else
     --prepare function?
     local action_permission = utils.capitalizeFirst( action )
     if object['prepare' .. action_permission] then
-        object['prepare' .. action_permission]( object, request )
+        object['prepare' .. action_permission]( object )
     end
 
     --add to template
