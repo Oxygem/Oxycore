@@ -1,14 +1,14 @@
 -- Oxypanel
 -- File: config.lua
--- Desc: Oxypanel configuration
+-- Desc: Oxypanel/Luawa configuration
 
 local config = {
     ------- Basics
 
-    hostname = 'oxypanel.dev', --only used when host header not set
-    cache = true, --cache template + app files (speeeeeed)
-    shm_prefix = 'oxypanel_', --shared memory prefix for nginx
-    limit_post = 1000, --limit number of POST arguments to process (prevent DOS, 0 = unlimited)
+    hostname = 'oxypanel.dev',
+    cache = true,
+    shm_prefix = 'oxypanel_',
+    limit_post = 1000,
 
 
     ------- Modules
@@ -16,7 +16,7 @@ local config = {
     --oxypanel
     oxypanel = {
         ssh_key = 'SSH_KEY_LOCATION',
-        ssh_key_pass = 'SSH_KEY_PASSPHRASE'
+        ssh_key_pass = ''
     },
 
     --database
@@ -24,32 +24,31 @@ local config = {
         driver = 'mysql',
         host = '127.0.0.1',
         port = 3306,
-        name = 'DATABASE_NAME',
-        user = 'DATABASE_USER',
+        name = 'oxypanel',
+        user = 'oxypanel',
         pass = 'DATABASE_PASS'
     },
 
     --user
     user = {
         keys = 3,
-        stretching = 3,
+        stretching = 1024,
         secret = 'USER_SECRET_KEY',
-        dbprefix = ''
+        dbprefix = '',
+        super = 1
     },
 
     --node
     node = {
-        --ports for ngx/auto nodes client/server listens
-        --in production: always set server_port's to file string aka socket
         ngx = {
-            client_port = 9001,
+            client_port = 9000,
             server_port = '/opt/oxypanel/tmp/ngx_server.sock'
         },
         auto = {
-            client_port = 9005,
+            client_port = 9001,
             server_port = '/opt/oxypanel/tmp/auto_server.sock'
         },
-        share_key = 'NODE_SECRET_KEY'
+        share_key = 'NODE_SHARE_KEY'
     },
 
     --nginx
@@ -64,9 +63,7 @@ local config = {
 
     --template
     template = {
-        dir = '',
-        --currently broken!
-        minimize = false
+        dir = ''
     },
 
 
