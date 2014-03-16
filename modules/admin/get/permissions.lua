@@ -13,7 +13,7 @@ local action = 'user/list'
 
 
 --select groups
-local groups = database:select( 'user_groups' )
+local groups = database:select( 'user_groups', '*', { id = { sign = '>', 1 }})
 
 --select/build set permissions table
 local set_permissions = {}

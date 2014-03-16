@@ -1,13 +1,13 @@
 <h2>Add Group</h2>
 
 <div class="third left">
-	<form class="wide" action="/admin/groups/add" method="post">
-		<label for="name">Name:</label>
-		<input type="text" name="name" />
+    <form class="wide" action="/admin/groups/add" method="post">
+        <label for="name">Name:</label>
+        <input type="text" name="name" />
 
-		<button type="submit" class="submit lightgreen">Add Group &#187;</button>
-		&nbsp;&nbsp;<a href="/admin/groups">back to groups</a>
+        <button type="submit" class="submit lightgreen">Add Group &#187;</button>
+        &nbsp;&nbsp;<a href="/admin/groups">back to groups</a>
 
-		<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
-	</form>
+        <input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+    </form>
 </div>
