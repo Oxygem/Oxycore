@@ -189,7 +189,7 @@ if [ ! $( which node 2> /dev/null ) ]; then
     printf "    Node... "
     cd /tmp/node-*
     ./configure --prefix=$OXYPANEL_PATH >> $LOG_PATH/install.log
-    make -j 2 -w >> $LOG_PATH/install.log 2>&1
+    make -w >> $LOG_PATH/install.log 2>&1
     make install >> $LOG_PATH/install.log
     echo "complete"
 fi
