@@ -12,3 +12,4 @@ end
 --load templates
 template:load( 'head' )
 template:load( 'login' )
+template:load( 'foot' )
