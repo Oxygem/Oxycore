@@ -35,7 +35,8 @@ local config = {
         stretching = 1024,
         secret = 'USER_SECRET_KEY',
         dbprefix = '',
-        super = 1
+        super = 1,
+        reload_key = true
     },
 
     --node
