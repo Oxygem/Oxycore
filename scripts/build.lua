@@ -1,4 +1,4 @@
-#!/usr/bin/env lua
+#!/usr/bin/env luajit
 
 -- Oxypanel Core
 -- File: scripts/build.lua
@@ -579,13 +579,13 @@ local function build()
     print( '    oxy.js' )
 
     --config.nginx
-    local f, err = io.open( 'oxy.nginx', 'w' )
+    local f, err = io.open( 'config.nginx', 'w' )
     if not f then error( err ) end
     local urls = ''
     for k, v in pairs( _autoconf.brands ) do if k ~= 'default' then urls = urls .. ' ' .. k end end
     local status, err = f:write( nginx_config({ root = _autoconf.root, urls = urls }))
     if not status then error( err ) end
-    print( '    oxy.nginx' )
+    print( '    config.nginx' )
 
     --oxypanel.js clientside
     local f, err = io.open( 'inc/oxypanel.js', 'w' )
