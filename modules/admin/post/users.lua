@@ -49,7 +49,6 @@ elseif request.get.action == 'edit' then
 elseif request.get.action == 'delete' then
     --id
     if not request.post.id then return template:error( 'No ID set' ) end
-    if request.post.id == 1 then return template:error( 'You cannot delete the first group' ) end
     --permission
     if not user:checkPermission( 'DeleteUser' ) then return template:error( 'You do not have permission to do that' ) end
 

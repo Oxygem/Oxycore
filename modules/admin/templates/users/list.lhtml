@@ -38,7 +38,7 @@
                     <form data-confirm-message="Are you sure you wish to delete this user?" class="inline" method="post" action="/admin/users/delete">
                         <input type="hidden" name="id" value="<?=user.id ?>" />
                         <input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
-                        <? if user.id > 1 then ?><button type="submit" class="button red">Delete</button><? end ?>
+                        <button type="submit" class="button red">Delete</button>
                     </form>
                 </td>
             </tr>
