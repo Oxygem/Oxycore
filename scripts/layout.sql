@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `user_groups` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `user_groups` ( `id`, `name` ) VALUES ( 1, 'KeyMaster' )
+INSERT INTO `user_groups` ( `id`, `name` ) VALUES ( 1, 'KeyMaster' );
 
 
 # Dump of table user_messages
