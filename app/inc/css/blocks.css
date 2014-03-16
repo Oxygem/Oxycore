@@ -44,6 +44,9 @@
     display: inline-block;
     vertical-align: top;
 }
+.block .bottom {
+    vertical-align: bottom;
+}
 .wide {
     width: 100%;
 }

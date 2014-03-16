@@ -9,6 +9,12 @@ form {
         color: #666;
         cursor: pointer;
     }
+        form label a {
+            border: none;
+        }
+        form label a.left, form label a.right {
+            margin-top: 1px;
+        }
     form input, form textarea, form select {
         display: block;
         width: 100%;
