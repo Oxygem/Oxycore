@@ -11,7 +11,7 @@ node_modules/
 # Auto-built files
 oxy.lua
 oxy.js
-oxy.nginx
+config.nginx
 
 # Security risk
 config.lua
