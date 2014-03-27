@@ -15,7 +15,8 @@ local config = {
             users = { file = 'get/users' },
             permissions = { file = 'get/permissions' },
             groups = { file = 'get/groups' },
-            logs = { file = 'get/logs' }
+            logs = { file = 'get/logs' },
+            debug = { file = 'get/debug' }
         },
         post = {
             users = { file = 'post/users' },
@@ -40,7 +41,8 @@ local config = {
         'EditUserGroup',
         'DeleteUserGroup',
 
-        'ViewLog'
+        'ViewLog',
+        'ViewDebug'
     }
 }
 
