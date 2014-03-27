@@ -17,7 +17,7 @@ OXYPANEL_PATH="/opt/oxypanel"
 # Configure to-compile versions
 LUAJIT_VERSION="2.0.2"
 LUACJSON_VERSION="2.1.0"
-NGINX_VERSION="1.4.4"
+NGINX_VERSION="1.4.7"
 NGINXLUA_VERSION="0.9.5rc2"
 NGINXDEV_VERSION="0.2.19"
 NODE_VERSION="0.10.24"
@@ -203,8 +203,8 @@ mkdir -p "$OXYPANEL_PATH/ssh"
 mkdir -p "$OXYPANEL_PATH/tmp"
 cd $OXYPANEL_PATH/src/
 if ! find "$OXYPANEL_PATH/src/.git/index" > /dev/null 2>&1; then
-    git clone https://github.com/Oxygem/Oxypanel.git $OXYPANEL_PATH/src >> $LOG_PATH/install.log
-    git submodule update --init --recursive >> $LOG_PATH/install.log
+    git clone https://github.com/Oxygem/Oxypanel.git $OXYPANEL_PATH/src >> $LOG_PATH/install.log 2>&1
+    git submodule update --init --recursive >> $LOG_PATH/install.log 2>&1
 fi
 
 echo "[7] Creating SSH key"
