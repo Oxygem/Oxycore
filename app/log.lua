@@ -3,17 +3,23 @@
 -- Desc: logging of all actions for Oxypanel
 
 local os = os
-local database, user = luawa.database, luawa.user
+local database, user, request = luawa.database, luawa.user, luawa.request
 
 local function log()
-    local request = luawa.request
+    -- require both id & type for object
+    local id, type = 0, ''
+    if request.get.type and request.get.id then
+        id = request.get.id
+        type = request.get.type
+    end
 
+    -- insert the log
     local status, err = database:insert( 'log',
         { 'time', 'object_type', 'object_id', 'user_id', 'action', 'module', 'module_request', 'request' },
         {{
             os.time(),
-            request.get.type or '',
-            request.get.id or 0,
+            type,
+            id,
             user:checkLogin() and user:getData().id or 0,
             request.get.action or 'view',
             request.get.module or '',
