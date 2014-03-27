@@ -117,7 +117,12 @@ end
 oxy:setup()
 
 --pass to luawa to process request
-luawa:processRequest( file )]]
+luawa:processFile( file )
+
+--end oxypanel
+
+--end luawa request
+luawa:endRequest()]]
 
     return out
 end
