@@ -38,10 +38,11 @@
 
                     try {
                         var data = JSON.parse( req.responseText );
-                        return options.success( req.status, data );
                     } catch( e ) {
                         return options.error( req.status, e, req.responseText );
                     }
+
+                    return options.success( req.status, data );
                 }
             }
 
