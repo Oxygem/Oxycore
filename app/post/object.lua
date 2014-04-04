@@ -40,18 +40,29 @@ end
 request.get.module = type.module
 request.get.mreq = request.get.type .. 's'
 
--- Post action exists?
+-- Inject owner action
+type.posts.owner = { permission = 'owner' }
+
+-- Post action exists
 if not type.posts or not type.posts[request.get.action] then
     return template:error( 'Invalid action' )
 end
 
--- Get our object
-local object, err = module[request.get.type]:get( request.get.id, 'view' )
-if err then return template:error( err ) end
+-- Get our object w/permission
+local object, err = module[request.get.type]:get( request.get.id, type.posts[request.get.action].permission )
+if err then
+    return template:error( err )
+end
 
--- Check permission
-if not module[request.get.type]:permission( request.get.id, type.posts[request.get.action].permission ) then
-    return template:error( 'You do not have permission to do that' )
+-- Owner?
+if request.get.action == 'owner' then
+    local status, err = object:_owner( request.post.user, request.post.group )
+    local url = '/' .. request.get.type .. '/' .. request.get.id .. '/owner'
+    if not status then
+        header:redirect( url, 'error', tostring(status) .. tostring(err) )
+    else
+        header:redirect( url, 'success', 'Owners updated' )
+    end
 end
 
 --enforce api mode

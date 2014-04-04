@@ -65,7 +65,6 @@ function object:fetch( id, prepare, fields )
     local this = self
     --edit object details in database
     object._edit = function( self, data )
-        if not this:permission( self.id, 'edit' ) then return false, 'You do not have permission to edit this ' .. this.type end
         --update database
         local update, err = database:update(
             this.module .. '_' .. this.type, data,
@@ -77,6 +76,14 @@ function object:fetch( id, prepare, fields )
     --delete the object
     object._delete = function( self )
         return this:delete( self.id )
+    end
+    --change object owner
+    object._owner = function( self, user, group )
+        local update, err = self._edit( self, {
+            user_id = user,
+            group_id = group
+        })
+        return update, err
     end
 
     --run any prepare function

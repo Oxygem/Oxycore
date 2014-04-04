@@ -1,5 +1,5 @@
 <div class="third left">
-    <form class="wide" action="/admin/users/add" method="post">
+    <form class="wide" action="/<?=self:get( 'object' )._type ?>/<?=self:get( 'object' ).id ?>/owner" method="post">
         <label for="user">User</label>
         <select id="user" name="user">
             <option value="0">None</option>
