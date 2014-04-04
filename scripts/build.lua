@@ -427,7 +427,8 @@ local function build()
         modules = {},
         objects = {},
         brands = {},
-        node = luawaconf.node
+        node = luawaconf.node,
+        oxypanel = luawaconf.oxypanel
     }
     for k, v in pairs( luawaconf.nginx ) do
         _autoconf[k] = v
