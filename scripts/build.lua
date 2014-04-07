@@ -95,7 +95,7 @@ local lua_config = function( config )
     out = out .. [[
 
 --oxy config
-_autoconf = {]] .. config .. [[
+local _autoconf = {]] .. config .. [[
 }
 
 
