@@ -7,24 +7,28 @@ local require = require
 
 --oxypanel core
 local oxy = {
-    config = {}
+    config = {},
+    modules = {
+        'object',
+        'template',
+        'email',
+        'brand',
+        'users',
+        'log'
+    }
 }
 
 --set config & setup
 function oxy:setConfig( config )
+    if self.init then return end
+
     self.config = config
-    --get & set object
-    self.object = require( config.root .. 'app/object' )
-    --get & set template
-    self.template = require( config.root .. 'app/template' )
-    --get & set email
-    self.email = require( config.root .. 'app/email' )
-    --get brand
-    self.brand = require( config.root .. 'app/brand' )
-    --users
-    self.users = require( config.root .. 'app/users' )
-    --log
-    self.log = require( config.root .. 'app/log' )
+
+    for k, v in pairs( self.modules ) do
+        self[v] = require( config.root .. 'app/' .. v )
+    end
+
+    self.init = true
 end
 
 --load module
