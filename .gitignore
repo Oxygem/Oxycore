@@ -7,6 +7,7 @@ inc/*
 
 # No thanks!
 node_modules/
+modules_disabled/
 
 # Auto-built files
 oxy.lua
