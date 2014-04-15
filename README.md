@@ -19,12 +19,10 @@ Documentation for Oxypanel Core and the various modules is found at [doc.oxypane
 
 # Internals
 
-*note: links coming soon.
-*
-+ Oxypanel is extended by [`modules`](#)
-+ `modules` can define [`requests`](#) and [`objects`](#)
-+ `objects` are created using [`object factories`](#)
-+ `objects` need view, edit and list [`templates`](#)
++ Oxypanel is extended by [`modules`](http://doc.oxypanel.com/Development/Modules)
++ `modules` can define [`requests`](#) and [`objects`](http://doc.oxypanel.com/Development/Objects)
++ `objects` are created using [`object factories`](http://doc.oxypanel.com/Development/ObjectFactories)
++ `objects` need `view`, `edit` and `list` templates
 
 
 # Notes
