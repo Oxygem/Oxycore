@@ -19,26 +19,26 @@ local oxy = {
 }
 
 --set config & setup
-function oxy:setConfig( config )
+function oxy:setConfig(config)
     if self.init then return end
 
     self.config = config
 
-    for k, v in pairs( self.modules ) do
-        self[v] = require( config.root .. 'app/' .. v )
+    for k, v in pairs(self.modules) do
+        self[v] = require(config.root .. 'app/' .. v)
     end
 
     self.init = true
 end
 
 --load module
-function oxy:loadModule( module )
+function oxy:loadModule(module)
     --module folder exists?
     if not self.config[module] then return false end
 
     --need to load it?
     if not self[module] then
-        self[module] = require( self.config.root .. 'modules/' .. module .. '/' .. module )
+        self[module] = require(self.config.root .. 'modules/' .. module .. '/' .. module)
         self[module].config = self.config[module]
     end
 

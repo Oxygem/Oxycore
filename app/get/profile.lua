@@ -4,19 +4,19 @@
 ]]
 
 --get template
-local template, header, user, countries = oxy.template, luawa.header, luawa.user, require( oxy.config.root .. 'app/countries' ).list
+local template, header, user, countries = oxy.template, luawa.header, luawa.user, require(oxy.config.root .. 'app/countries').list
 
 --profile is not public
 if not user:checkLogin() then
-    return header:redirect( '/login' )
+    return header:redirect('/login')
 end
 
 --page title
-template:set( 'page_title', 'Your Profile' )
+template:set('page_title', 'Your Profile')
 --country list
-template:set( 'countries', countries )
+template:set('countries', countries)
 --user data
-template:set( 'user', user:getData() )
+template:set('user', user:getData())
 
 --load templates
-template:wrap( false, 'profile' )
+template:wrap(false, 'profile')

@@ -8,7 +8,7 @@
 var graph = {
     palette: new Rickshaw.Color.Palette({ scheme: 'colorwheel' }),
 
-    create: function( $element, data, options ) {
+    create: function($element, data, options) {
         var self = this,
             options = options || {},
             graph = {
@@ -16,15 +16,15 @@ var graph = {
             };
 
         //update function
-        graph.update = function( data ) {
+        graph.update = function(data) {
             var self = this;
 
             //messy
-            util.each( data, function( _, points ) {
-                util.each( self.data, function( key, series ) {
-                    if( points.name == series.name ) {
-                        util.each( points.data, function( _, point ) {
-                            self.data[key].data.push( point );
+            util.each(data, function(_, points) {
+                util.each(self.data, function(key, series) {
+                    if(points.name == series.name) {
+                        util.each(points.data, function(_, point) {
+                            self.data[key].data.push(point);
                         });
                     }
                 });
@@ -36,28 +36,28 @@ var graph = {
         //build list of x values & find max x
         var x_values = [],
             x_max = 0;
-        util.each( data, function( key, value ) {
-            util.each( value.data, function( x, y ) {
-                if( x > x_max )
+        util.each(data, function(key, value) {
+            util.each(value.data, function(x, y) {
+                if(x > x_max)
                     x_max = x;
 
-                if( x_values.indexOf( x ) == -1 )
-                    x_values.push( x );
+                if(x_values.indexOf(x) == -1)
+                    x_values.push(x);
             });
         });
 
         //build object data -> rickshaw data
-        util.each( data, function( key, value ) {
+        util.each(data, function(key, value) {
             //ensure x values
-            util.each( x_values, function( _, x ) {
-                if( !value.data[x] )
+            util.each(x_values, function(_, x) {
+                if(!value.data[x])
                     value.data[x] = 0;
             });
 
             //turn x=>y into []{x, y}
             var array_data = [];
-            util.each( value.data, function( x, y ) {
-                array_data.push({ x: parseInt( x ), y: y });
+            util.each(value.data, function(x, y) {
+                array_data.push({ x: parseInt(x), y: y });
             });
 
             graph.data.push({
@@ -70,7 +70,7 @@ var graph = {
         //force scale if dealing with percentages
         var padding = {},
             min, max;
-        if( options.percentify ) {
+        if(options.percentify) {
             min = 0,
             max = 100;
         //pad if not
@@ -96,20 +96,20 @@ var graph = {
             graph: graph.rickshaw
         });
 
-        graph.x_axis = new Rickshaw.Graph.Axis.Time( {
+        graph.x_axis = new Rickshaw.Graph.Axis.Time({
             graph: graph.rickshaw,
             orientation: 'bottom'
         });
         graph.x_axis.render();
 
-        graph.y_axis = new Rickshaw.Graph.Axis.Y( {
+        graph.y_axis = new Rickshaw.Graph.Axis.Y({
             graph: graph.rickshaw,
             pixelsPerTick: 20
         });
         graph.y_axis.render();
 
-        if( options.$legend ) {
-            graph.legend = new Rickshaw.Graph.Legend( {
+        if(options.$legend) {
+            graph.legend = new Rickshaw.Graph.Legend({
                 graph: graph.rickshaw,
                 element: options.$legend
             });

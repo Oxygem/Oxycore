@@ -4,7 +4,6 @@
 # File: scripts/install.sh
 # Desc: install Oxypanel
 #       Although there is some protection, assume running this on a running Oxypanel node = death
-#       Assumes 2 cores/cpus available (make & nginx conf)
 #       Use: curl -fSsL https://raw.github.com/Oxygem/Oxypanel/master/scripts/install.sh | bash
 #       Safe Use: download above file, confirm acceptable contents & run
 
@@ -15,10 +14,10 @@
 OXYPANEL_PATH="/opt/oxypanel"
 
 # Configure to-compile versions
-LUAJIT_VERSION="2.0.2"
+LUAJIT_VERSION="2.0.3"
 LUACJSON_VERSION="2.1.0"
-NGINX_VERSION="1.4.7"
-NGINXLUA_VERSION="0.9.5rc2"
+NGINX_VERSION="1.5.13"
+NGINXLUA_VERSION="0.9.7"
 NGINXDEV_VERSION="0.2.19"
 NODE_VERSION="0.10.24"
 
@@ -56,6 +55,8 @@ echo ""
 
 
 ###################################################### Install: prepare
+# Number of cpu threads
+CPU_THREADS=$( grep -c ^processor /proc/cpuinfo )
 # Work out OS
 OS_NAME=$( head -n 1 /etc/issue 2> /dev/null | grep -oEi '[a-zA-Z/]+' | head -n 1 )
 OS_VERSION=$( head -n 1 /etc/issue 2> /dev/null | grep -oEi '[0-9]' | head -n 1 ) # major version only
@@ -87,7 +88,7 @@ if [ "$OS_NAME" = "Debian" ] || [ "$OS_NAME" = "Ubuntu" ]; then
             add-apt-repository "http://mirrors.coreix.net/mariadb/repo/$MARIADB_VERSION/$1" >> $LOG_PATH/install.log
         }
         if [ "$OS_NAME" = "Debian" ]; then
-            apt-get install python-software-properties -y >> $LOG_PATH/install.log 2>&1
+            DEBIAN_FRONTEND=noninteractive apt-get install python-software-properties -y >> $LOG_PATH/install.log 2>&1
             add_repo "debian"
         else
             apt-get install software-properties-common -y >> $LOG_PATH/install.log 2>&1
@@ -169,7 +170,7 @@ if [ ! $( which luajit 2> /dev/null ) ]; then
     make >> $LOG_PATH/install.log
     make install PREFIX=$OXYPANEL_PATH >> $LOG_PATH/install.log
     cd /tmp/lua-cjson*
-    make -j 2 -w PREFIX=$OXYPANEL_PATH LUA_INCLUDE_DIR=$OXYPANEL_PATH/include/luajit-2.0 >> $LOG_PATH/install.log
+    make -j $CPU_THREADS -w PREFIX=$OXYPANEL_PATH LUA_INCLUDE_DIR=$OXYPANEL_PATH/include/luajit-2.0 >> $LOG_PATH/install.log
     make install PREFIX=$OXYPANEL_PATH >> $LOG_PATH/install.log
     echo "complete"
 fi
@@ -180,7 +181,7 @@ if [ ! $( which nginx 2> /dev/null ) ]; then
     export LUAJIT_INC="$OXYPANEL_PATH/include/luajit-2.0"
     export LUAJIT_LIB="$OXYPANEL_PATH/lib"
     ./configure --prefix=$OXYPANEL_PATH --with-http_ssl_module --add-module=../ngx_devel_kit* --add-module=../lua-nginx-module* >> $LOG_PATH/install.log
-    make -j 2 -w >> $LOG_PATH/install.log
+    make -j $CPU_THREADS -w >> $LOG_PATH/install.log
     make install >> $LOG_PATH/install.log
     echo "complete"
 fi
@@ -189,7 +190,7 @@ if [ ! $( which node 2> /dev/null ) ]; then
     printf "    Node... "
     cd /tmp/node-*
     ./configure --prefix=$OXYPANEL_PATH >> $LOG_PATH/install.log
-    make -w >> $LOG_PATH/install.log 2>&1
+    make -j $CPU_THREADS -w >> $LOG_PATH/install.log 2>&1
     make install >> $LOG_PATH/install.log
     echo "complete"
 fi
@@ -235,7 +236,7 @@ salt = hashlib.sha512( base ).hexdigest()
 
 # Using default conf settings build a user password (stretching = 1024)
 # following matches up with luawa/user.lua's generatePassword function
-password_unhashed = 'admin'
+password_unhashed = 'changeme'
 password = '{0}{1}'.format( salt, user_secret )
 for _ in range( 1024 ):
     password = hashlib.sha512( '{0}{1}'.format( password, password_unhashed ) ).hexdigest()
@@ -245,8 +246,8 @@ mysql_password = ''.join( random.choice( chars ) for _ in range( 30 ))
 print 'GRANT ALL ON oxypanel.* TO "oxypanel"@"localhost" IDENTIFIED BY "{0}"'.format( mysql_password )
 
 # Build user insert query
-print 'DELETE FROM user WHERE email = "admin@admin.com"; INSERT INTO user ( email, password, salt, \`group\`, name, register_time ) VALUES ( "{0}", "{1}", "{2}", "{3}", "{4}", "{5}" )'.format(
-    'admin@admin.com',
+print 'DELETE FROM user WHERE email = "changeme"; INSERT INTO user ( email, password, salt, \`group\`, name, register_time ) VALUES ( "{0}", "{1}", "{2}", "{3}", "{4}", "{5}" )'.format(
+    'changeme',
     password,
     salt,
     1,
@@ -274,7 +275,7 @@ find $OXYPANEL_PATH/src/config.lua > /dev/null 2>&1 || echo "$CONFIG" > $OXYPANE
 # Nginx config
 NGINX_CONFIG=$( cat <<EOF
 user  daemon;
-worker_processes  2;
+worker_processes  $CPU_THREADS;
 
 events {
     worker_connections  1024;
@@ -317,8 +318,8 @@ mkdir -p /usr/local/lib/lua/5.1/
 find /usr/local/lib/lua/5.1/cjson.so > /dev/null 2>&1 || ln -s $OXYPANEL_PATH/lib/lua/5.1/cjson.so /usr/local/lib/lua/5.1/cjson.so
 
 
-#echo "[12] Starting Oxypanel"
-#nginx
+echo "[12] Starting Oxypanel"
+nginx
 
 
 # Done!

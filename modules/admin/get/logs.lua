@@ -6,8 +6,8 @@ local database, user = luawa.database, luawa.user
 local template = oxy.template
 
 --login & permission check
-if not user:checkPermission( 'ViewLog' ) then
-    return template:error( 'You do not have permission to do that' )
+if not user:checkPermission('ViewLog') then
+    return template:error('You do not have permission to do that')
 end
 
 local logs, err = database:select(
@@ -17,8 +17,8 @@ local logs, err = database:select(
     { limit = 500, order = 'time DESC' }
 )
 if not logs then
-    return template:error( err )
+    return template:error(err)
 end
 
-template:set( 'logs', logs )
-template:wrap( 'admin', 'logs' )
+template:set('logs', logs)
+template:wrap('admin', 'logs')

@@ -5,7 +5,7 @@
 
 var debug = {
     log: function() {
-        if( oxypanel.debug )
-            console.log.apply( console, arguments );
+        if(oxypanel.debug)
+            console.log.apply(console, arguments);
     }
 };

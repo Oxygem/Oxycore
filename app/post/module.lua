@@ -6,15 +6,15 @@
 local oxy, luawa, header, request, user, session, template = oxy, luawa, luawa.header, luawa.request, luawa.user, luawa.session, oxy.template
 
 --try to load the module in question
-local module = oxy:loadModule( request.get.module )
+local module = oxy:loadModule(request.get.module)
 --fail? cya!
 if not module then
-    header:redirect( '/' )
+    header:redirect('/')
 end
 
 --token?
-if not request.post.token or not session:checkToken( request.post.token ) then
-    return template:error( 'Invalid form token' )
+if not request.post.token or not session:checkToken(request.post.token) then
+    return template:error('Invalid form token')
 end
 
 local file, public = false, false
@@ -27,11 +27,11 @@ end
 
 --are we logged in or public?
 if not user:checkLogin() and not public then
-    header:redirect( '/login' )
+    header:redirect('/login')
 end
 --no file?
 if not file then
-    header:redirect( '/' .. request.get.module, 'error', 'Invalid request' )
+    header:redirect('/' .. request.get.module, 'error', 'Invalid request')
 end
 
-return luawa:processFile( 'modules/' .. request.get.module .. '/' .. file )
+return luawa:processFile('modules/' .. request.get.module .. '/' .. file)

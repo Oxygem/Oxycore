@@ -14,7 +14,7 @@ local function log()
     end
 
     -- insert the log
-    local status, err = database:insert( 'log',
+    local status, err = database:insert('log',
         { 'time', 'object_type', 'object_id', 'user_id', 'action', 'module', 'module_request', 'request' },
         {{
             os.time(),
@@ -27,7 +27,7 @@ local function log()
             request.get.request
         }},
         { delayed = true }
-    )
+   )
 end
 
 return log
