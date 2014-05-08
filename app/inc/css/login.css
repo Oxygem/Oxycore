@@ -24,5 +24,8 @@ div#login-header {
         div#login-header div#logo a {
             border: none;
         }
+        div#login-header div#logo img {
+            width: 207px;
+        }
 div#login-main {
 }

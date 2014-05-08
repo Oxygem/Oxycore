@@ -45,6 +45,7 @@ ul#nav {
     }
         ul#nav li#logo img {
             margin-top: 0px;
+            width: 209px;
         }
 
         ul#nav li a, ul#nav li span {
