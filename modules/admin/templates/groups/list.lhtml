@@ -5,7 +5,7 @@
         <th width="200px">Actions</th>
     </tr></thead>
     <tbody>
-        <? for k, group in pairs( self:get( 'groups' ) ) do ?>
+        <? for k, group in pairs(self:get('groups')) do ?>
             <tr>
                 <td><?=group.id ?></td>
                 <td><?=group.name ?></td>
@@ -13,7 +13,7 @@
                     <a href="/admin/users?group=<?=group.id ?>" class="button green">View Users</a> <a href="/admin/groups/edit?id=<?=group.id ?>" class="button black">Edit</a>
                     <form data-confirm-message="Are you sure you wish to delete this group?" class="inline" method="post" action="/admin/groups/delete">
                         <input type="hidden" name="id" value="<?=group.id ?>" />
-                        <input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+                        <input type="hidden" name="token" value="<?=self:get('token') ?>" />
                         <? if group.id > 1 then ?><button type="submit" class="button red">Delete</button><? end ?>
                     </form>
                 </td>

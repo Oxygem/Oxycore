@@ -2,21 +2,21 @@
     <div class="third">
         <form action="/profile" method="post" class="wide">
             <label for="name">Display Name:</label>
-            <input type="text" name="name" id="name" value="<?=self:get( 'user' ).name ?>" />
+            <input type="text" name="name" id="name" value="<?=self:get('user').name ?>" />
 
             <label for="email">Email:</label>
-            <input type="text" name="email" id="email" value="<?=self:get( 'user' ).email ?>" />
+            <input type="text" name="email" id="email" value="<?=self:get('user').email ?>" />
 
             <label for="password">New Password (optional):</label>
             <input type="password" name="password" id="password" />
 
            <!-- <label for="phone">Phone Number:</label>
-            <input type="text" name="phone" id="phone" value="<?=self:get( 'user' ).phone ?>" />
+            <input type="text" name="phone" id="phone" value="<?=self:get('user').phone ?>" />
 
             <label for="two_factor">Enable Two-Factor Auth (requires phone number)</label>
-            <input type="checkbox" class="checkbox" name="two_factor" id="two_factor" <? if self:get( 'user' ).two_factor == 1 then ?>checked<? end ?>/><div></div> -->
+            <input type="checkbox" class="checkbox" name="two_factor" id="two_factor" <? if self:get('user').two_factor == 1 then ?>checked<? end ?>/><div></div> -->
 
-            <input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+            <input type="hidden" name="token" value="<?=self:get('token') ?>" />
             <button type="submit" class="submit lightgreen" name="update" value="profile">Update Profile &#187;</button>
         </form>
     </div><!--end left-->
@@ -26,9 +26,9 @@
 
         <form action="/profile" method="post" class="wide">
             <label for="ssh_key">Public SSH Key</label>
-            <textarea name="ssh_key" id="ssh_key"><?=self:get( 'user' ).ssh_key ?></textarea>
+            <textarea name="ssh_key" id="ssh_key"><?=self:get('user').ssh_key ?></textarea>
 
-            <input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+            <input type="hidden" name="token" value="<?=self:get('token') ?>" />
             <button type="submit" class="submit lightgreen" name="update" value="address">Update SSH Key &#187;</button>
         </form>
     </div> -->
@@ -38,20 +38,20 @@
 
         <form action="/profile" method="post" class="wide">
             <label for="real_name">Company or Individual Name:</label>
-            <input type="text" name="real_name" id="real_name" value="<?=self:get( 'user' ).real_name ?>" />
+            <input type="text" name="real_name" id="real_name" value="<?=self:get('user').real_name ?>" />
 
             <label for="address">Address:</label>
-            <textarea name="address" class="short"><?=self:get( 'user' ).address ?></textarea>
+            <textarea name="address" class="short"><?=self:get('user').address ?></textarea>
 
             <label for="country">Country:</label>
             <select name="country" id="country">
                 <option value="">Select Country</option>
-                <? for k, country in pairs( self:get( 'countries' ) ) do ?>
-                    <option value="<?=country.iso ?>"<? if country.iso == self:get( 'user' ).country then ?> selected<? end ?>><?=country.name ?></option>
+                <? for k, country in pairs(self:get('countries')) do ?>
+                    <option value="<?=country.iso ?>"<? if country.iso == self:get('user').country then ?> selected<? end ?>><?=country.name ?></option>
                 <? end ?>
             </select>
 
-            <input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+            <input type="hidden" name="token" value="<?=self:get('token') ?>" />
             <button type="submit" class="submit lightgreen" name="update" value="address">Update Address &#187;</button>
         </form>
     </div><!end right-->

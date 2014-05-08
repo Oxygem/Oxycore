@@ -1,3 +1,3 @@
 <h2>Oxypanel Config</h2>
 
-<pre><code><?=luawa.utils.tableString( self:get( 'config' )) ?></code></pre>
+<pre><code><?=luawa.utils.table_string(self:get('config')) ?></code></pre>

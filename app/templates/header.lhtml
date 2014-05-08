@@ -13,8 +13,8 @@
                         <li class="dashboard"><a href="/">Dashboard</a></li>
                     <? end ?>
 
-                    <? for k, module in pairs( oxy.config.modules ) do
-                        if user:checkPermission( 'Module' .. module ) then ?>
+                    <? for k, module in pairs(oxy.config.modules) do
+                        if user:checkPermission('Module' .. module) then ?>
                         <? if request.get.module == module then ?>
                             <li class="<?=module ?> active"><a href="/<?=module ?>"><?=oxy.config[module].name ?></a></li>
                         <? else ?>
@@ -41,30 +41,30 @@
             <ul id="subnav">
                 <li class="search">
                     <form action="" method="get" class="search">
-                        <input type="text" name="q" value="type to search..." onfocus="if( this.value == 'type to search...' ) { this.value = ''; }" onblur="if( this.value == '' ) { this.value = 'type to search...'; }" />
+                        <input type="text" name="q" value="type to search..." onfocus="if(this.value == 'type to search...') { this.value = ''; }" onblur="if(this.value == '') { this.value = 'type to search...'; }" />
                         <button type="submit">&rarr;</button>
                     </form>
                 </li>
 
                 <? if request.get.module and oxy[request.get.module].subnav then
-                    for k, link in pairs( oxy[request.get.module]:subnav() ) do
+                    for k, link in pairs(oxy[request.get.module]:subnav()) do
                         local isadmin = false
-                        local mreqlink = link.link:sub( 2 )
+                        local mreqlink = link.link:sub(2)
                         local module_request = request.get.module_request or '' ?>
                     <li<? if mreqlink == module_request then ?> class="active"<? end ?>>
                         <? if link.submenus then ?>
                             <ul class="dropdown">
-                            <? for k, submenu in ipairs( link.submenus ) do ?>
+                            <? for k, submenu in ipairs(link.submenus) do ?>
                                 <li><ul>
-                                    <? for c, sublink in pairs( submenu ) do ?>
+                                    <? for c, sublink in pairs(submenu) do ?>
                                         <li><a href="/<?=request.get.module ?><?=sublink.link ?>"><?=sublink.title ?></a></li>
                                     <? end ?>
                                 </ul></li>
                             <? link.submenus[k] = nil end ?>
-                            <? for title, submenu in pairs( link.submenus ) do ?>
+                            <? for title, submenu in pairs(link.submenus) do ?>
                                 <li><ul>
                                     <li<? if title == 'Admin' then isadmin = true ?> class="red"<? end ?>><?=title ?></li>
-                                    <? for c, sublink in pairs( submenu ) do ?>
+                                    <? for c, sublink in pairs(submenu) do ?>
                                         <li><a href="/<?=request.get.module ?><?=sublink.link ?>"><?=sublink.title ?></a></li>
                                     <? end ?>
                                 </ul></li>
@@ -74,7 +74,7 @@
                         <? if link.submenu then ?>
                             <ul class="dropdown">
                                 <li><ul>
-                                    <? for k, sublink in pairs( link.submenu ) do ?>
+                                    <? for k, sublink in pairs(link.submenu) do ?>
                                         <li><a href="/<?=request.get.module ?><?=sublink.link ?>"><?=sublink.title ?></a></li>
                                     <? end ?>
                                 </ul></li>
@@ -132,17 +132,17 @@
 
         <div id="main">
             <div class="message warning noscript" style="margin-top:20px;"><strong><noscript>JavaScript disabled:</noscript></strong><noscript> many features will not work. It is highly recommended to enable it.</noscript></div>
-            <script type="text/javascript">document.querySelector( '.noscript' ).style.display = 'none';</script>
+            <script type="text/javascript">document.querySelector('.noscript').style.display = 'none';</script>
 
             <h2>
-                <?=self:get( 'page_title' ) ?> <span class="meta"><?=self:get( 'page_title_meta' ) ?></span>
-                <span class="right"><? if self:get( 'page_title_buttons' ) then
-                        for k, button in pairs( self:get( 'page_title_buttons' ) ) do ?>
+                <?=self:get('page_title') ?> <span class="meta"><?=self:get('page_title_meta') ?></span>
+                <span class="right"><? if self:get('page_title_buttons') then
+                        for k, button in pairs(self:get('page_title_buttons')) do ?>
                         <a href="<?=button.link ?>" class="button <?=button.class ?>"><?=button.text ?></a>
                 <? end
                 end ?></span>
             </h2>
 
-            <div id="messages"><? for k, message in pairs( session:getMessages() ) do ?>
-                <div class="message click <?=message.type ?>"><?=message.text ?><? if message.type == 'error' and luawa.header:getHeader( 'referer' ) then ?> <a href="<?=luawa.header:getHeader( 'referer' ) ?>" class="right">Go back</a><? end ?></div>
+            <div id="messages"><? for k, message in pairs(session:getMessages()) do ?>
+                <div class="message click <?=message.type ?>"><?=message.text ?><? if message.type == 'error' and luawa.request.header.referer then ?> <a href="<?=luawa.request.header.referer ?>" class="right">Go back</a><? end ?></div>
             <? end ?></div>

@@ -1,52 +1,52 @@
 <form method="post" method="/admin/permissions">
 
-	<table cellspacing="0" cellpadding="0" class="nosort">
-		<thead><tr>
-			<th width="100px">Core</th>
-			<th width="200px"></th>
-			<? for k, v in pairs( self:get( 'groups' ) ) do ?>
-				<th><?=v.name ?><br /><small>(select: <a href="#" onclick="util.elements( 'input.core_group_<?=v.id ?>' ).set( 'checked', 'on' ); return false;">all</a>/<a href="#" onclick="util.elements( 'input.core_group_<?=v.id ?>' ).set( 'checked', false ); return false;">none</a>)</small></th>
-			<? end ?>
-		</tr></thead>
-		<tbody>
-			<tr><th rowspan="<?=#self:get( 'full_permissions' ) + 1 ?>">Modules</th></tr>
-			<? for k, v in ipairs( self:get( 'full_permissions' ) ) do ?>
-				<tr>
-					<td><?=v ?></td>
-					<? for c, d in pairs( self:get( 'groups' ) ) do ?>
-						<td><input name="<?=d.id ?>_<?=v ?>" class="core_group_<?=d.id ?>" type="checkbox" <? if self:get( 'set_permissions' )[d.id .. v] then ?>checked<? end ?> /></td>
-					<? end ?>
-				</tr>
-			<? self:get( 'full_permissions' )[k] = nil
-			end ?>
-		</tbody>
-	</table>
+    <table cellspacing="0" cellpadding="0" class="nosort">
+        <thead><tr>
+            <th width="100px">Core</th>
+            <th width="200px"></th>
+            <? for k, v in pairs(self:get('groups')) do ?>
+                <th><?=v.name ?><br /><small>(select: <a href="#" onclick="util.elements('input.core_group_<?=v.id ?>').set('checked', 'on'); return false;">all</a>/<a href="#" onclick="util.elements('input.core_group_<?=v.id ?>').set('checked', false); return false;">none</a>)</small></th>
+            <? end ?>
+        </tr></thead>
+        <tbody>
+            <tr><th rowspan="<?=#self:get('full_permissions') + 1 ?>">Modules</th></tr>
+            <? for k, v in ipairs(self:get('full_permissions')) do ?>
+                <tr>
+                    <td><?=v ?></td>
+                    <? for c, d in pairs(self:get('groups')) do ?>
+                        <td><input name="<?=d.id ?>_<?=v ?>" class="core_group_<?=d.id ?>" type="checkbox" <? if self:get('set_permissions')[d.id .. v] then ?>checked<? end ?> /></td>
+                    <? end ?>
+                </tr>
+            <? self:get('full_permissions')[k] = nil
+            end ?>
+        </tbody>
+    </table>
 
-	<? for k, v in pairs( self:get( 'full_permissions' ) ) do ?>
-		<table cellspacing="0" cellpadding="0" class="nosort">
-			<thead><tr>
-				<th width="100px"><?=k ?></th>
-				<th width="200px"></th>
-				<? for c, d in pairs( self:get( 'groups' ) ) do ?>
-					<th><?=d.name ?><br /><small>(select: <a href="#" onclick="util.elements( 'input.<?=k ?>_group_<?=d.id ?>' ).set( 'checked', 'on' ); return false;">all</a>/<a href="#" onclick="util.elements( 'input.<?=k ?>_group_<?=d.id ?>' ).set( 'checked', false ); return false;">none</a>)</small></th>
-				<? end ?>
-			</tr></thead>
-			<tbody>
-				<? for c, d in pairs( v ) do ?>
-					<tr><th rowspan="<?=#d + 1 ?>"><?=c ?></th></tr>
-					<? for e, f in pairs( d ) do ?>
-					<tr>
-						<td><?=f ?></td>
-						<? for g, h in pairs( self:get( 'groups' ) ) do ?>
-							<td><input name="<?=h.id ?>_<?=f ?>" class="<?=k ?>_group_<?=h.id ?>" type="checkbox" <? if self:get( 'set_permissions' )[h.id .. f] then ?>checked<? end ?> /></td>
-						<? end ?>
-					</tr>
-				<? 	end
-				end ?>
-			</tbody>
-		</table>
-	<? end ?>
+    <? for k, v in pairs(self:get('full_permissions')) do ?>
+        <table cellspacing="0" cellpadding="0" class="nosort">
+            <thead><tr>
+                <th width="100px"><?=k ?></th>
+                <th width="200px"></th>
+                <? for c, d in pairs(self:get('groups')) do ?>
+                    <th><?=d.name ?><br /><small>(select: <a href="#" onclick="util.elements('input.<?=k ?>_group_<?=d.id ?>').set('checked', 'on'); return false;">all</a>/<a href="#" onclick="util.elements('input.<?=k ?>_group_<?=d.id ?>').set('checked', false); return false;">none</a>)</small></th>
+                <? end ?>
+            </tr></thead>
+            <tbody>
+                <? for c, d in pairs(v) do ?>
+                    <tr><th rowspan="<?=#d + 1 ?>"><?=c ?></th></tr>
+                    <? for e, f in pairs(d) do ?>
+                    <tr>
+                        <td><?=f ?></td>
+                        <? for g, h in pairs(self:get('groups')) do ?>
+                            <td><input name="<?=h.id ?>_<?=f ?>" class="<?=k ?>_group_<?=h.id ?>" type="checkbox" <? if self:get('set_permissions')[h.id .. f] then ?>checked<? end ?> /></td>
+                        <? end ?>
+                    </tr>
+                <?  end
+                end ?>
+            </tbody>
+        </table>
+    <? end ?>
 
-	<button type="submit" class="lightgreen submit right">Update Permissions &#187;</button>
-	<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+    <button type="submit" class="lightgreen submit right">Update Permissions &#187;</button>
+    <input type="hidden" name="token" value="<?=self:get('token') ?>" />
 </form>

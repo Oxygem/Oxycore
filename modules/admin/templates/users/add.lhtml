@@ -13,7 +13,7 @@
 
         <label for="group">Group:</label>
         <select name="group">
-            <? for k, group in pairs( self:get( 'groups' ) ) do ?>
+            <? for k, group in pairs(self:get('groups')) do ?>
                 <option value="<?=group.id ?>"><?=group.name ?></option>
             <? end ?>
         <select>
@@ -21,6 +21,6 @@
         <button type="submit" class="submit lightgreen">Add User &#187;</button>
         &nbsp;&nbsp;<a href="/admin/users">back to users</a>
 
-        <input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+        <input type="hidden" name="token" value="<?=self:get('token') ?>" />
     </form>
 </div>

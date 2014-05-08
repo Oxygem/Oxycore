@@ -8,6 +8,6 @@
         <button type="submit" class="submit lightgreen">Add Group &#187;</button>
         &nbsp;&nbsp;<a href="/admin/groups">back to groups</a>
 
-        <input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+        <input type="hidden" name="token" value="<?=self:get('token') ?>" />
     </form>
 </div>

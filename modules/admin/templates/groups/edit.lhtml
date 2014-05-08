@@ -1,14 +1,14 @@
-<h2>Edit Group: <?=self:get( 'group' ).name ?></h2>
+<h2>Edit Group: <?=self:get('group').name ?></h2>
 
 <div class="third left">
-	<form class="wide" action="/admin/groups/edit" method="post">
-		<label for="name">Name:</label>
-		<input type="text" name="name" value="<?=self:get( 'group' ).name ?>" />
+    <form class="wide" action="/admin/groups/edit" method="post">
+        <label for="name">Name:</label>
+        <input type="text" name="name" value="<?=self:get('group').name ?>" />
 
-		<button type="submit" class="submit lightgreen">Update Group &#187;</button>
-		&nbsp;&nbsp;<a href="/admin/groups">back to groups</a>
+        <button type="submit" class="submit lightgreen">Update Group &#187;</button>
+        &nbsp;&nbsp;<a href="/admin/groups">back to groups</a>
 
-		<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
-		<input type="hidden" name="id" value="<?=self:get( 'group' ).id ?>" />
-	</form>
+        <input type="hidden" name="token" value="<?=self:get('token') ?>" />
+        <input type="hidden" name="id" value="<?=self:get('group').id ?>" />
+    </form>
 </div>

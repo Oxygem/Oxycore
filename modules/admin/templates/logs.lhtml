@@ -12,7 +12,7 @@
         <th>Object</th>
     </tr></thead>
     <tbody>
-        <? for k, log in pairs( self:get( 'logs' ) ) do ?>
+        <? for k, log in pairs(self:get('logs')) do ?>
             <tr>
                 <td><?=log.user_id ?>: <?=log.username ?></td>
                 <td><?=log.time ?></td>
@@ -21,7 +21,7 @@
                 <td><?=log.module_request ?></td>
                 <td><?=log.action ?></td>
                 <td><? if log.object_id > 0 then ?>
-                    <a class="button lightblue pop" data-object-id="<?=log.object_id ?>" data-object-type="<?=log.object_type ?>" href="/<?=log.object_type ?>/<?=log.object_id ?>"><?=utils.capitalizeFirst( log.object_type ) ?></a>
+                    <a class="button lightblue pop" data-object-id="<?=log.object_id ?>" data-object-type="<?=log.object_type ?>" href="/<?=log.object_type ?>/<?=log.object_id ?>"><?=utils.capitalize_first(log.object_type) ?></a>
                 <? end ?></td>
             </tr>
         <? end ?>

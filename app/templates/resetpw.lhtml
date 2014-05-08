@@ -10,8 +10,8 @@
             <div id="main">
                 <h2>Reset Your Password</h2>
 
-                <? for k, message in pairs( session:getMessages() ) do ?>
-                    <div class="message <?=message.type ?>"><?=message.text ?><? if message.type == 'error' and luawa.header:getHeader( 'referer' ) then ?> <a href="<?=luawa.header:getHeader( 'referer' ) ?>" class="right">Go back</a><? end ?></div>
+                <? for k, message in pairs(session:getMessages()) do ?>
+                    <div class="message <?=message.type ?>"><?=message.text ?><? if message.type == 'error' and luawa.request.header.referer then ?> <a href="<?=luawa.request.header.referer ?>" class="right">Go back</a><? end ?></div>
                 <? end ?>
 
                 <form class="wide" action="/resetpw" method="post">
@@ -22,7 +22,7 @@
                         <button type="submit" class="lightgreen submit">Reset Password &#187;</button>
                         or <a href="/login">login</a>
                     </div>
-                    <input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
+                    <input type="hidden" name="token" value="<?=self:get('token') ?>" />
                 </form>
             </div><!--end main-->
         </div><!--end login-->

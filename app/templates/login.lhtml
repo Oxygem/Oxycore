@@ -2,32 +2,32 @@
 <link rel="stylesheet" href="/inc/core/css/login.css" media="all" />
 
 <div id="login">
-		<div id="login-header">
-			<div id="logo"><a href="/login"><img src="/inc/core/<?=oxy.brand.logo ?>" alt="<?=oxy.brand.name ?>" /></a></div>
-		</div><!--end header-->
+        <div id="login-header">
+            <div id="logo"><a href="/login"><img src="/inc/core/<?=oxy.brand.logo ?>" alt="<?=oxy.brand.name ?>" /></a></div>
+        </div><!--end header-->
 
-		<div id="login-main">
-			<div id="main">
-				<h2>Login to <?=oxy.brand.name ?></h2>
+        <div id="login-main">
+            <div id="main">
+                <h2>Login to <?=oxy.brand.name ?></h2>
 
-				<? for k, message in pairs( session:getMessages() ) do ?>
-					<div class="message <?=message.type ?>"><?=message.text ?><? if message.type == 'error' and luawa.header:getHeader( 'referer' ) then ?> <a href="<?=luawa.header:getHeader( 'referer' ) ?>" class="right">Go back</a><? end ?></div>
-				<? end ?>
+                <? for k, message in pairs(session:getMessages()) do ?>
+                    <div class="message <?=message.type ?>"><?=message.text ?><? if message.type == 'error' and luawa.request.header.referer then ?> <a href="<?=luawa.request.header.referer ?>" class="right">Go back</a><? end ?></div>
+                <? end ?>
 
-				<form class="wide" action="/login" method="post">
-					<div><label for="email">Email:</label>
-					<input type="text" name="email" id="email" value="<?=request.get.email ?>" /></div>
+                <form class="wide" action="/login" method="post">
+                    <div><label for="email">Email:</label>
+                    <input type="text" name="email" id="email" value="<?=request.get.email ?>" /></div>
 
-					<div><label for="password">Password:</label>
-					<input type="password" name="password" id="password" value="<?=request.get.password ?>" /></div>
+                    <div><label for="password">Password:</label>
+                    <input type="password" name="password" id="password" value="<?=request.get.password ?>" /></div>
 
-					<div>
-						<button type="submit" class="lightgreen submit">Login &#187;</button>
-						or <a href="/resetpw">reset your password</a>
-					</div>
-					<input type="hidden" name="token" value="<?=self:get( 'token' ) ?>" />
-				</form>
-			</div><!--end main-->
-		</div><!--end login-->
+                    <div>
+                        <button type="submit" class="lightgreen submit">Login &#187;</button>
+                        or <a href="/resetpw">reset your password</a>
+                    </div>
+                    <input type="hidden" name="token" value="<?=self:get('token') ?>" />
+                </form>
+            </div><!--end main-->
+        </div><!--end login-->
 
 </div>

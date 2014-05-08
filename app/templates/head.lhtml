@@ -2,8 +2,8 @@
 <html>
 <head>
     <!--title-->
-    <? if self:get( 'page_title' ) then ?>
-        <title><?=self:get( 'page_title' ) ?> - <?=oxy.brand.name ?></title>
+    <? if self:get('page_title') then ?>
+        <title><?=self:get('page_title') ?> - <?=oxy.brand.name ?></title>
     <? else ?>
         <title><?=oxy.brand.name ?></title>
     <? end ?>
@@ -17,7 +17,7 @@
     <!--style-->
     <link rel="stylesheet" href="/inc/core/font/ptsans/font.css" media="all" />
 
-    <? if not luawa.cache then ?>
+    <? if not luawa.caching then ?>
         <link rel="stylesheet" href="/inc/core/css/basics.css" media="all" />
         <link rel="stylesheet" href="/inc/core/css/blocks.css" media="all" />
         <link rel="stylesheet" href="/inc/core/css/buttons.css" media="all" />
@@ -31,7 +31,7 @@
         <link rel="stylesheet" href="/inc/core/css/text.css" media="all" />
 
         <link rel="stylesheet" href="/inc/core/css/rickshaw.css" media="all" />
-        <? for k, module in pairs( oxy.config.modules ) do ?>
+        <? for k, module in pairs(oxy.config.modules) do ?>
             <link rel="stylesheet" href="/inc/<?=module ?>/auto.css" media="all" />
         <? end
     else ?>
