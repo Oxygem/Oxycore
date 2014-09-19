@@ -1,6 +1,6 @@
 # Oxycore
 
-**Please note**: Oxycore is no longer under active development. Please see [Oxypanel](http://github.com/Oxygem/Oxypanel).
+**Please note**: Oxycore is no longer under active development. Please see [Oxypanel](http://oxypanel.com).
 
 This repo is for [_Oxypanel Core_](http://oxypanel.org) which is a modular, object based Lua web framework based on [Luawa](http://luawa.com). The functionality described on [Oxypanel.com](http://oxypanel.com) is based on a number of open source & commercial modules for this framework:
 
